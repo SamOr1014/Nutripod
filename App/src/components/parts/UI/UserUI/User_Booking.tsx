@@ -1,9 +1,8 @@
 import { Center, Flex, Wrap } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "../CSS/Calendar.css";
-import { currentTheme } from "../utility/currentTheme";
-import BookingDetail from "./parts/functions/BookingDetail";
+import "../../../../CSS/Calendar.css";
+import BookingDetail from "../../functions/BookingDetail";
 
 export default function UserBooking() {
   const [selectedDate, setSelectedDate] = useState(new Date());
