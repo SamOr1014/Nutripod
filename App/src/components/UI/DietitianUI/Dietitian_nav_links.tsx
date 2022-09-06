@@ -29,7 +29,7 @@ export default function DietitianNavLinks(props: OptionalFunction) {
           <Text mt={1}>主頁</Text>
         </Button>
       </Link>
-      <Link to="/dietitian/" as={ReactLink}>
+      <Link to="/dietitian/bookings" as={ReactLink}>
         <Button
           w="16"
           h="16"

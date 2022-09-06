@@ -56,7 +56,7 @@ export default function Banner() {
     );
   }
   return (
-    <Center height="14" px="6">
+    <Center height="14" px="4" mb={2}>
       <Center flex="2" display="flex" justifyContent="start">
         <Show above="md"></Show>
         <Hide above="md">
