@@ -11,7 +11,7 @@ export default function UserNav() {
             width="120px"
             maxH="100%"
             spacing="5"
-            p="2"
+            p="10"
           >
             <UserNavLinks />
           </VStack>
