@@ -2,6 +2,8 @@ import DashBoard from "./components/parts/UI/UserUI/Dashboard";
 import { Route, Routes } from "react-router";
 import FrontPage from "./components/FrontPage";
 import UserBooking from "./components/User_Booking";
+import { Login } from "./components/Login";
+import NotFound from "./components/404"
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
         <Route path="posts" element={<p>2</p>} />
         <Route path="account" element={<p>3</p>} />
       </Route>
+      <Route path = "login" element = {<Login/>}/>
+      <Route path = "*" element = {<NotFound/>}/>
       {/* <Route path="dietitian" element={<DashBoard_Dietitians />}>
         <Route index element={<p>Diet home</p>} />
         <Route path="patients" element={<p>Diet home</p>} />
