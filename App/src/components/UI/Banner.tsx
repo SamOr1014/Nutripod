@@ -16,11 +16,11 @@ import {
   Avatar,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
+import { Link } from "@chakra-ui/react";
+import { Link as ReactLink } from "react-router-dom";
 import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner() {
@@ -30,6 +30,11 @@ export default function Banner() {
     onOpen: onDrawerOpen,
     onClose: onDrawerClose,
   } = useDisclosure();
+
+  // If the role is dietitian render a different route for account
+  const accountDir = "/dashboard/account";
+  //   state.role === "dietitian" ? "/dietitian/account" : "/dashboard/account";
+
   function MobileNav() {
     return (
       <Drawer placement="top" onClose={onDrawerClose} isOpen={isDrawerOpen}>
@@ -42,6 +47,7 @@ export default function Banner() {
           </DrawerHeader>
           <DrawerBody>
             <Center>
+              {/* If the role is dietitian render a different mobile nav */}
               <UserNavLinks closeDrawer={onDrawerClose} />
             </Center>
           </DrawerBody>
@@ -50,7 +56,7 @@ export default function Banner() {
     );
   }
   return (
-    <Center height="14" px="6">
+    <Center height="14" p={"10"} mb={7} boxShadow={"5px 2px 10px 3px black"}>
       <Center flex="2" display="flex" justifyContent="start">
         <Show above="md"></Show>
         <Hide above="md">
@@ -90,17 +96,17 @@ export default function Banner() {
                 onChange={() => toggleColorMode()}
               />
             </MenuItem>
-            <MenuItem fontWeight="bold">帳戶</MenuItem>
-            <MenuItem fontWeight="bold">登出</MenuItem>
+            <Link as={ReactLink} to={accountDir}>
+              <MenuItem fontWeight="bold">帳戶</MenuItem>
+            </Link>
+
+            <Link as={ReactLink} to="/api/logout">
+              <MenuItem fontWeight="bold">登出</MenuItem>
+            </Link>
           </MenuList>
         </Menu>
       </Center>
       <MobileNav />
     </Center>
   );
-}
-
-{
-  /* <Switch marginRight="1" size="md" onChange={() => toggleColorMode()} />
-<Button size="sm">登出</Button> */
 }

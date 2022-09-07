@@ -1,0 +1,8 @@
+* {
+  -ms-overflow-style: none;
+
+  scrollbar-color: rgb(27, 32, 43);
+}
+::-webkit-scrollbar {
+  display: none;
+}

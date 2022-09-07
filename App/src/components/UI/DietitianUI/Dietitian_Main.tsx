@@ -1,11 +1,9 @@
 import { Center, Flex, Wrap } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "../CSS/Calendar.css";
-import { currentTheme } from "../utility/currentTheme";
-import BookingDetail from "./parts/functions/BookingDetail";
+import "../../../../CSS/Calendar.css";
 
-export default function UserBooking() {
+export default function DietitianMain() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   return (
     <>
@@ -21,9 +19,7 @@ export default function UserBooking() {
           <Center mb="5">
             <h1>{selectedDate.toLocaleDateString()}</h1>
           </Center>
-          <Wrap width="100%">
-            <BookingDetail />
-          </Wrap>
+          <Wrap width="100%"></Wrap>
         </Flex>
       </Flex>
     </>
