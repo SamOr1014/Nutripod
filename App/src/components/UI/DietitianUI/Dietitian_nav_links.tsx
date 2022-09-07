@@ -1,11 +1,10 @@
-import { Button, Center, Text } from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
 import {
   BsFillHouseFill,
   BsTable,
   BsFillChatRightTextFill,
-  BsArchiveFill,
   BsFillFileMedicalFill,
 } from "react-icons/bs";
 

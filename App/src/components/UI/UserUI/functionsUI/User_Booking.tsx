@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Heading, Wrap } from "@chakra-ui/react";
+import { Button, Flex, Heading } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
 import "../../../../CSS/Calendar.css";
@@ -21,7 +21,7 @@ export default function UserBooking() {
   return (
     <>
       <Flex flex={2} flexDirection="column">
-        <Heading p={3} textAlign={"center"}>
+        <Heading p={3} textAlign={"center"} mb={10}>
           請選擇預約日期📅
         </Heading>
         <Calendar

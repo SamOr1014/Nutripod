@@ -1,4 +1,4 @@
-import { Hide, VStack, Button, Text } from "@chakra-ui/react";
+import { Hide, VStack } from "@chakra-ui/react";
 import DietitianNavLinks from "./Dietitian_nav_links";
 export default function DietitianNav() {
   function CollapsedNav() {

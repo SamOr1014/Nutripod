@@ -1,5 +1,4 @@
 import { Container, Flex } from "@chakra-ui/react";
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";

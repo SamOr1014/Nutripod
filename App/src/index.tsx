@@ -3,7 +3,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import theme from "./chakra/themeConfig";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import "./CSS/MobileScroll.css";
 
 const root = ReactDOM.createRoot(
