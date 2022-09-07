@@ -1,15 +1,16 @@
 import DashBoard from "./components/UI/UserUI/Dashboard";
 import { Route, Routes } from "react-router";
 import FrontPage from "./components/FrontPage";
-import UserBooking from "./components/UI/UserUI/User_Booking";
+import UserBooking from "./components/UI/UserUI/functionsUI/User_Booking";
 import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
+import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<FrontPage />} />
       <Route path="dashboard" element={<DashBoard />}>
-        <Route index element={<p>MAIN</p>} />
+        <Route index element={<UserMain />} />
         <Route path="booking" element={<UserBooking />} />
         <Route path="history" element={<p>BP BG</p>} />
         <Route path="reports" element={<p>Dietitian report</p>} />

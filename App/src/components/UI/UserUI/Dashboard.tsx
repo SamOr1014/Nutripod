@@ -18,14 +18,13 @@ export default function DashBoard() {
         <UserNav />
         <Flex
           direction="row"
-          height="90vh"
+          height="85vh"
           maxW="90vw"
           flex="8"
           p="2"
           borderRadius="2xl"
-          boxShadow="0px 0px 5px 3px"
           flexWrap={"wrap"}
-          overflow={"scroll"}
+          overflow={"auto"}
         >
           <Outlet />
         </Flex>

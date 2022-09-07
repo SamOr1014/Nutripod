@@ -56,7 +56,7 @@ export default function Banner() {
     );
   }
   return (
-    <Center height="14" px="4" mb={2}>
+    <Center height="14" p={"10"} mb={7} boxShadow={"5px 2px 10px 3px black"}>
       <Center flex="2" display="flex" justifyContent="start">
         <Show above="md"></Show>
         <Hide above="md">
