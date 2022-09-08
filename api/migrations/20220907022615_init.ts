@@ -207,8 +207,8 @@ export async function up(knex: Knex): Promise<void> {
         table.increments()
         table.integer('type').unsigned().notNullable()
 		table.foreign('type').references('diets_types.id')
-        table.integer('food_group').unsigned().notNullable()
-		table.foreign('food_group').references('food_groups.id')
+        table.integer('food').unsigned().notNullable()
+		table.foreign('food').references('food.id')
         table.integer('food_amount').notNullable()
         table.date('date').notNullable()
         table.timestamps(false, true)
@@ -217,7 +217,6 @@ export async function up(knex: Knex): Promise<void> {
     })
 
 }
-
 
 export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTableIfExists(usersDietTableName)
@@ -229,25 +228,17 @@ export async function down(knex: Knex): Promise<void> {
 	await knex.schema.dropTableIfExists(usersBloodGlucoseTableName)
 	await knex.schema.dropTableIfExists(usersBloodPressureTableName)
     await knex.schema.dropTableIfExists(dietitianReportTableName)
-    await knex.schema.dropTableIfExists(usersDietTableName)
     await knex.schema.dropTableIfExists(bookingTableName)
     await knex.schema.dropTableIfExists(timeSlotTableName)
     await knex.schema.dropTableIfExists(exercisesTableName)
-    await knex.schema.dropTableIfExists(userTableName)
     await knex.schema.dropTableIfExists(exercisesTypesTableName)
     await knex.schema.dropTableIfExists(chronicConditionTableName)
     await knex.schema.dropTableIfExists(userAuthTableName)
+    await knex.schema.dropTableIfExists(userStatsTableName)
+    await knex.schema.dropTableIfExists(userTableName)
     await knex.schema.dropTableIfExists(educationName)
     await knex.schema.dropTableIfExists(professionTableName)
     await knex.schema.dropTableIfExists(genderTableName)
 
-
-
-
-
-
-
-
-    
 }
 

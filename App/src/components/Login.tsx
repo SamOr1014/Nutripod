@@ -6,7 +6,8 @@ import {
     FormLabel,
     Input,
     extendTheme,
-    Box
+    Box,
+    Container
   } from "@chakra-ui/react";
 
 const activeLabelStyles = {
@@ -64,6 +65,7 @@ export function Login() {
     // )
 
     return (
+      <Container>
         <ChakraProvider theme={theme}>
         <Box p={8}>
         <FormLabel>First name</FormLabel>
@@ -77,6 +79,7 @@ export function Login() {
           </FormControl>
         </Box>
       </ChakraProvider>
+      </Container>
     )
 }
 
