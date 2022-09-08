@@ -53,6 +53,7 @@ export default function UserBooking() {
         borderRadius="2xl"
         flexWrap={"wrap"}
         gap={5}
+        maxH={"700px"}
       >
         <Flex
           flex={1}
@@ -101,6 +102,7 @@ export default function UserBooking() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
+          maxH={"700px"}
         >
           <Heading p={3} textAlign={"center"}>
             {selectedDate?.toLocaleDateString().split("/")[2]}年

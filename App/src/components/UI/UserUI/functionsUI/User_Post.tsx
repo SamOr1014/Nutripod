@@ -7,6 +7,7 @@ export default function UserPost() {
         border={"2px"}
         minW="50%"
         maxW="100%"
+        minH={"100%"}
         p={5}
         flexDir="column"
         flexWrap={"wrap"}
@@ -21,7 +22,15 @@ export default function UserPost() {
           <Heading fontSize={"2xl"}>Title</Heading>
         </Box>
       </Flex>
-      <Flex border={"2px"} minW="50%" maxW="100%" p={5}>
+      <Flex
+        border={"2px"}
+        minW="50%"
+        maxW="100%"
+        minH={"100%"}
+        p={5}
+        flexDir="column"
+        flexWrap={"wrap"}
+      >
         2
       </Flex>
     </>
