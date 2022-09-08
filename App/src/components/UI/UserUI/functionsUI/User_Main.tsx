@@ -43,6 +43,7 @@ const css = `
 
 export default function UserMain() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
@@ -50,7 +51,7 @@ export default function UserMain() {
   return (
     <>
       <style>{css}</style>
-      <Flex alignSelf={"center"} justifyContent={"center"} w="100%" p={1}>
+      <Flex alignSelf={"center"} justifyContent={"center"} w="100%">
         <Popover>
           <PopoverTrigger>
             <Box as="button" fontSize={"4xl"} fontWeight={"extrabold"}>
@@ -90,19 +91,21 @@ export default function UserMain() {
           </PopoverContent>
         </Popover>
       </Flex>
+
       <Flex
         flexWrap={"wrap"}
         w={"100%"}
         justifyContent={isSmallerThan600 ? "center" : "space-between"}
         gap={2}
-        mb={15}
+        mb={5}
       >
         <Flex
-          w={"xl"}
           flexDir={"column"}
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
+          minW={isLargerThan1700 ? "45%" : isSmallerThan600 ? "100%" : "570px"}
+          minH={isLargerThan1700 ? "45%" : "70px"}
         >
           <Heading textAlign={"center"}>攝取統計📊</Heading>
           <Divider my={3} />
@@ -131,11 +134,12 @@ export default function UserMain() {
           </Center>
         </Flex>
         <Flex
-          w={"xl"}
           flexDir={"column"}
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
+          minW={isLargerThan1700 ? "45%" : isSmallerThan600 ? "100%" : "570px"}
+          h={isLargerThan1700 ? "500px" : "300px"}
         >
           <Heading textAlign={"center"}>運動統計🏃🏻‍♀️</Heading>
           <Divider my={3} />
@@ -164,26 +168,25 @@ export default function UserMain() {
           </Center>
         </Flex>
       </Flex>
+      <Divider mb={2} />
       <Flex
         flexWrap={"wrap"}
         w={"100%"}
-        gap={"5"}
+        gap={2}
         justifyContent={isSmallerThan600 ? "center" : "space-between"}
-        h={"40%"}
       >
         <Box
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : "2xs"}
-          h={"2xs"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
+          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
           bg={"gray.500"}
           flexDir={"column"}
-          alignSelf={"center"}
         >
           <Heading>早餐</Heading>
           <Text fontSize={"xl"}>500kcal</Text>
@@ -192,8 +195,8 @@ export default function UserMain() {
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
-          w={isSmallerThan600 ? "100%" : "2xs"}
-          h={"2xs"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
+          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
           justifyContent={"center"}
           _hover={{
             boxShadow: "0 0 5px 5px",
@@ -209,8 +212,8 @@ export default function UserMain() {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : "2xs"}
-          h={"2xs"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
+          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
@@ -225,8 +228,8 @@ export default function UserMain() {
           rounded={"3xl"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : "2xs"}
-          h={"2xs"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
+          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
