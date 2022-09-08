@@ -1,38 +1,115 @@
 import {
   Box,
+  Button,
   Center,
   Divider,
   Flex,
   Heading,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   Stat,
   StatArrow,
   StatGroup,
   StatHelpText,
   StatLabel,
   StatNumber,
+  Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
+import { MdToday } from "react-icons/md";
+import { useState } from "react";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+const css = `
+.my-selected:not([disabled]) { 
+  font-weight: bold; 
+  border: 2px solid currentColor;
+}
+.my-selected:hover:not([disabled]) { 
+  border-color: red;
+  color: red;
+}
+.my-today { 
+  font-weight: bold;
+  font-size: 100%; 
+  color: red;
+}
+`;
+
 export default function UserMain() {
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+
   return (
     <>
-      <Flex alignSelf={"center"} justifyContent={"center"} w="100%" p={2}>
-        <Box>Time Here</Box>
+      <style>{css}</style>
+      <Flex alignSelf={"center"} justifyContent={"center"} w="100%" p={1}>
+        <Popover>
+          <PopoverTrigger>
+            <Box as="button" fontSize={"4xl"} fontWeight={"extrabold"}>
+              {selectedDate?.toLocaleDateString()} 📅
+            </Box>
+          </PopoverTrigger>
+          <PopoverContent>
+            <PopoverArrow />
+            <PopoverCloseButton />
+            <PopoverHeader fontSize={"3xL"} display={"flex"}>
+              <Text>請選擇想查看的日期</Text>
+            </PopoverHeader>
+            <PopoverBody>
+              <Flex justifyContent={"center"} mb={-6}>
+                <DayPicker
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  defaultMonth={new Date()}
+                  modifiersClassNames={{
+                    selected: "my-selected",
+                    today: "my-today",
+                  }}
+                  required={true}
+                  fixedWeeks
+                />
+              </Flex>
+              <Button
+                onClick={() => setSelectedDate(new Date())}
+                display={"flex"}
+                flexDir={"column"}
+              >
+                <MdToday />
+                今日
+              </Button>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
       </Flex>
       <Flex
         flexWrap={"wrap"}
         w={"100%"}
-        justifyContent={"center"}
+        justifyContent={isSmallerThan600 ? "center" : "space-between"}
         gap={2}
         mb={15}
-        borderRadius={"3xl"}
-        bg={"gray.700"}
       >
-        <Flex w={"xl"} flexDir={"column"} p={4}>
-          <Heading textAlign={"center"}>攝取統計</Heading>
+        <Flex
+          w={"xl"}
+          flexDir={"column"}
+          p={4}
+          borderRadius={"3xl"}
+          bg={"gray.500"}
+        >
+          <Heading textAlign={"center"}>攝取統計📊</Heading>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
             <StatGroup flex={"1 1 0%"}>
               <Stat textAlign={"center"}>
-                <StatLabel>今日攝取量</StatLabel>
+                <StatLabel>今日攝取量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
                   比昨日
@@ -42,7 +119,7 @@ export default function UserMain() {
               </Stat>
 
               <Stat textAlign={"center"}>
-                <StatLabel>本月平均攝取量</StatLabel>
+                <StatLabel>本月平均攝取量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
                   比上月
@@ -53,15 +130,19 @@ export default function UserMain() {
             </StatGroup>
           </Center>
         </Flex>
-        <Flex w={"xl"} flexDir={"column"} p={4}>
-          <Heading textAlign={"center"} mb={2}>
-            運動統計
-          </Heading>
+        <Flex
+          w={"xl"}
+          flexDir={"column"}
+          p={4}
+          borderRadius={"3xl"}
+          bg={"gray.500"}
+        >
+          <Heading textAlign={"center"}>運動統計🏃🏻‍♀️</Heading>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
             <StatGroup flex={"1 1 0%"}>
               <Stat textAlign={"center"}>
-                <StatLabel>今日運動消耗量</StatLabel>
+                <StatLabel>今日運動消耗量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
                   比昨日
@@ -71,7 +152,7 @@ export default function UserMain() {
               </Stat>
 
               <Stat textAlign={"center"}>
-                <StatLabel>平均每日運動消耗量</StatLabel>
+                <StatLabel>平均每日運動消耗量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
                   比今日
@@ -87,7 +168,7 @@ export default function UserMain() {
         flexWrap={"wrap"}
         w={"100%"}
         gap={"5"}
-        justifyContent={"space-around"}
+        justifyContent={isSmallerThan600 ? "center" : "space-between"}
         h={"40%"}
       >
         <Box
@@ -95,56 +176,65 @@ export default function UserMain() {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={"2xs"}
+          w={isSmallerThan600 ? "100%" : "2xs"}
           h={"2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
-          bg={"gray.700"}
+          bg={"gray.500"}
+          flexDir={"column"}
+          alignSelf={"center"}
         >
           <Heading>早餐</Heading>
+          <Text fontSize={"xl"}>500kcal</Text>
         </Box>
         <Box
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
-          w={"2xs"}
+          w={isSmallerThan600 ? "100%" : "2xs"}
           h={"2xs"}
           justifyContent={"center"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
-          bg={"gray.700"}
+          bg={"gray.500"}
+          flexDir={"column"}
         >
           <Heading>午餐</Heading>
+          <Text fontSize={"xl"}>500kcal</Text>
         </Box>
         <Box
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={"2xs"}
+          w={isSmallerThan600 ? "100%" : "2xs"}
           h={"2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
-          bg={"gray.700"}
+          bg={"gray.500"}
+          flexDir={"column"}
         >
           <Heading>晚餐</Heading>
+          <Text fontSize={"xl"}>500kcal</Text>
         </Box>
         <Box
           display={"flex"}
           rounded={"3xl"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={"2xs"}
+          w={isSmallerThan600 ? "100%" : "2xs"}
           h={"2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
-          bg={"gray.700"}
+          bg={"gray.500"}
+          flexDir={"column"}
         >
           <Heading>小食</Heading>
+          <Text fontSize={"xl"}>500kcal</Text>
         </Box>
       </Flex>
     </>
