@@ -97,15 +97,15 @@ export default function UserMain() {
         w={"100%"}
         justifyContent={isSmallerThan600 ? "center" : "space-between"}
         gap={2}
-        mb={5}
+        mb={2}
       >
         <Flex
           flexDir={"column"}
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          minW={isLargerThan1700 ? "45%" : isSmallerThan600 ? "100%" : "570px"}
-          minH={isLargerThan1700 ? "45%" : "70px"}
+          minW={isLargerThan1700 ? "47%" : isSmallerThan600 ? "100%" : "570px"}
+          minH={isLargerThan1700 ? "400px" : "150px"}
         >
           <Heading textAlign={"center"}>攝取統計📊</Heading>
           <Divider my={3} />
@@ -138,8 +138,8 @@ export default function UserMain() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          minW={isLargerThan1700 ? "45%" : isSmallerThan600 ? "100%" : "570px"}
-          h={isLargerThan1700 ? "500px" : "300px"}
+          minW={isLargerThan1700 ? "47%" : isSmallerThan600 ? "100%" : "570px"}
+          minH={isLargerThan1700 ? "400px" : "150px"}
         >
           <Heading textAlign={"center"}>運動統計🏃🏻‍♀️</Heading>
           <Divider my={3} />
