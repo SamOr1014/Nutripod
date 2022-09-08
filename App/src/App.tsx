@@ -7,12 +7,7 @@ import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 import UserRecord from "./components/UI/UserUI/functionsUI/User_Record";
 import { Login } from "./components/Login";
 import NotFound from "./components/404";
-<<<<<<< HEAD
-import { Login } from "./components/Login";
-import NotFound from "./components/404";
-=======
-import UserRecord from "./components/UI/UserUI/functionsUI/User_Record";
->>>>>>> 97cd503474b28a8a4a6edc8e2140c8c36a986ae8
+
 
 function App() {
   return (
