@@ -1,7 +1,7 @@
 import { Button, Center, Flex, Heading, Wrap } from "@chakra-ui/react";
 import { useState } from "react";
 import Calendar from "react-calendar";
-import "../../../../CSS/Calendar.css";
+import "../../../CSS/Calendar.css";
 
 export default function UserBooking() {
   const fakeData: Array<any> = [
