@@ -1,6 +1,5 @@
 import { Center, Flex, Wrap } from "@chakra-ui/react";
 import { useState } from "react";
-import Calendar from "react-calendar";
 import "../../../../CSS/Calendar.css";
 
 export default function DietitianMain() {
@@ -9,11 +8,7 @@ export default function DietitianMain() {
     <>
       <Flex flexWrap="wrap" width="100%" mr="2">
         <Flex flex="1" max-height="100%" flexDir="column">
-          <Calendar
-            onClickDay={(value) => {
-              setSelectedDate(value);
-            }}
-          />
+          
         </Flex>
         <Flex flex="1" height="100%" flexDirection="column" ml="2">
           <Center mb="5">
