@@ -5,6 +5,7 @@ import UserBooking from "./components/UI/UserUI/functionsUI/User_Booking";
 import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
 import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 import UserRecord from "./components/UI/UserUI/functionsUI/User_Record";
+import UserPost from "./components/UI/UserUI/functionsUI/User_Post";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
         <Route path="booking" element={<UserBooking />} />
         <Route path="history" element={<UserRecord />} />
         <Route path="reports" element={<p>Evaluation report</p>} />
-        <Route path="posts" element={<p>POST</p>} />
+        <Route path="posts" element={<UserPost />} />
         <Route path="account" element={<p>account</p>} />
       </Route>
       <Route path="dietitian" element={<DashBoardDietitian />}>

@@ -9,7 +9,7 @@ export default function DashBoard() {
     <>
       <Banner />
       <Container
-        minW="100%"
+        minW={"90%"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
@@ -17,8 +17,7 @@ export default function DashBoard() {
         <UserNav />
         <Flex
           direction="row"
-          height="85vh"
-          maxW="90vw"
+          height="80vh"
           flex="8"
           p="2"
           borderRadius="2xl"
