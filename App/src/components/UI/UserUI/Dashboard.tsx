@@ -10,7 +10,6 @@ export default function DashBoard() {
       <Banner />
       <Container
         minW="100%"
-        p="0"
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
