@@ -1,4 +1,4 @@
-import { Box, Divider, Heading, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
 
 const fakePost = [
   {
@@ -156,21 +156,29 @@ export default function UserPost() {
   }
 
   return (
-    <>
-      <Heading w={"100%"} textAlign={"center"}>
-        健康快訊
-        <Divider my={5} />
-      </Heading>
-
-      {/* Post Area */}
-      {fakePost.map((post) => (
-        <Posts
-          title={post.title}
-          author={post.userId}
-          time={new Date().toLocaleDateString()}
-          content={post.body}
-        />
-      ))}
-    </>
+    <Flex
+      flexDir={"column"}
+      w={"100%"}
+      maxH={"90%"}
+      bg={"gray.500"}
+      p={10}
+      my={2}
+      overflow={"hidden"}
+      borderRadius={"3xl"}
+      whiteSpace={"nowrap"}
+    >
+      <Flex flexDir={"column"} w={"99%"} overflow={"auto"}>
+        <Divider my={4} />
+        {/* Post Area */}
+        {fakePost.map((post) => (
+          <Posts
+            title={post.title}
+            author={post.userId}
+            time={new Date().toLocaleDateString()}
+            content={post.body}
+          />
+        ))}
+      </Flex>
+    </Flex>
   );
 }

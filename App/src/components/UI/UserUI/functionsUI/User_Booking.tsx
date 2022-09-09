@@ -5,24 +5,37 @@ import {
   Heading,
   ListItem,
   OrderedList,
+  Image,
+  useMediaQuery,
+  Text,
+  Select,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 
+const fakeData: Array<any> = [
+  { time: "09:00", booked: true },
+  { time: "09:00", booked: true },
+  { time: "09:00", booked: true },
+  { time: "09:00", booked: true },
+  { time: "09:00", booked: true },
+  { time: "10:00", booked: false },
+  { time: "11:00", booked: false },
+  { time: "11:00", booked: false },
+  { time: "11:00", booked: false },
+  { time: "11:00", booked: false },
+];
+
 export default function UserBooking() {
-  const fakeData: Array<any> = [
-    { time: "09:00", booked: true },
-    { time: "09:00", booked: true },
-    { time: "09:00", booked: true },
-    { time: "09:00", booked: true },
-    { time: "09:00", booked: true },
-    { time: "10:00", booked: false },
-    { time: "11:00", booked: false },
-    { time: "11:00", booked: false },
-    { time: "11:00", booked: false },
-    { time: "11:00", booked: false },
-  ];
+  var date = new Date();
+  date.setDate(date.getDate() + 1);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [dietitian, setDietitian] = useState<string>("Gigi Wong");
+  useEffect(() => {
+    console.log("current:", dietitian, "date:", selectedDate);
+  }, [dietitian, selectedDate]);
 
   const css = `
 .my-selected:not([disabled]) { 
@@ -40,9 +53,6 @@ export default function UserBooking() {
 }
 `;
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-    new Date()
-  );
   return (
     <>
       <style>{css}</style>
@@ -53,7 +63,7 @@ export default function UserBooking() {
         borderRadius="2xl"
         flexWrap={"wrap"}
         gap={5}
-        maxH={"700px"}
+        maxH={"800px"}
       >
         <Flex
           flex={1}
@@ -64,10 +74,36 @@ export default function UserBooking() {
           w={"100%"}
         >
           <Heading p={3} textAlign={"center"} mb={1}>
-            📅請選擇預約日期
+            📅請選擇預約營養師及日期
           </Heading>
-          <Divider mb={-2} />
-          <Flex justifyContent={"center"} mb={-7}>
+          <Divider />
+          <Flex
+            justifyContent={"center"}
+            alignItems={"center"}
+            flexWrap={"wrap"}
+          >
+            <Flex gap={2} flexDir={"column"} justifyContent={"space-between"}>
+              <Text textAlign={"center"} fontSize={"lg"}>
+                營養師
+              </Text>
+              <Image
+                boxSize={isSmallerThan600 ? "40" : "200px"}
+                objectFit={"scale-down"}
+                src="https://4.bp.blogspot.com/-yFu3rScjhnA/VPQT-JtUE0I/AAAAAAAAsFE/FxQfBOPTMKU/s450/medical_eiyoushi.png"
+              />
+              <Select
+                variant={"filled"}
+                placeholder="選擇營養師"
+                onChange={(e) => {
+                  setDietitian(e.target.value);
+                }}
+              >
+                <option value="Gigi Wong">Gigi Wong</option>
+                <option value="Bibi Kong">Bibi Kong</option>
+                <option value="Kiki Song">Kiki Song</option>
+              </Select>
+            </Flex>
+
             <DayPicker
               mode="single"
               selected={selectedDate}
@@ -79,9 +115,15 @@ export default function UserBooking() {
               }}
               required={true}
               fixedWeeks
+              disabled={[
+                {
+                  from: new Date(0, 1, 1),
+                  to: new Date(),
+                },
+              ]}
             />
           </Flex>
-          <Flex alignItems={"center"} flexDir={"column"}>
+          <Flex alignItems={"center"} flexDir={"column"} mt={-5}>
             <Heading p={3} textAlign={"center"} mb={1}>
               ⚠️注意事項
             </Heading>
@@ -102,7 +144,6 @@ export default function UserBooking() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          maxH={"700px"}
         >
           <Heading p={3} textAlign={"center"}>
             {selectedDate?.toLocaleDateString().split("/")[2]}年

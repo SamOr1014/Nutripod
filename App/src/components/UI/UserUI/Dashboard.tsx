@@ -1,4 +1,4 @@
-import { Center, Container } from "@chakra-ui/react";
+import { Center, Container, Flex } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";
@@ -15,16 +15,19 @@ export default function DashBoard() {
         justifyContent={"center"}
       >
         <UserNav />
-        <Center
-          height="84vh"
+        <Flex
+          height="88vh"
           flex="8"
           p="2"
           borderRadius="2xl"
-          flexWrap={"wrap"}
           overflow={"auto"}
+          flexWrap={"wrap"}
+          maxW={"1500px"}
+          maxH={"850px"}
+          justifyContent={"center"}
         >
           <Outlet />
-        </Center>
+        </Flex>
       </Container>
     </>
   );
