@@ -20,10 +20,13 @@ import {
   StatNumber,
   Text,
   useMediaQuery,
+  Image,
 } from "@chakra-ui/react";
 import { MdToday } from "react-icons/md";
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
+import { AddIcon } from "@chakra-ui/icons";
+
 import "react-day-picker/dist/style.css";
 const css = `
 .my-selected:not([disabled]) { 
@@ -104,24 +107,38 @@ export default function UserMain() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          minW={isLargerThan1700 ? "47%" : isSmallerThan600 ? "100%" : "570px"}
-          minH={isLargerThan1700 ? "400px" : "150px"}
+          minW={isSmallerThan600 ? "100%" : "47%"}
+          minH={isLargerThan1700 ? "300px" : "250px"}
         >
           <Heading textAlign={"center"}>攝取統計📊</Heading>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
             <StatGroup flex={"1 1 0%"}>
               <Stat textAlign={"center"}>
-                <StatLabel>今日攝取量📈</StatLabel>
+                <StatLabel justifyContent={"center"} display={"flex"}>
+                  <Image
+                    boxSize={"100px"}
+                    objectFit={"scale-down"}
+                    src="https://3.bp.blogspot.com/-DVesu5jkbJY/V-SzHXVJrVI/AAAAAAAA-D8/S2GvFrXsOvMT7IwOjZHsa2VM83Q9LZSVACLcB/s400/syokuji_girl.png"
+                  />
+                </StatLabel>
+                <StatLabel>本日攝取量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
-                  比昨日
+                  比前一日
                   <StatArrow type="increase" />
                   23.36%
                 </StatHelpText>
               </Stat>
 
               <Stat textAlign={"center"}>
+                <StatLabel justifyContent={"center"} display={"flex"}>
+                  <Image
+                    boxSize={"100px"}
+                    objectFit={"scale-down"}
+                    src="https://4.bp.blogspot.com/-M4s-kw3pnK4/VVGU_vRA5ZI/AAAAAAAAtgc/gurhjQK24X0/s400/diet_after_woman.png"
+                  />
+                </StatLabel>
                 <StatLabel>本月平均攝取量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
@@ -139,27 +156,54 @@ export default function UserMain() {
           borderRadius={"3xl"}
           bg={"gray.500"}
           minW={isLargerThan1700 ? "47%" : isSmallerThan600 ? "100%" : "570px"}
-          minH={isLargerThan1700 ? "400px" : "150px"}
+          minH={isLargerThan1700 ? "300px" : "250px"}
         >
-          <Heading textAlign={"center"}>運動統計🏃🏻‍♀️</Heading>
+          <Flex>
+            <Heading
+              flex={1}
+              textAlign={"center"}
+              ml={isSmallerThan600 ? "40px" : "81px"}
+            >
+              運動統計🏃🏻‍♀️
+            </Heading>
+            <Button gap={1}>
+              <AddIcon />
+              <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+            </Button>
+          </Flex>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
             <StatGroup flex={"1 1 0%"}>
               <Stat textAlign={"center"}>
-                <StatLabel>今日運動消耗量📈</StatLabel>
+                <StatLabel justifyContent={"center"} display={"flex"}>
+                  <Image
+                    boxSize={"100px"}
+                    objectFit={"scale-down"}
+                    src="https://2.bp.blogspot.com/-HNXSoXEM1h4/XLAdkaFXsXI/AAAAAAABSZc/sg3hQKBIFC8HsYpjS2mVnCa9hyFlSyBkACLcBGAs/s450/undou_back_press_man.png"
+                  />
+                </StatLabel>
+                <StatLabel>
+                  <Text>本日運動消耗量📈</Text>
+                </StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
-                  比昨日
+                  比前一日
                   <StatArrow type="increase" />
                   23.36%
                 </StatHelpText>
               </Stat>
-
               <Stat textAlign={"center"}>
+                <StatLabel justifyContent={"center"} display={"flex"}>
+                  <Image
+                    boxSize={"100px"}
+                    objectFit={"scale-down"}
+                    src="https://4.bp.blogspot.com/-MeaPmMfyFEU/ViipeRRGWxI/AAAAAAAAz5Q/ZJ78UMjZfuQ/s450/shibou_nensyou.png"
+                  />
+                </StatLabel>
                 <StatLabel>平均每日運動消耗量📈</StatLabel>
                 <StatNumber>345,670kcal</StatNumber>
                 <StatHelpText>
-                  比今日
+                  比本日
                   <StatArrow type="increase" />
                   23.36%
                 </StatHelpText>
@@ -168,7 +212,7 @@ export default function UserMain() {
           </Center>
         </Flex>
       </Flex>
-      <Divider mb={2} />
+      <Divider my={2} />
       <Flex
         flexWrap={"wrap"}
         w={"100%"}
@@ -180,8 +224,8 @@ export default function UserMain() {
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
-          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
+          w={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
+          h={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
@@ -190,13 +234,17 @@ export default function UserMain() {
         >
           <Heading>早餐</Heading>
           <Text fontSize={"xl"}>500kcal</Text>
+          <Button my={2} gap={1}>
+            <AddIcon />
+            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          </Button>
         </Box>
         <Box
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
-          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
+          w={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
+          h={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
           justifyContent={"center"}
           _hover={{
             boxShadow: "0 0 5px 5px",
@@ -206,14 +254,18 @@ export default function UserMain() {
         >
           <Heading>午餐</Heading>
           <Text fontSize={"xl"}>500kcal</Text>
+          <Button my={2} gap={1}>
+            <AddIcon />
+            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          </Button>
         </Box>
         <Box
           rounded={"3xl"}
           display={"flex"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
-          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
+          w={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
+          h={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
@@ -222,14 +274,18 @@ export default function UserMain() {
         >
           <Heading>晚餐</Heading>
           <Text fontSize={"xl"}>500kcal</Text>
+          <Button my={2} gap={1}>
+            <AddIcon />
+            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          </Button>
         </Box>
         <Box
           display={"flex"}
           rounded={"3xl"}
           alignItems={"center"}
           justifyContent={"center"}
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "sm" : "2xs"}
-          h={isSmallerThan600 ? "2xs" : isLargerThan1700 ? "sm" : "2xs"}
+          w={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
+          h={isSmallerThan600 ? "170px" : isLargerThan1700 ? "xs" : "2xs"}
           _hover={{
             boxShadow: "0 0 5px 5px",
           }}
@@ -238,6 +294,10 @@ export default function UserMain() {
         >
           <Heading>小食</Heading>
           <Text fontSize={"xl"}>500kcal</Text>
+          <Button my={2} gap={1}>
+            <AddIcon />
+            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          </Button>
         </Box>
       </Flex>
     </>

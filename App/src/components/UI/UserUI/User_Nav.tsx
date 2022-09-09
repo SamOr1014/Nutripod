@@ -5,7 +5,7 @@ export default function UserNav() {
   function CollapsedNav() {
     return (
       <>
-        <Hide below="md">
+        <Hide below="1200px">
           <VStack
             direction="column"
             width="120px"
