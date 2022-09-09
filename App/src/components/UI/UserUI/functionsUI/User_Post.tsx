@@ -1,4 +1,11 @@
-import { Box, Divider, Flex, Heading, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Divider,
+  Flex,
+  Heading,
+  Text,
+  useMediaQuery,
+} from "@chakra-ui/react";
 
 const fakePost = [
   {
@@ -127,26 +134,28 @@ interface PostTemplate {
 }
 
 export default function UserPost() {
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   function Posts(props: PostTemplate) {
     return (
       <Box w={"100%"} h={"150px"}>
-        <Heading fontSize={"md"} overflow={"hidden"}>
+        <Heading fontSize={isSmallerThan600 ? "sm" : "md"} overflow={"hidden"}>
           {props.author}
         </Heading>
         <Heading
-          fontSize={"2xl"}
+          fontSize={isSmallerThan600 ? "lg" : "2xl"}
           overflow={"hidden"}
           textOverflow={"ellipsis"}
           whiteSpace={"nowrap"}
         >
           {props.title}
         </Heading>
-        <Text>{props.time}</Text>
+        <Text fontSize={isSmallerThan600 ? "xs" : "sm"}>{props.time}</Text>
         <Text
           overflow={"hidden"}
           h={"30px"}
           textOverflow={"ellipsis"}
           whiteSpace={"nowrap"}
+          fontSize={isSmallerThan600 ? "sm" : "md"}
         >
           {props.content}
         </Text>
@@ -159,26 +168,20 @@ export default function UserPost() {
     <Flex
       flexDir={"column"}
       w={"100%"}
-      maxH={"90%"}
-      bg={"gray.500"}
-      p={10}
+      p={isSmallerThan600 ? 0 : 2}
       my={2}
-      overflow={"hidden"}
-      borderRadius={"3xl"}
-      whiteSpace={"nowrap"}
+      overflow={"auto"}
     >
-      <Flex flexDir={"column"} w={"99%"} overflow={"auto"}>
-        <Divider my={4} />
-        {/* Post Area */}
-        {fakePost.map((post) => (
-          <Posts
-            title={post.title}
-            author={post.userId}
-            time={new Date().toLocaleDateString()}
-            content={post.body}
-          />
-        ))}
-      </Flex>
+      <Divider my={4} />
+      {/* Post Area */}
+      {fakePost.map((post) => (
+        <Posts
+          title={post.title}
+          author={post.userId}
+          time={new Date().toLocaleDateString()}
+          content={post.body}
+        />
+      ))}
     </Flex>
   );
 }

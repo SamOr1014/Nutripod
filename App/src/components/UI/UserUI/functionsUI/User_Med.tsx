@@ -30,10 +30,11 @@ export default function UserMed() {
       maxH={"800px"}
       borderRadius={"3xl"}
       bg={"gray.500"}
-      p={5}
+      p={isSmallerThan600 ? 0 : 3}
       my={2}
-      gap={5}
+      gap={10}
       justifyContent={"center"}
+      flexWrap={"wrap"}
     >
       <Flex flexDir={"column"} w={isSmallerThan600 ? "100%" : "45%"}>
         <Heading
