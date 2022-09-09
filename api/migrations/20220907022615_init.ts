@@ -123,7 +123,6 @@ export async function up(knex: Knex): Promise<void> {
 
     await knex.schema.createTable(userStatsTableName, (table)=> {
         table.increments()
-        table.integer('height').notNullable()
         table.integer('weight').notNullable()
         table.date('date').notNullable()
         table.timestamps(false, true)
@@ -249,6 +248,5 @@ export async function down(knex: Knex): Promise<void> {
     await knex.schema.dropTableIfExists(educationName)
     await knex.schema.dropTableIfExists(professionTableName)
     await knex.schema.dropTableIfExists(genderTableName)
-
 }
 
