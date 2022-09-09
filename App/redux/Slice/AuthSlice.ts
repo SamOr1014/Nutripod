@@ -32,8 +32,21 @@ export const authSlice = createSlice({
                     name:action.payload.name,
                     isStuff:action.payload.isStuff
                 }]
-    }
-}}})
+    }}},
+    // extraReducers:(builder)=>{
+    //     builder
+    //     .addCase(loginThunk.pending,(state)=>{
+    //         state.loading = true;
+    //     })
+    //     .addCase(loginThunk.fulfilled,(state,action)=>{
+    //         state.loading = false;
+
+    //     })
+    //     .addCase(loginThunk.rejected,(state,action)=>{
+    //         state.loading = false;
+    //     })
+    // }
+})
 
 
 export const {login} = authSlice.actions
