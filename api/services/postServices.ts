@@ -4,8 +4,8 @@ export class PostServices {
     constructor(private knex: Knex) {}
 
     async get() {
-        // please change later
-        await this.knex('posts').select('*')
+        const result = await this.knex('posts').select('*')
+        return result
 
     }
 

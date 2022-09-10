@@ -8,52 +8,20 @@ import {
   extendTheme,
   Box,
   Container,
-  Switch,
   Button,
   ButtonGroup
 } from "@chakra-ui/react"
+import {Formik} from "formik"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, IRootState } from "../../redux/store"
 import {login} from "../../redux/Slice/AuthSlice"
 
-// const activeLabelStyles = {
-//   transform: "scale(0.85) translateY(-24px)"
-// };
 
-// export const theme = extendTheme({
-//   components: {
-//     Form: {
-//       variants: {
-//         floating: {
-//           container: {
-//             _focusWithin: {
-//               label: {
-//                 ...activeLabelStyles
-//               }
-//             },
-//             "input:not(:placeholder-shown) + label, .chakra-select__wrapper + label, textarea:not(:placeholder-shown) ~ label": {
-//               ...activeLabelStyles
-//             },
-//             label: {
-//               top: 0,
-//               left: 0,
-//               zIndex: 2,
-//               position: "absolute",
-//               backgroundColor: "white",
-//               pointerEvents: "none",
-//               mx: 3,
-//               px: 1,
-//               my: 2,
-//               transformOrigin: "left top"
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-// });
-
+type user = {
+  userName: string
+  password:string|number
+}
 export function Login() {
 
   const [username, setUsername] = useState("")
@@ -61,11 +29,16 @@ export function Login() {
   // const dispatch = useDispatch<AppDispatch>();
   // const loadingStatus = useSelector((state: IRootState) => state.user.loading);
 
-
+  let userData:user = {
+    userName:username,
+    password:userPassword
+  }
+  
   const LoginSubmit = async () => {
-    console.log(`userName::${username}`)
-    console.log(`Password::${userPassword}`)
-    console.log('client submit submit')
+      console.log(`userName::${username}`)
+      console.log(`Password::${userPassword}`)
+      console.log('client submit submit')
+
   }
 
   // useEffect(() => {

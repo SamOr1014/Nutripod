@@ -4,8 +4,8 @@ export class DietRecordServices {
     constructor(private knex: Knex) {}
 
     async get() {
-        // please change later
-        await this.knex('users_diet').select('*')
+        const result = await this.knex('users_diets').select('*')
+        return result
 
     }
 
