@@ -1,5 +1,5 @@
-import express from "express"
-import { logger } from './tools/winston'
+import express from 'express'
+import { logger } from './configs/winston'
 import formidable from 'formidable'
 import path from 'path'
 import fs from 'fs'
@@ -25,10 +25,11 @@ export const postController = new PostController(postServices)
 const bookingServices = new BookingServices(knex)
 export const bookingController = new BookingController(bookingServices)
 const medicalRecordServices = new MedicalRecordServices(knex)
-export const medicalRecordController = new MedicalRecordController(medicalRecordServices)
+export const medicalRecordController = new MedicalRecordController(
+	medicalRecordServices
+)
 const dietRecordServices = new DietRecordServices(knex)
 export const dietRecordController = new DietRecordController(dietRecordServices)
-
 
 
 
@@ -55,7 +56,7 @@ app.use(express.urlencoded({ extended: true }))
 
 
 import { routes } from "./routes/routes"
-app.use("/", routes)
+app.use('/', routes)
 
 app.get("/testing", (req, res) => {
 	res.send("hello, world")})

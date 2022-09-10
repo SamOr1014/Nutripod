@@ -6,11 +6,8 @@ import {
   Image,
   Input,
   Table,
-  TableCaption,
-  TableContainer,
   Tbody,
   Td,
-  Tfoot,
   Th,
   Thead,
   Tr,
@@ -23,7 +20,7 @@ export default function UserBPBGRecord() {
   return (
     <>
       <Flex
-        gap={2}
+        gap={1}
         flexWrap={"wrap"}
         justifyContent={"space-between"}
         w="100%"
@@ -31,7 +28,7 @@ export default function UserBPBGRecord() {
       >
         {/* Weight part */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}
@@ -91,7 +88,7 @@ export default function UserBPBGRecord() {
         </Flex>
         {/* BP */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}
@@ -159,7 +156,7 @@ export default function UserBPBGRecord() {
         </Flex>
         {/* BG */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}

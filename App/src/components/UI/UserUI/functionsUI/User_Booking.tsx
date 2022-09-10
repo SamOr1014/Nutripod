@@ -28,14 +28,11 @@ const fakeData: Array<any> = [
 ];
 
 export default function UserBooking() {
-  var date = new Date();
+  let date = new Date();
   date.setDate(date.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [dietitian, setDietitian] = useState<string>("Gigi Wong");
-  useEffect(() => {
-    console.log("current:", dietitian, "date:", selectedDate);
-  }, [dietitian, selectedDate]);
 
   const css = `
 .my-selected:not([disabled]) { 
