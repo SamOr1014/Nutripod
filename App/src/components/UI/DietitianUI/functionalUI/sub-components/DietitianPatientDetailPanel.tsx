@@ -137,6 +137,7 @@ export default function DietitianPatientDetailPanel(
           w={isSmallerThan600 ? "100%" : "30%"}
           bg={"gray.500"}
           borderRadius={"3xl"}
+          alignItems={"center"}
         >
           <Heading
             textAlign={"center"}
@@ -154,7 +155,7 @@ export default function DietitianPatientDetailPanel(
             />
             病人已預約診期
           </Heading>
-          <Flex w={"100%"} maxH={"80%"} overflow={"auto"}>
+          <Flex w={"90%"} maxH={"80%"} overflow={"auto"}>
             <Table size={isSmallerThan600 ? "sm" : "md"}>
               <Thead position="sticky" top={0} bg={"gray.300"} zIndex={100}>
                 <Tr>
@@ -179,6 +180,7 @@ export default function DietitianPatientDetailPanel(
           w={isSmallerThan600 ? "100%" : "30%"}
           bg={"gray.500"}
           borderRadius={"3xl"}
+          alignItems={"center"}
         >
           <Heading
             textAlign={"center"}
@@ -196,7 +198,7 @@ export default function DietitianPatientDetailPanel(
             />
             病人病歷記錄
           </Heading>
-          <Box w={"100%"} maxH={"80%"} overflow={"auto"}>
+          <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
             <Accordion allowToggle>
               <AccordionItem>
                 <h2>
