@@ -1,5 +1,6 @@
 import {
   Box,
+  CloseButton,
   Divider,
   Flex,
   Heading,
@@ -127,6 +128,7 @@ const fakePost = [
 ];
 
 interface PostTemplate {
+  id: number;
   title: string;
   author: string | number;
   time: string;
@@ -137,9 +139,19 @@ export default function UserPost() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   function Posts(props: PostTemplate) {
     return (
-      <Box w={"100%"} h={"150px"}>
-        <Heading fontSize={isSmallerThan600 ? "sm" : "md"} overflow={"hidden"}>
-          {props.author}
+      <Box w={"100%"} h={"150px"} display={"flex"} flexDir={"column"}>
+        <Heading
+          fontSize={isSmallerThan600 ? "sm" : "md"}
+          overflow={"hidden"}
+          display={"flex"}
+        >
+          <Text flex={1}>{props.author}</Text>
+          {/* authState==="dietitian"?
+          <CloseButton
+            size="sm"
+            onClick={() => console.log("delete psot", props.id)}
+          />
+          :"" */}
         </Heading>
         <Heading
           fontSize={isSmallerThan600 ? "lg" : "2xl"}
@@ -177,6 +189,7 @@ export default function UserPost() {
       {fakePost.map((post) => (
         <Posts
           title={post.title}
+          id={post.id}
           author={post.userId}
           time={new Date().toLocaleDateString()}
           content={post.body}

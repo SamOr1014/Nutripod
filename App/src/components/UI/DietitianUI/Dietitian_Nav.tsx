@@ -4,13 +4,13 @@ export default function DietitianNav() {
   function CollapsedNav() {
     return (
       <>
-        <Hide below="md">
+        <Hide below="1200px">
           <VStack
             direction="column"
             width="120px"
             maxH="100%"
             spacing="5"
-            p="2"
+            p="10"
           >
             <DietitianNavLinks />
           </VStack>

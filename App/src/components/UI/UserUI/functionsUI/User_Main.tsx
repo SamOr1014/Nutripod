@@ -107,7 +107,7 @@ export default function UserMain() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          minW={isSmallerThan600 ? "100%" : "47%"}
+          minW={isLargerThan1700 ? "48%" : isSmallerThan600 ? "100%" : "46%"}
           minH={isLargerThan1700 ? "300px" : "250px"}
         >
           <Heading textAlign={"center"}>攝取統計📊</Heading>
@@ -155,7 +155,7 @@ export default function UserMain() {
           p={4}
           borderRadius={"3xl"}
           bg={"gray.500"}
-          minW={isLargerThan1700 ? "47%" : isSmallerThan600 ? "100%" : "570px"}
+          minW={isLargerThan1700 ? "48%" : isSmallerThan600 ? "100%" : "46%"}
           minH={isLargerThan1700 ? "300px" : "250px"}
         >
           <Flex>

@@ -1,31 +1,31 @@
-import { Container, Flex } from "@chakra-ui/react";
+import { Container, Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";
 import DietitianNav from "./Dietitian_Nav";
 
 export default function DashBoardDietitian() {
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <>
       <Banner />
       <Container
-        minW="100%"
-        p="0"
+        minW={"100%"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
       >
         <DietitianNav />
         <Flex
-          direction="row"
-          height="90vh"
-          maxW="90vw"
+          height="88vh"
           flex="8"
           p="2"
           borderRadius="2xl"
-          boxShadow="0px 0px 5px 3px"
+          overflow={"auto"}
           flexWrap={"wrap"}
-          overflow={"scroll"}
+          maxW={"1500px"}
+          maxH={isSmallerThan600 ? "100%" : "850px"}
+          justifyContent={"center"}
         >
           <Outlet />
         </Flex>

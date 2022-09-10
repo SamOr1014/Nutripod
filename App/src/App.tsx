@@ -5,11 +5,13 @@ import UserBooking from "./components/UI/UserUI/functionsUI/User_Booking";
 
 import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 
-import UserPost from "./components/UI/UserUI/functionsUI/User_Post";
+import UserPost from "./components/Post";
 import { Login } from "./components/Login";
 import NotFound from "./components/404";
 import UserMed from "./components/UI/UserUI/functionsUI/User_Med";
 import UserBPBGRecord from "./components/UI/UserUI/functionsUI/User_Record";
+import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
+import DietitianMain from "./components/UI/DietitianUI/Dietitian_Main";
 
 function App() {
   return (
@@ -23,11 +25,11 @@ function App() {
         <Route path="posts" element={<UserPost />} />
         <Route path="account" element={<p>account</p>} />
       </Route>
-      <Route path="dietitian" element={<DashBoard />}>
-        <Route index element={<p>Diet home</p>} />
+      <Route path="dietitian" element={<DashBoardDietitian />}>
+        <Route index element={<DietitianMain />} />
         <Route path="patients" element={<p>Diet bookings</p>} />
         <Route path="bookings" element={<p>Diet patients</p>} />
-        <Route path="posts" element={<p>Diet Post</p>} />
+        <Route path="posts" element={<UserPost />} />
         <Route path="account" element={<p>Diet ac</p>} />
       </Route>
       <Route path="login" element={<Login />} />

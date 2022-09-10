@@ -24,7 +24,7 @@ export default function DashBoard() {
           overflow={"auto"}
           flexWrap={"wrap"}
           maxW={"1500px"}
-          maxH={"850px"}
+          maxH={isSmallerThan600 ? "100%" : "850px"}
           justifyContent={"center"}
         >
           <Outlet />
