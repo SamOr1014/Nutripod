@@ -1,87 +1,113 @@
 import {
-    ChakraProvider,
-    FormControl,
-    FormErrorMessage,
-    FormHelperText,
-    FormLabel,
-    Input,
-    extendTheme,
-    Box,
-    Container
-  } from "@chakra-ui/react";
-
-const activeLabelStyles = {
-    transform: "scale(0.85) translateY(-24px)"
-  };
-
-export const theme = extendTheme({
-    components: {
-      Form: {
-        variants: {
-          floating: {
-            container: {
-              _focusWithin: {
-                label: {
-                  ...activeLabelStyles
-                }
-              },
-              "input:not(:placeholder-shown) + label, .chakra-select__wrapper + label, textarea:not(:placeholder-shown) ~ label": {
-                ...activeLabelStyles
-              },
-              label: {
-                top: 0,
-                left: 0,
-                zIndex: 2,
-                position: "absolute",
-                backgroundColor: "white",
-                pointerEvents: "none",
-                mx: 3,
-                px: 1,
-                my: 2,
-                transformOrigin: "left top"
-              }
-            }
-          }
-        }
-      }
-    }
-  });
+  ChakraProvider,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+  extendTheme,
+  Box,
+  Container,
+  Switch,
+  Button,
+  ButtonGroup,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../../redux/store";
+import { login } from "../../redux/Slice/AuthSlice";
 
 export function Login() {
+  const [username, setUsername] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  // const dispatch = useDispatch<AppDispatch>();
+  // const loadingStatus = useSelector((state: IRootState) => state.user.loading);
 
-    // const loginFunction = async () => {
-    //     console.log("testing")
-    // } 
+  const LoginSubmit = async () => {
+    console.log(`userName::${username}`);
+    console.log(`Password::${userPassword}`);
+    console.log("client submit submit");
+  };
 
-    // return (
-    //     <FormControl onSubmit={loginFunction}>
-    //         <FormLabel>username</FormLabel>
-    //         <Input type='email' />
-    //         <FormHelperText>We'll never share your email.</FormHelperText>
-    //         <FormLabel>password</FormLabel>
-    //         <Input type='password' />
-    //         <FormHelperText>Please enter your password</FormHelperText>
-    //     </FormControl>
-    // )
+  // useEffect(() => {
+  //   setUsername(() => username = "")
+  //   setUserPassword(() => username = "")
+  // }, [isAdmin])
 
-    return (
-      <Container>
-        <ChakraProvider theme={theme}>
-        <Box p={8}>
-        <FormLabel>First name</FormLabel>
-          <FormControl variant="floating" id="first-name" isRequired isInvalid>
-        
-            <Input placeholder="username" />
-            {/* It is important that the Label comes after the Control due to css selectors */}
-            <FormLabel>First name</FormLabel>
-            <FormHelperText>Keep it very short and sweet!</FormHelperText>
-            <FormErrorMessage>Your First name is invalid</FormErrorMessage>
-          </FormControl>
+  const userNameError = username === "";
+  const passwordError = userPassword === "";
+
+  return (
+    <Container maxW="50%" bg="blue.600" mt={50}>
+      <Container maxW="100%">
+        <FormLabel fontSize="80px" fontWeight="semibold" textAlign="center">
+          NutriPOD{" "}
+        </FormLabel>
+      </Container>
+
+      <ChakraProvider>
+        <Box p={100}>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              {
+                LoginSubmit();
+              }
+            }}
+          >
+            <FormLabel>USERNAME</FormLabel>
+            <FormControl
+              variant="floating"
+              id="userName"
+              isRequired
+              isInvalid={userNameError}
+            >
+              <Input
+                placeholder="username"
+                name="username"
+                type="text"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              {!userNameError ? (
+                <FormHelperText>
+                  Please make sure your username is correct
+                </FormHelperText>
+              ) : (
+                <FormErrorMessage>Your username is missing</FormErrorMessage>
+              )}
+            </FormControl>
+
+            <FormLabel>PASSWORD</FormLabel>
+            <FormControl
+              variant="floating"
+              id="password"
+              isRequired
+              isInvalid={passwordError}
+            >
+              <Input
+                placeholder="password"
+                onChange={(e) => setUserPassword(e.target.value)}
+              />
+              {!passwordError ? (
+                <FormHelperText>
+                  Please make sure your username is correct
+                </FormHelperText>
+              ) : (
+                <FormErrorMessage>Your username is missing</FormErrorMessage>
+              )}
+            </FormControl>
+
+            <ButtonGroup gap="10" mt="5">
+              <Button colorScheme="blue" type="submit">
+                Submit
+              </Button>
+              <Button colorScheme="blue" type="reset">
+                Reset
+              </Button>
+            </ButtonGroup>
+          </form>
         </Box>
       </ChakraProvider>
-      </Container>
-    )
+    </Container>
+  );
 }
-
-
-  

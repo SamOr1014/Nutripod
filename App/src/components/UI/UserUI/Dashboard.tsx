@@ -1,30 +1,35 @@
-import { Center, Container, Flex } from "@chakra-ui/react";
+import { Center, Container, Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";
 import UserNav from "./User_Nav";
+import UserNavLinks from "./User_nav_links";
 
 export default function DashBoard() {
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <>
-      <Banner />
+      <Banner element={<UserNavLinks />} />
       <Container
-        minW={"90vw"}
+        minW={"100%"}
         display="flex"
         flexDirection="row"
         justifyContent={"center"}
       >
         <UserNav />
-        <Center
-          height="80vh"
+        <Flex
+          height="88vh"
           flex="8"
           p="2"
           borderRadius="2xl"
-          flexWrap={"wrap"}
           overflow={"auto"}
+          flexWrap={"wrap"}
+          maxW={"1500px"}
+          maxH={isSmallerThan600 ? "100%" : "850px"}
+          justifyContent={"center"}
         >
           <Outlet />
-        </Center>
+        </Flex>
       </Container>
     </>
   );
