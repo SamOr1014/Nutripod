@@ -6,6 +6,7 @@ import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian"
 import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 import UserRecord from "./components/UI/UserUI/functionsUI/User_Record";
 import UserPost from "./components/UI/UserUI/functionsUI/User_Post";
+import UserAccount from "./components/UI/UserUI/functionsUI/User_Account";
 import { Login } from "./components/Login";
 import NotFound from "./components/404";
 
@@ -19,7 +20,7 @@ function App() {
         <Route path="history" element={<UserRecord />} />
         <Route path="reports" element={<p>Evaluation report</p>} />
         <Route path="posts" element={<UserPost />} />
-        <Route path="account" element={<p>account</p>} />
+        <Route path="account" element={<UserAccount/>} />
       </Route>
       <Route path="dietitian" element={<DashBoardDietitian />}>
         <Route index element={<p>Diet home</p>} />
