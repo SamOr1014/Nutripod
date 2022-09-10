@@ -3,7 +3,7 @@ import { logger } from './configs/winston'
 import formidable from 'formidable'
 import path from 'path'
 import fs from 'fs'
-import {knex} from "./tools/knexConfig"
+import {knex} from "./configs/knexConfig"
 
 const app = express()
 
