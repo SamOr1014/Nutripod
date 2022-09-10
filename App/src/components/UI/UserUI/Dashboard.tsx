@@ -1,4 +1,4 @@
-import { Center, Container, Flex, useMediaQuery } from "@chakra-ui/react";
+import { Container, Flex, useMediaQuery } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";

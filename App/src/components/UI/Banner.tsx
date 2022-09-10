@@ -22,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
-import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner(props: { element: any }) {
   const { toggleColorMode } = useColorMode();

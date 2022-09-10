@@ -1,6 +1,5 @@
 import {
   Box,
-  CloseButton,
   Divider,
   Flex,
   Heading,

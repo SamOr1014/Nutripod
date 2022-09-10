@@ -6,13 +6,10 @@ import {
   AccordionPanel,
   Box,
   Button,
-  CloseButton,
-  Divider,
   Flex,
   Heading,
   Image,
   Table,
-  TableContainer,
   Tbody,
   Td,
   Th,
@@ -23,7 +20,6 @@ import {
 
 export default function UserMed() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
-  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   return (
     <Flex
       minW={"100%"}
