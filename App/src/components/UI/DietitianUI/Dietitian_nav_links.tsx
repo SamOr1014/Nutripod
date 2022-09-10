@@ -31,21 +31,7 @@ export default function DietitianNavLinks(props: OptionalFunction) {
           </Text>
         </Button>
       </Link>
-      <Link to="/dietitian/bookings" as={ReactLink}>
-        <Button
-          w={isLargerThan1700 ? 24 : 16}
-          h={isLargerThan1700 ? 24 : 16}
-          rounded="full"
-          flexDir="column"
-          p={2}
-          onClick={props.closeDrawer}
-        >
-          <BsTable size={isLargerThan1700 ? "40px" : "30px"} />
-          <Text mt={1} fontSize={isLargerThan1700 ? "2xl" : "md"}>
-            預約
-          </Text>
-        </Button>
-      </Link>
+
       <Link to="/dietitian/patients" as={ReactLink}>
         <Button
           w={isLargerThan1700 ? 24 : 16}

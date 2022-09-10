@@ -3,12 +3,13 @@ import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";
 import UserNav from "./User_Nav";
+import UserNavLinks from "./User_nav_links";
 
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <>
-      <Banner />
+      <Banner element={<UserNavLinks />} />
       <Container
         minW={"100%"}
         display="flex"

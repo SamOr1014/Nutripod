@@ -17,27 +17,18 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Stack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
-
-const fakeData: Array<any> = [
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "10:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
-];
+import { PatientDetailOfTodayBooking } from "../../../../utility/models";
 
 export default function DietitianMain() {
   let date = new Date();
-  date.setDate(date.getDate() + 1);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
+  date.setDate(date.getDate() - 1);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
 
   const css = `
@@ -56,11 +47,111 @@ export default function DietitianMain() {
 }
 `;
 
+  function BookingDetailToday(patient: PatientDetailOfTodayBooking) {
+    return (
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              {patient.time}
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel
+          pb={4}
+          display={"flex"}
+          justifyContent={"center"}
+          flexDir={"column"}
+          alignSelf={"center"}
+        >
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              用家ID:
+            </Text>
+            <Text>{patient.id}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              名:
+            </Text>
+            <Text>{patient.first_name}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              姓:
+            </Text>
+            <Text>{patient.last_name}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              體重:
+            </Text>
+            <Text>{patient.weight}kg</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              身高:
+            </Text>
+            <Text>{patient.height}cm</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              BMI:
+            </Text>
+            <Text>
+              {(patient.weight / (patient.height / 100) ** 2).toPrecision(4)}
+            </Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              性別:
+            </Text>
+            <Text>{patient.gender}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              香港身份證:
+            </Text>
+            <Text>{patient.HKID}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              電話:
+            </Text>
+            <Text>{patient.phone}</Text>
+          </Flex>
+          <Flex>
+            <Text flex={1} fontWeight={"extrabold"}>
+              出生日期:
+            </Text>
+            <Text>{patient.birthday}</Text>
+          </Flex>
+          <Stack spacing={4} direction="row" align="center" my={2}>
+            <Button colorScheme="blue" size="sm">
+              Follow Up
+            </Button>
+            <Button colorScheme="red" size="sm">
+              Dismiss
+            </Button>
+            <Button colorScheme="green" size="sm">
+              Attend
+            </Button>
+            <Button colorScheme="pink" size="sm">
+              Absent
+            </Button>
+          </Stack>
+        </AccordionPanel>
+      </AccordionItem>
+    );
+  }
+
   return (
     <>
       <style>{css}</style>
       <Flex
         direction="row"
+        maxW={"100%"}
         flex="8"
         p="2"
         borderRadius="2xl"
@@ -74,10 +165,9 @@ export default function DietitianMain() {
           bg={"gray.500"}
           p={4}
           borderRadius={"3xl"}
-          w={"100%"}
         >
           <Heading p={3} textAlign={"center"} mb={1}>
-            📅請選擇預約日期
+            📅請選擇應診日期
           </Heading>
           <Divider />
           <Flex
@@ -114,7 +204,7 @@ export default function DietitianMain() {
               disabled={[
                 {
                   from: new Date(0, 1, 1),
-                  to: new Date(),
+                  to: date,
                 },
               ]}
             />
@@ -150,22 +240,18 @@ export default function DietitianMain() {
           </Heading>
           <Flex flexDir={"column"} alignItems={"center"} w={"100%"}>
             <Accordion allowToggle w={"100%"}>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                      Section 1 title
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </AccordionPanel>
-              </AccordionItem>
+              <BookingDetailToday
+                id={1}
+                first_name={"billy"}
+                last_name={"wong"}
+                height={175}
+                weight={70}
+                gender={"Male"}
+                HKID={"A1234567"}
+                phone={"23456789"}
+                birthday={"1-1-1997"}
+                time={"09:00"}
+              />
             </Accordion>
           </Flex>
         </Flex>

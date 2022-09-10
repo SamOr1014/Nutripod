@@ -24,7 +24,7 @@ import { Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
 import UserNavLinks from "./UserUI/User_nav_links";
 
-export default function Banner() {
+export default function Banner(props: { element: any }) {
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const {
@@ -50,7 +50,7 @@ export default function Banner() {
           <DrawerBody>
             <Center>
               {/* If the role is dietitian render a different mobile nav */}
-              <UserNavLinks closeDrawer={onDrawerClose} />
+              {props.element}
             </Center>
           </DrawerBody>
         </DrawerContent>
