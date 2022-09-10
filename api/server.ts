@@ -1,10 +1,10 @@
-import express from "express"
-import { logger } from './tools/winston'
+import express from 'express'
+import { logger } from './configs/winston'
 import formidable from 'formidable'
 import path from 'path'
 import fs from 'fs'
-import { routes } from "./routes/router"
-import {knex} from "./tools/knexConfig"
+import { routes } from './routes/router'
+import { knex } from './configs/knexConfig'
 
 const app = express()
 
@@ -21,24 +21,23 @@ export const form = formidable({
 	keepExtensions: true,
 	maxFiles: 1,
 	maxFileSize: 500 * 1024 * 1024, // the default limit is 500MB
-	filter: (part) => part.mimetype?.startsWith('image/') || false,
+	filter: (part) => part.mimetype?.startsWith('image/') || false
 	// filename: (originalName, originalExt, part, form) => {
 	// 	let fieldName = part.name
 	// 	return `${fieldName}`
 	// }
 })
 
-
-import {UserServices} from "./services/userServices"
-import {UserController} from "./controller/userController"
-import {PostServices} from "./services/postServices"
-import {PostController} from "./controller/postController"
-import {BookingServices} from "./services/bookingServices"
-import {BookingController} from "./controller/bookingController"
-import {MedicalRecordServices} from "./services/medicalRecordServices"
-import {MedicalRecordController} from "./controller/medicalRecordController"
-import {DietRecordServices} from "./services/dietRecordServices"
-import {DietRecordController} from "./controller/dietRecordController"
+import { UserServices } from './services/userServices'
+import { UserController } from './controller/userController'
+import { PostServices } from './services/postServices'
+import { PostController } from './controller/postController'
+import { BookingServices } from './services/bookingServices'
+import { BookingController } from './controller/bookingController'
+import { MedicalRecordServices } from './services/medicalRecordServices'
+import { MedicalRecordController } from './controller/medicalRecordController'
+import { DietRecordServices } from './services/dietRecordServices'
+import { DietRecordController } from './controller/dietRecordController'
 
 const userServices = new UserServices(knex)
 export const userController = new UserController(userServices)
@@ -47,15 +46,17 @@ export const postController = new PostController(postServices)
 const bookingServices = new BookingServices(knex)
 export const bookingController = new BookingController(bookingServices)
 const medicalRecordServices = new MedicalRecordServices(knex)
-export const medicalRecordController = new MedicalRecordController(medicalRecordServices)
+export const medicalRecordController = new MedicalRecordController(
+	medicalRecordServices
+)
 const dietRecordServices = new DietRecordServices(knex)
 export const dietRecordController = new DietRecordController(dietRecordServices)
 
+app.use('/', routes)
 
-app.use("/", routes)
-
-app.get("/testing", (req, res) => {
-	res.send("hello, world")})
+app.get('/testing', (req, res) => {
+	res.send('hello, world')
+})
 
 const PORT = 8080
 app.listen(PORT, () => {
