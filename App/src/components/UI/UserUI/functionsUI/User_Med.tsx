@@ -17,8 +17,51 @@ import {
   Tr,
   useMediaQuery,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+interface UserBookingData {
+  id: number;
+  date: string;
+  first_name: string;
+  last_name: string;
+  time: string;
+}
 
 export default function UserMed() {
+  const userID = 1;
+
+  const [booking, setBooking] = useState<Array<UserBookingData>>([]);
+
+  async function fetchBooking() {
+    let userBooking = await axios.get(
+      `http://localhost:8080/api/booking/user/${userID}`
+    );
+    if (userBooking.data.success) {
+      if (userBooking.data.data) {
+        setBooking(userBooking.data.data);
+      } else {
+        setBooking([]);
+      }
+    } else {
+      alert("Fail to fetch your booking");
+    }
+  }
+
+  async function deleteBooking(bookingID: number | string) {
+    let deleteRes = await axios.delete(
+      `http://localhost:8080/api/booking/user/${userID}/${bookingID}`
+    );
+    console.log(deleteRes.data.deleteRes);
+    if (deleteRes.data.success) {
+      fetchBooking();
+    } else {
+      alert("Fail to delete");
+    }
+  }
+  useEffect(() => {
+    fetchBooking();
+  }, []);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <Flex
@@ -49,7 +92,7 @@ export default function UserMed() {
           />
           病人已預約診期
         </Heading>
-        <Flex w={"100%"} maxH={"80%"} overflow={"auto"}>
+        <Flex w={"100%"} maxH={"80%"} overflow={"auto"} flexDir={"column"}>
           <Table size={isSmallerThan600 ? "sm" : "md"}>
             <Thead position="sticky" top={0} bg={"gray.300"} zIndex={100}>
               <Tr>
@@ -60,23 +103,37 @@ export default function UserMed() {
               </Tr>
             </Thead>
             <Tbody>
-              <Tr>
-                <Td>22/9/2022</Td>
-                <Td>09:00</Td>
-                <Td>Gigi Wong</Td>
-                <Td isNumeric>
-                  <Button
-                    bg={"red.700"}
-                    borderRadius={"lg"}
-                    size={isSmallerThan600 ? "xs" : "sm"}
-                  >
-                    Cancel
-                  </Button>
-                </Td>
-              </Tr>
+              {booking.map((detail) => {
+                return (
+                  <Tr key={`bookingid-${detail.id}`}>
+                    <Td>{new Date(detail.date).toLocaleDateString()}</Td>
+                    <Td>{detail.time.slice(0, -3)}</Td>
+                    <Td>{detail.first_name + " " + detail.last_name}</Td>
+                    <Td isNumeric>
+                      <Button
+                        bg={"red.700"}
+                        borderRadius={"lg"}
+                        size={isSmallerThan600 ? "xs" : "sm"}
+                        onClick={() => {
+                          deleteBooking(detail.id);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
         </Flex>
+        {booking[0] === undefined ? (
+          <Heading textAlign={"center"} color={"red.700"}>
+            你暫時未有已預約診期
+          </Heading>
+        ) : (
+          ""
+        )}
       </Flex>
 
       <Flex flexDir={"column"} w={isSmallerThan600 ? "100%" : "45%"}>
