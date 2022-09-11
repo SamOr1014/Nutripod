@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+const { REACT_APP_API_SERVER } = process.env;
 interface UserBookingData {
   id: number;
   date: string;
@@ -35,7 +35,7 @@ export default function UserMed() {
 
   async function fetchBooking() {
     let userBooking = await axios.get(
-      `http://localhost:8080/api/booking/user/${userID}`
+      `${REACT_APP_API_SERVER}/api/booking/user/${userID}`
     );
     if (userBooking.data.success) {
       if (userBooking.data.data) {
@@ -50,7 +50,7 @@ export default function UserMed() {
 
   async function deleteBooking(bookingID: number | string) {
     let deleteRes = await axios.delete(
-      `http://localhost:8080/api/booking/user/${userID}/${bookingID}`
+      `${REACT_APP_API_SERVER}/api/booking/user/${userID}/${bookingID}`
     );
     console.log(deleteRes.data.deleteRes);
     if (deleteRes.data.success) {
