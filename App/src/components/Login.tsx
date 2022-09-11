@@ -9,36 +9,34 @@ import {
   Box,
   Container,
   Button,
-  ButtonGroup
-} from "@chakra-ui/react"
-import {Formik} from "formik"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, IRootState } from "../../redux/store"
-import {login} from "../../redux/Slice/AuthSlice"
-
+  ButtonGroup,
+} from "@chakra-ui/react";
+import { Formik } from "formik";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../redux/store";
+import { login } from "../redux/Slice/AuthSlice";
 
 type user = {
-  userName: string
-  password:string|number
-}
+  userName: string;
+  password: string | number;
+};
 export function Login() {
   const [username, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
   // const dispatch = useDispatch<AppDispatch>();
   // const loadingStatus = useSelector((state: IRootState) => state.user.loading);
 
-  let userData:user = {
-    userName:username,
-    password:userPassword
-  }
-  
-  const LoginSubmit = async () => {
-      console.log(`userName::${username}`)
-      console.log(`Password::${userPassword}`)
-      console.log('client submit submit')
+  let userData: user = {
+    userName: username,
+    password: userPassword,
+  };
 
-  }
+  const LoginSubmit = async () => {
+    console.log(`userName::${username}`);
+    console.log(`Password::${userPassword}`);
+    console.log("client submit submit");
+  };
 
   // useEffect(() => {
   //   setUsername(() => username = "")
