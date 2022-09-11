@@ -2,7 +2,6 @@ import DashBoard from "./components/UI/UserUI/Dashboard";
 import { Route, Routes } from "react-router";
 import FrontPage from "./components/FrontPage";
 import UserBooking from "./components/UI/UserUI/functionsUI/User_Booking";
-
 import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
 import UserAccount from "./components/UI/UserUI/functionsUI/User_Account";
 import UserPost from "./components/Post";
@@ -13,7 +12,6 @@ import UserBPBGRecord from "./components/UI/UserUI/functionsUI/User_Record";
 import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
 import DietitianMain from "./components/UI/DietitianUI/functionalUI/Dietitian_Main";
 import PatientSearchPanel from "./components/UI/DietitianUI/functionalUI/Dietitian_patient_search";
-import UserAccount from "./components/UI/UserUI/functionsUI/User_Account";
 
 function App() {
   return (
