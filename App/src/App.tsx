@@ -4,7 +4,7 @@ import FrontPage from "./components/FrontPage";
 import UserBooking from "./components/UI/UserUI/functionsUI/User_Booking";
 
 import UserMain from "./components/UI/UserUI/functionsUI/User_Main";
-
+import UserAccount from "./components/UI/UserUI/functionsUI/User_Account";
 import UserPost from "./components/Post";
 import { Login } from "./components/Login";
 import NotFound from "./components/404";
