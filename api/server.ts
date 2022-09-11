@@ -4,6 +4,7 @@ import formidable from 'formidable'
 import path from 'path'
 import fs from 'fs'
 import {knex} from "./configs/knexConfig"
+import cors from "cors";
 
 const app = express()
 
@@ -50,8 +51,8 @@ export const form = formidable({
 	// }
 })
 
-
 app.use(express.json())
+
 app.use(express.urlencoded({ extended: true }))
 
 

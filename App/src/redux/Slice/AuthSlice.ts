@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { loginThunk } from "../Thunk/AuthThunk";
 
 interface userInfo {
     id: number|null
@@ -33,19 +34,20 @@ export const authSlice = createSlice({
                     isStuff:action.payload.isStuff
                 }]
     }}},
-    // extraReducers:(builder)=>{
-    //     builder
-    //     .addCase(loginThunk.pending,(state)=>{
-    //         state.loading = true;
-    //     })
-    //     .addCase(loginThunk.fulfilled,(state,action)=>{
-    //         state.loading = false;
+    extraReducers:(builder)=>{
+        builder
+        .addCase(loginThunk.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(loginThunk.fulfilled,(state,action)=>{
+            state.loading = false;
 
-    //     })
-    //     .addCase(loginThunk.rejected,(state,action)=>{
-    //         state.loading = false;
-    //     })
-    // }
+        })
+        .addCase(loginThunk.rejected,(state,action)=>{
+            state.loading = false;
+            alert(action.payload?.error)
+        })
+    }
 })
 
 
