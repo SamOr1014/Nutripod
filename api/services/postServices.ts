@@ -1,12 +1,10 @@
 import { Knex } from 'knex'
 
 export class PostServices {
-    constructor(private knex: Knex) {}
+	constructor(private knex: Knex) {}
 
-    async get() {
-        // please change later
-        await this.knex('posts').select('*')
-
-    }
-
+	async get() {
+		const result = await this.knex('posts').select('*')
+		return result
+	}
 }

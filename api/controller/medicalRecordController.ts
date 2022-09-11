@@ -5,7 +5,14 @@ export class MedicalRecordController {
     constructor(private medicalRecordService:MedicalRecordServices) {}
 
     get = async (req: Request, res: Response) => {
-        this.medicalRecordService.get
+        const results = await this.medicalRecordService.get()
+        if(results.length === 0 ) {
+            res.json({success:false,message:"Error in medicalRecord"})
+            return
+        }
+        const result = res.json(results)
+        res.send(result)
     }
+
 
 }

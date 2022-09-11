@@ -8,20 +8,29 @@ import {
   extendTheme,
   Box,
   Container,
-  Switch,
   Button,
   ButtonGroup,
 } from "@chakra-ui/react";
+import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, IRootState } from "../../redux/store";
-import { login } from "../../redux/Slice/AuthSlice";
+import { AppDispatch, IRootState } from "../redux/store";
+import { login } from "../redux/Slice/AuthSlice";
 
+type user = {
+  userName: string;
+  password: string | number;
+};
 export function Login() {
   const [username, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
   // const dispatch = useDispatch<AppDispatch>();
   // const loadingStatus = useSelector((state: IRootState) => state.user.loading);
+
+  let userData: user = {
+    userName: username,
+    password: userPassword,
+  };
 
   const LoginSubmit = async () => {
     console.log(`userName::${username}`);

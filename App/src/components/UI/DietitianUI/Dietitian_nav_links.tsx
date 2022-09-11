@@ -3,7 +3,6 @@ import { Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
 import {
   BsFillHouseFill,
-  BsTable,
   BsFillChatRightTextFill,
   BsFillFileMedicalFill,
 } from "react-icons/bs";

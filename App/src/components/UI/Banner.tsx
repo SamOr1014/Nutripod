@@ -22,7 +22,6 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
 import { Link as ReactLink } from "react-router-dom";
-import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner(props: { element: any }) {
   const { toggleColorMode } = useColorMode();
@@ -59,12 +58,12 @@ export default function Banner(props: { element: any }) {
   }
   return (
     <Center
-      height={isLargerThan1700 ? 40 : 14}
+      height={isLargerThan1700 ? 40 : 20}
       p={"10"}
-      boxShadow={"5px 2px 10px 3px black"}
       mb={isLargerThan1700 ? 10 : 2}
       pos={"sticky"}
       top={0}
+      zIndex={100}
     >
       <Center flex="2" display="flex" justifyContent="start">
         <Show above="md"></Show>

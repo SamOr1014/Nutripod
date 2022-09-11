@@ -4,8 +4,8 @@ export class MedicalRecordServices {
     constructor(private knex: Knex) {}
 
     async get() {
-        // please change later
-        await this.knex('dietitian_report').select('*')
+        const result = await this.knex('user_blood_glucose').select('*')
+        return result
 
     }
 
