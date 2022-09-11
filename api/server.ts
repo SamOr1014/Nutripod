@@ -50,6 +50,7 @@ export const form = formidable({
 })
 
 app.use(express.json())
+
 app.use(express.urlencoded({ extended: true }))
 
 import { routes } from './routes/routes'
