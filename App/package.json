@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",
-    "@chakra-ui/react": "^2.3.1",
+    "@chakra-ui/react": "^2.3.2",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
     "@reduxjs/toolkit": "^1.8.5",
@@ -25,7 +25,7 @@
     "date-fns": "^2.29.2",
     "dotenv": "^16.0.2",
     "formik": "^2.2.9",
-    "framer-motion": "^7.2.1",
+    "framer-motion": "^7.3.2",
     "i": "^0.3.7",
     "jwt-decode": "^3.1.2",
     "jwt-simple": "^0.5.6",
@@ -67,5 +67,7 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "main": "index.js",
+  "license": "MIT"
 }

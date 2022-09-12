@@ -1,4 +1,4 @@
-import { Box, Flex, Spacer, Heading, Button, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Button, Text } from "@chakra-ui/react";
 
 export default function UserAccount() {
   return (
@@ -9,6 +9,7 @@ export default function UserAccount() {
         bg={"gray.500"}
         width="100%"
         h="100%"
+        borderRadius={10}
       >
         <Flex
           minWidth="max-content"
@@ -17,9 +18,8 @@ export default function UserAccount() {
           justifyContent={"center"}
         >
           <Box p="2">
-            <Heading size="xl">你的帳戶</Heading>
+            <Heading size="xl">你的帳戶資料</Heading>
 
-            <Spacer />
           </Box>
         </Flex>
         <Flex
@@ -29,7 +29,7 @@ export default function UserAccount() {
           m={3}
           justifyContent="space-between"
         >
-          <Text size="md">Name</Text>
+          <Text size="md">姓名</Text>
           <Text size="md">Peter</Text>
 
           <Button colorScheme="red">更改</Button>
@@ -54,10 +54,47 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">出生日期</Text>
-          <Text size="md">1/1/1991</Text>
+          <Text size="md">1991年</Text>
 
           <Button colorScheme="red">更改</Button>
         </Flex>
+        <Flex
+          minWidth="max-content"
+          alignItems="center"
+          bg={"green"}
+          m={3}
+          justifyContent="space-between"
+        >
+          <Text size="md">電話號碼</Text>
+          <Text size="md">66556655</Text>
+
+          <Button colorScheme="red">更改</Button>
+        </Flex>
+        <Flex
+          minWidth="max-content"
+          alignItems="center"
+          bg={"green"}
+          m={3}
+          justifyContent="space-between"
+        >
+          <Text size="md">地址</Text>
+          <Text size="md">新界荃灣one mid town 5樓16室 </Text>
+
+          <Button colorScheme="red">更改</Button>
+        </Flex>
+        <Flex
+          minWidth="max-content"
+          alignItems="center"
+          bg={"green"}
+          m={3}
+          justifyContent="space-between"
+        >
+          <Text size="md">電郵</Text>
+          <Text size="md">peter123@gmail.com</Text>
+
+          <Button colorScheme="red">更改</Button>
+        </Flex>
+        <Button colorScheme="red" maxWidth={20} m={3} >更改密碼?</Button>
       </Flex>
     </>
   );
