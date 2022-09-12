@@ -22,3 +22,14 @@ export interface DietitianPatientPanel {
   phone: string;
   birthday: any;
 }
+
+export interface UserBookingDetailByDateAndDietitian {
+  id: number;
+  date: string;
+  time: number;
+  created_at: string;
+  updated_at: string;
+  is_deleted: boolean;
+  users_id: number;
+  dietitian_id: number;
+}

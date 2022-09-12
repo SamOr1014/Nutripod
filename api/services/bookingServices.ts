@@ -3,6 +3,11 @@ import { Knex } from 'knex'
 export class BookingServices {
 	constructor(private knex: Knex) {}
 
+	async getTimeslot() {
+		const timeSlot = await this.knex('timeslot').select('*')
+		return timeSlot
+	}
+
 	async getAllUserBooking(userID: number | string) {
 		const result = await this.knex('booking')
 			.select(
@@ -18,6 +23,7 @@ export class BookingServices {
 			.where('booking.users_id', userID)
 			.andWhere('booking.is_deleted', 'false')
 			.andWhere('booking.date', '>=', 'NOW()')
+			.orderBy('booking.date', 'asc')
 		return result
 	}
 	async postUserBooking(
@@ -31,7 +37,7 @@ export class BookingServices {
 				{
 					date: date,
 					time: timeslotID,
-					patient_id: userID,
+					users_id: userID,
 					dietitian_id: dietitianID
 				}
 			])
@@ -49,5 +55,17 @@ export class BookingServices {
 			.andWhere('users_id', userID)
 			.returning('*')
 		return result
+	}
+
+	async getAllBookingByDateAndDietitianID(
+		date: string,
+		dietitianID: string | number
+	) {
+		const bookingByDate = await this.knex('booking')
+			.select('*')
+			.where('date', date)
+			.andWhere('is_deleted', false)
+			.andWhere('dietitian_id', dietitianID)
+		return bookingByDate
 	}
 }

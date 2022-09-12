@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 const { REACT_APP_API_SERVER } = process.env;
 interface UserBookingData {
   id: number;
@@ -35,7 +36,7 @@ export default function UserMed() {
 
   async function fetchBooking() {
     let userBooking = await axios.get(
-      `${REACT_APP_API_SERVER}/api/booking/user/${userID}`
+      `${REACT_APP_API_SERVER}/booking/user/${userID}`
     );
     if (userBooking.data.success) {
       if (userBooking.data.data) {
@@ -44,19 +45,24 @@ export default function UserMed() {
         setBooking([]);
       }
     } else {
-      alert("Fail to fetch your booking");
+      await Swal.fire({
+        icon: "error",
+        title: "Fail to get your booking, Please try again",
+      });
     }
   }
 
   async function deleteBooking(bookingID: number | string) {
     let deleteRes = await axios.delete(
-      `${REACT_APP_API_SERVER}/api/booking/user/${userID}/${bookingID}`
+      `${REACT_APP_API_SERVER}/booking/user/${userID}/${bookingID}`
     );
-    console.log(deleteRes.data.deleteRes);
     if (deleteRes.data.success) {
-      fetchBooking();
-    } else {
-      alert("Fail to delete");
+      Swal.fire({
+        icon: "success",
+        title: "Delete Successful",
+      });
+      await fetchBooking();
+      return;
     }
   }
   useEffect(() => {
@@ -115,7 +121,25 @@ export default function UserMed() {
                         borderRadius={"lg"}
                         size={isSmallerThan600 ? "xs" : "sm"}
                         onClick={() => {
-                          deleteBooking(detail.id);
+                          Swal.fire({
+                            icon: "question",
+                            title:
+                              "Can you confirm that you want to delete this booking",
+                            html: `<p><b>Date</b>: ${new Date(
+                              detail.date
+                            ).toLocaleDateString()}</p> <br> <p><b>Time</b>: ${detail.time.slice(
+                              0,
+                              -3
+                            )}</p> <br> <p><b>Dietitian</b>: ${
+                              detail.first_name + " " + detail.last_name
+                            }</p>`,
+                            showCloseButton: true,
+                            showCancelButton: true,
+                          }).then(async (result) => {
+                            if (result.isConfirmed) {
+                              await deleteBooking(detail.id);
+                            }
+                          });
                         }}
                       >
                         Cancel
