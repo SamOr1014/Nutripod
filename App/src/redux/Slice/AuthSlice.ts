@@ -1,55 +1,55 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { loginThunk } from "../Thunk/AuthThunk";
 
 interface userInfo {
-  id: number | null;
-  name: string | null;
-  isStuff: boolean | null;
+    id: number|null
+    name : string|null
+    isStuff: boolean|null
 }
 
 export type userState = {
-  user: Array<userInfo>;
-  loading: boolean;
-  error: string | undefined;
-};
+    user: Array<userInfo>,
+    loading:boolean,
+    error:string|undefined
 
-const initialState: userState = {
-  user: [{ id: null, name: "", isStuff: null }],
-  loading: false,
-  error: undefined,
-};
+}
+
+const initialState:userState = {
+    user:[{id:null,name:"",isStuff:null}],
+    loading:false,
+    error:undefined
+}
 
 export const authSlice = createSlice({
-  name: "user",
-  initialState,
-  reducers: {
-    login: (state, action: PayloadAction<userInfo>) => {
-      return {
-        ...state,
-        user: [
-          {
-            id: action.payload.id,
-            name: action.payload.name,
-            isStuff: action.payload.isStuff,
-          },
-        ],
-      };
-    },
-  },
-  // extraReducers:(builder)=>{
-  //     builder
-  //     .addCase(loginThunk.pending,(state)=>{
-  //         state.loading = true;
-  //     })
-  //     .addCase(loginThunk.fulfilled,(state,action)=>{
-  //         state.loading = false;
+    name:"user",
+    initialState,
+    reducers:{
+        login: (state, action:PayloadAction<userInfo>) => {
+            return {
+                ...state,
+                user:[{
+                    id:action.payload.id,
+                    name:action.payload.name,
+                    isStuff:action.payload.isStuff
+                }]
+    }}},
+    extraReducers:(builder)=>{
+        builder
+        .addCase(loginThunk.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(loginThunk.fulfilled,(state,action)=>{
+            state.loading = false;
 
-  //     })
-  //     .addCase(loginThunk.rejected,(state,action)=>{
-  //         state.loading = false;
-  //     })
-  // }
-});
+        })
+        .addCase(loginThunk.rejected,(state,action)=>{
+            state.loading = false;
+            alert(action.payload?.error)
+        })
+    }
+})
 
-export const { login } = authSlice.actions;
-export default authSlice.reducer;
+
+export const {login} = authSlice.actions
+export default authSlice.reducer
