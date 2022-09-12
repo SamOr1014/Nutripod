@@ -12,7 +12,7 @@ export class BookingController {
 				parseInt(userID)
 			)
 			if (results.length === 0) {
-				res.json({ success: true, message: 'You Have No Booking' })
+				res.json({ success: false, message: 'You Have No Booking' })
 				return
 			}
 			res.json({ success: true, data: results })

@@ -30,8 +30,6 @@ export async function up(knex: Knex): Promise<void> {
         table.text('pf_type').notNullable()
     })
 
-    await knex.schema.dropTableIfExists(genderTableName)
-
     await knex.schema.createTable(genderTableName, (table) => {
         table.increments()
         table.text('gender_type').notNullable()

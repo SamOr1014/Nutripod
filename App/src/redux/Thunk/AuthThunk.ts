@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit"
 import jwt_decode, { JwtPayload } from "jwt-decode"
 import axios from "axios"
+const { REACT_APP_API_SERVER } = process.env;
 
 export type Error = {
     error: string;
@@ -14,17 +15,20 @@ export const loginThunk = createAsyncThunk<any, userInfo, ThunkExtraInfo>(
 
         try {
             let info = { username, password }
-            const res = await fetch("http://localhost:8080/user", {
+            const result = await axios.post
+            (`${REACT_APP_API_SERVER}/api/user/`, {
                 headers: {
                     "content-type": "application/json"
                 },
-                body: JSON.stringify(info)
+                data: {
+                    user:info
+                }
             })
 
-            const result = await res.json()
-            if (result.success) {
-                thunkAPI.extra.jwt = result.token
-                window.localStorage.setItem("userToken", result.token)
+            
+            if (result.data.success) {
+                thunkAPI.extra.jwt = result.data.token
+                window.localStorage.setItem("userToken", result.data.token)
                 // decode and return the id & username to set status
                 // let payload: JwtPayload = jwt_decode(result.token)
                 // return payload as userInfo
