@@ -5,6 +5,7 @@
 /uploads
 foodGroup.csv
 food.csv
+jwt.ts
 
 
 # testing

@@ -10,30 +10,99 @@ import {
   Text,
   Select,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import Swal from "sweetalert2";
+import { UserBookingDetailByDateAndDietitian } from "../../../../utility/models";
+const { REACT_APP_API_SERVER } = process.env;
 
-const fakeData: Array<any> = [
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "09:00", booked: true },
-  { time: "10:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
-  { time: "11:00", booked: false },
+// const staticDietitianList =
+
+const staticTimeSlot = [
+  {
+    id: 1,
+    time: "09:00:00",
+  },
+  {
+    id: 2,
+    time: "10:00:00",
+  },
+  {
+    id: 3,
+    time: "11:00:00",
+  },
+  {
+    id: 4,
+    time: "12:00:00",
+  },
+  {
+    id: 5,
+    time: "14:00:00",
+  },
+  {
+    id: 6,
+    time: "15:00:00",
+  },
+  {
+    id: 7,
+    time: "16:00:00",
+  },
+  {
+    id: 8,
+    time: "17:00:00",
+  },
 ];
 
 export default function UserBooking() {
+  //######################
+  //#####Fake UserID######
+  const uID = 1;
+  //####Remember to#######
+  //####Use JWT Token####
+  //######################
+
   let date = new Date();
   date.setDate(date.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
-  const [dietitian, setDietitian] = useState<string>("Gigi Wong");
+  const [dietitian, setDietitian] = useState<string>("");
+  const [existedBookings, setExistedBooking] = useState<
+    Array<UserBookingDetailByDateAndDietitian>
+  >([]);
 
+  async function postBookingToServer(
+    timeslotID: string | number,
+    dietitianID: string,
+    date: string
+  ) {
+    const result = await axios.post(`${REACT_APP_API_SERVER}/booking`, {
+      date: date,
+      time: timeslotID,
+      dietitian_id: dietitianID,
+      user: uID,
+    });
+    await fetchBookingDetail();
+  }
+
+  async function fetchBookingDetail() {
+    if (selectedDate && dietitian) {
+      const { data } = await axios.get(
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${dietitian}`
+      );
+      let dateBookingWithSelectedDietitian = data;
+      setExistedBooking(dateBookingWithSelectedDietitian);
+    }
+    return;
+  }
+  useEffect(() => {
+    fetchBookingDetail();
+  }, [selectedDate, dietitian]);
+  //debug use to check if fetch is done
+  useEffect(() => {
+    console.log(existedBookings);
+  }, [existedBookings]);
   const css = `
 .my-selected:not([disabled]) { 
   font-weight: bold; 
@@ -95,9 +164,9 @@ export default function UserBooking() {
                   setDietitian(e.target.value);
                 }}
               >
-                <option value="Gigi Wong">Gigi Wong</option>
-                <option value="Bibi Kong">Bibi Kong</option>
-                <option value="Kiki Song">Kiki Song</option>
+                <option value="1">Gigi Wong</option>
+                <option value="2">Bibi Kong</option>
+                <option value="3">Kiki Song</option>
               </Select>
             </Flex>
 
@@ -143,26 +212,72 @@ export default function UserBooking() {
           bg={"gray.500"}
         >
           <Heading p={3} textAlign={"center"}>
-            {selectedDate?.toLocaleDateString().split("/")[2]}年
-            {selectedDate?.toLocaleDateString().split("/")[1]}月
-            {selectedDate?.toLocaleDateString().split("/")[0]}日
+            {selectedDate ? selectedDate?.getFullYear() : ""}年
+            {selectedDate ? selectedDate?.getMonth() + 1 : ""}月
+            {selectedDate ? selectedDate?.getDate() : ""}日
           </Heading>
-          <Flex flexWrap={"wrap"} flexDir={"column"} alignItems={"center"}>
-            {fakeData.map((booking) => {
-              if (booking.booked) {
-                return (
-                  <Button my={"1"} w={"100%"} disabled={true}>
-                    {booking.time}
-                  </Button>
-                );
-              } else {
-                return (
-                  <Button w={"100%"} my={"1"}>
-                    {booking.time}
-                  </Button>
-                );
-              }
-            })}
+          <Flex
+            flexWrap={"wrap"}
+            flexDir={"column"}
+            alignItems={"center"}
+            gap={5}
+          >
+            {/* This is where u put the buttons */}
+            {selectedDate && dietitian ? (
+              staticTimeSlot.map((timeslotDetail) => {
+                if (
+                  existedBookings.filter(
+                    (existbooking) => existbooking.time === timeslotDetail.id
+                  )[0]
+                ) {
+                  return (
+                    <Button
+                      key={`booking_button_${timeslotDetail.id}`}
+                      disabled={true}
+                      w={"100%"}
+                    >
+                      {timeslotDetail.time.slice(0, -3)}
+                    </Button>
+                  );
+                } else {
+                  return (
+                    <Button
+                      key={`booking_button_${timeslotDetail.id}`}
+                      w={"100%"}
+                      onClick={() => {
+                        Swal.fire({
+                          icon: "question",
+                          title: "Please confirm Your Booking",
+                          text: `Time: ${
+                            timeslotDetail.time
+                          }, Date: ${selectedDate.toLocaleDateString()}`,
+                          showCloseButton: true,
+                          showCancelButton: true,
+                        }).then(async (value) => {
+                          if (value.isConfirmed) {
+                            await postBookingToServer(
+                              timeslotDetail.id,
+                              dietitian,
+                              selectedDate.toISOString()
+                            );
+                            Swal.fire({
+                              icon: "success",
+                              title: `You Have Booked on ${selectedDate.toLocaleDateString()} at ${
+                                timeslotDetail.time
+                              }`,
+                            });
+                          }
+                        });
+                      }}
+                    >
+                      {timeslotDetail.time.slice(0, -3)}
+                    </Button>
+                  );
+                }
+              })
+            ) : (
+              <Text>請選擇時間及營養師</Text>
+            )}
           </Flex>
         </Flex>
       </Flex>

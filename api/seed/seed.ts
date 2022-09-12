@@ -43,4 +43,22 @@ export async function seed(knex: Knex) {
 	await knex(educationName).del()
 	await knex(professionTableName).del()
 	await knex(genderTableName).del()
+
+	// const professionID = await knex(professionTableName)
+	// .insert([
+	// 	{pf_type:"IT"}
+
+	// ]).returning('id')
+
+	// const genderID = await knex(genderTableName)
+	// .insert([
+	// 	{gender_type:"Male"},
+	// 	{gender_type:"Female"},
+	// 	{gender_type:"Others"}
+	// ])
+
+	// const educationID = await knex(educationName)
+	// .insert([
+	// 	{education_level:""}
+	// ])
 }
