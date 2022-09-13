@@ -16,8 +16,7 @@ import {
   Spinner,
   useMediaQuery,
   useBoolean,
-  Stack,
-  HStack
+  Stack
 } from "@chakra-ui/react"
 import { Link as ReactLink } from "react-router-dom"
 import { useEffect, useState } from "react"
@@ -240,10 +239,12 @@ export function Login() {
       </Box>
 
       <Box
-        height='180px'
-        width="100%"
+        h='100%'
+        w="100%"
         display='flex'
         flexDirection='column'
+        justifyContent={"center"}
+        alignItems={"center"}
         borderTop='2px'
         borderColor='blackAlpha.400'
         mt='6'
@@ -260,29 +261,31 @@ export function Login() {
           display='flex'
           justifyContent='center'
           direction='row'
-          spacing='2'
-          mt='2'>
+          w={isSmallerThan600? "10%": "100%"}
+          gap='2'
+          mt='2'
+          flexWrap={"wrap"}>
 
             <Link as={ReactLink} to="/">
-          <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid'>
+          <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid' w={"32"}>
             Email
           </Button>
           </Link>
 
           <Link as={ReactLink} to="/">
-          <Button colorScheme='facebook' leftIcon={<FaFacebook />}>
+          <Button colorScheme='facebook' leftIcon={<FaFacebook />} w={"32"}>
             Facebook
           </Button>
           </Link>
 
           <Link as={ReactLink} to="/">
-          <Button colorScheme='twitter' leftIcon={<FaTwitter />}>
+          <Button colorScheme='twitter' leftIcon={<FaTwitter />} w={"32"}>
             Twitter
           </Button>
           </Link>
 
           <Link as={ReactLink} to="/">
-          <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline'>
+          <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline' w={"32"}>
             Call us
           </Button>
           </Link>

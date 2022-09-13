@@ -210,7 +210,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments()
         table.text('content').notNullable()
         table.string('title').notNullable()
-        table.text('photo').notNullable()
+        table.text('photo').nullable()
         table.date('date').notNullable()
         table.timestamps(false, true)
         table.boolean('is_deleted').defaultTo(false)
