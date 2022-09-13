@@ -135,10 +135,10 @@ export async function seed(knex: Knex) {
 				education: educationID[1].id
 			},
 			{
-				username: 'marches',
+				username: 'marcus',
 				first_name: 'mar',
-				last_name: 'ches',
-				email: 'marches@gmail.com',
+				last_name: 'cus',
+				email: 'marcus@gmail.com',
 				password: await hashPassword('123'),
 				birthday: '2000-12-12',
 				height: 190,
