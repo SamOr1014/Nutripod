@@ -247,7 +247,7 @@ export default function UserBooking() {
                       onClick={() => {
                         Swal.fire({
                           icon: "question",
-                          title: "Please confirm Your Booking",
+                          title: "請",
                           text: `Time: ${
                             timeslotDetail.time
                           }, Date: ${selectedDate.toLocaleDateString()}`,
@@ -262,7 +262,7 @@ export default function UserBooking() {
                             );
                             Swal.fire({
                               icon: "success",
-                              title: `You Have Booked on ${selectedDate.toLocaleDateString()} at ${
+                              title: `你已經預約${selectedDate.toLocaleDateString()}的${
                                 timeslotDetail.time
                               }`,
                             });

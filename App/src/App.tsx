@@ -12,8 +12,17 @@ import UserBPBGRecord from "./components/UI/UserUI/functionsUI/User_Record";
 import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
 import DietitianMain from "./components/UI/DietitianUI/functionalUI/Dietitian_Main";
 import PatientSearchPanel from "./components/UI/DietitianUI/functionalUI/Dietitian_patient_search";
+import { useEffect } from "react";
+import { useAppDispatch } from "./redux/store";
+import { fetchDietitianDetail } from "./redux/Slice/dietitianSlice";
+import { fetchTimeSlotToRedux } from "./redux/Slice/timeslotSlice";
 
 function App() {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchDietitianDetail());
+    dispatch(fetchTimeSlotToRedux());
+  }, [dispatch]);
   return (
     <Routes>
       <Route path="/" element={<FrontPage />} />
