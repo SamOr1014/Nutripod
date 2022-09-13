@@ -14,48 +14,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../redux/store";
 import { UserBookingDetailByDateAndDietitian } from "../../../../utility/models";
 const { REACT_APP_API_SERVER } = process.env;
 
-// const staticDietitianList =
-
-const staticTimeSlot = [
-  {
-    id: 1,
-    time: "09:00:00",
-  },
-  {
-    id: 2,
-    time: "10:00:00",
-  },
-  {
-    id: 3,
-    time: "11:00:00",
-  },
-  {
-    id: 4,
-    time: "12:00:00",
-  },
-  {
-    id: 5,
-    time: "14:00:00",
-  },
-  {
-    id: 6,
-    time: "15:00:00",
-  },
-  {
-    id: 7,
-    time: "16:00:00",
-  },
-  {
-    id: 8,
-    time: "17:00:00",
-  },
-];
-
 export default function UserBooking() {
+  const staticDietitianList = useSelector(
+    (state: IRootState) => state.dietitian
+  );
+  const staticTimeSlot = useSelector((state: IRootState) => state.timeslot);
   //######################
   //#####Fake UserID######
   const uID = 1;
@@ -100,9 +69,7 @@ export default function UserBooking() {
     fetchBookingDetail();
   }, [selectedDate, dietitian]);
   //debug use to check if fetch is done
-  useEffect(() => {
-    console.log(existedBookings);
-  }, [existedBookings]);
+
   const css = `
 .my-selected:not([disabled]) { 
   font-weight: bold; 
@@ -164,9 +131,16 @@ export default function UserBooking() {
                   setDietitian(e.target.value);
                 }}
               >
-                <option value="1">Gigi Wong</option>
-                <option value="2">Bibi Kong</option>
-                <option value="3">Kiki Song</option>
+                {staticDietitianList.map((dietitianDetail) => {
+                  return (
+                    <option
+                      key={`dietitian_individual_${dietitianDetail.id}`}
+                      value={`${dietitianDetail.id}`}
+                    >
+                      {dietitianDetail.first_name} {dietitianDetail.last_name}
+                    </option>
+                  );
+                })}
               </Select>
             </Flex>
 

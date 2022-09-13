@@ -17,7 +17,12 @@ import { DietRecordServices } from './services/dietRecordServices'
 import { DietRecordController } from './controller/dietRecordController'
 const app = express()
 
-app.use(cors())
+app.use(
+	cors({
+		origin: '*',
+		optionsSuccessStatus: 200
+	})
+)
 
 const userServices = new UserServices(knex)
 export const userController = new UserController(userServices)
