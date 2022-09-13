@@ -153,6 +153,7 @@ export async function up(knex: Knex): Promise<void> {
         table.increments()
         table.float('weight').notNullable()
         table.date('date').notNullable()
+        table.boolean('is_deleted').notNullable().defaultTo(false)
         table.timestamps(false, true)
         table.integer('user_id').unsigned().notNullable()
         table.foreign('user_id').references('users.id')
@@ -187,6 +188,8 @@ export async function up(knex: Knex): Promise<void> {
         table.integer('sys_bp').notNullable()
         table.integer('dia_bp').notNullable()
         table.date('date').notNullable()
+        table.time('time').notNullable()
+        table.boolean('is_deleted').notNullable().defaultTo(false)
         table.timestamps(false, true)
         table.integer('user_id').unsigned().notNullable()
         table.foreign('user_id').references('users.id')
@@ -194,8 +197,10 @@ export async function up(knex: Knex): Promise<void> {
    
     await knex.schema.createTable(usersBloodGlucoseTableName, (table) => {
         table.increments()
-        table.integer('bg_measurement').notNullable()
+        table.float('bg_measurement').notNullable()
         table.date('date').notNullable()
+        table.time('time').notNullable()
+        table.boolean('is_deleted').notNullable().defaultTo(false)
         table.timestamps(false, true)
         table.integer('user_id').unsigned().notNullable()
         table.foreign('user_id').references('users.id')
