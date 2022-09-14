@@ -102,6 +102,7 @@ export async function up(knex: Knex): Promise<void> {
         table.integer('education').unsigned().notNullable()
         table.foreign('education').references('education.id')
         table.boolean('is_deleted').notNullable().defaultTo(false)
+        table.boolean('is_user').notNullable().defaultTo(true)
         table.timestamps(false, true)
     })
    
@@ -114,6 +115,7 @@ export async function up(knex: Knex): Promise<void> {
         table.string('email').unique().nullable()
         table.timestamps(false, true)
         table.boolean('is_deleted').notNullable().defaultTo(false)
+        table.boolean('is_user').notNullable().defaultTo(false)
     })
    
     await knex.schema.createTable(exercisesTableName, (table) => {

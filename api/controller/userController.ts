@@ -3,7 +3,7 @@ import { logger } from '../configs/winston'
 import { UserServices } from "../services/userServices"
 import jwtSimple from 'jwt-simple';
 import jwt from "../jwt"
-
+import { checkPassword } from "../utilities/hash"
 
 export class UserController {
     constructor(private userService: UserServices) { }
@@ -12,20 +12,41 @@ export class UserController {
 
         try {
             console.log("received in server userController")
-            let username = req.body.data.user.username
-            let password = req.body.data.user.password
-            const result = await this.userService.login(username, password)
+            const username = req.body.data.user.username
+            const password = req.body.data.user.password
 
-            if (result.length === 0) {
-                res.json({ success: false, message: "No such user" })
+            if (!username || !password) {
+                res.status(400).json({
+                    success: false,
+                    message: 'username or password are missing'
+                })
                 return
             }
-            const payload = {
-                id: result[0].id,
-                username: result[0].username
+
+            const result = await this.userService.login(username)
+
+            if (result.length === 0) {
+                res.status(400).json({ success: false, message: "No such user" })
+                return
             }
-            const token = jwtSimple.encode(payload, jwt.jwtSecret)
-            res.status(200).json({ token: token, success: true, result: result })
+            const hashedPassword = result[0].password
+            const matchResult = await checkPassword(password, hashedPassword)
+
+            if (matchResult) {
+                const payload = {
+                    id: result[0].id,
+                    username: result[0].username
+                }
+                const token = jwtSimple.encode(payload, jwt.jwtSecret)
+                res.status(200).json(
+                    {
+                        token: token,
+                        success: true,
+                        info: result[0]
+                    })
+            } else {
+                res.status(400).json({ success: false, message: "Incorrect password" })
+            }
         } catch (e) {
             logger.error(e.message)
             res.json({ success: false })

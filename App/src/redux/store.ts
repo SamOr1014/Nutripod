@@ -1,4 +1,4 @@
-import AuthSliceReducer from "./Slice/AuthSlice";
+import AuthSlice from "./Slice/AuthSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import logger from "redux-logger";
 import dietitianSlice from "./Slice/dietitianSlice";
@@ -7,7 +7,7 @@ import timeslotSlice from "./Slice/timeslotSlice";
 
 export const store = configureStore({
   reducer: {
-    user: AuthSliceReducer,
+    user: AuthSlice,
     dietitian: dietitianSlice,
     timeslot: timeslotSlice,
   },
