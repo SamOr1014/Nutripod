@@ -36,7 +36,7 @@ export class UserController {
                     id: result[0].id,
                     username: result[0].username
                 }
-                const token = jwtSimple.encode(payload, jwt.jwtSecret)
+                const token = jwtSimple.encode(payload, jwt.jwtSecret as string)
                 res.status(200).json(
                     {
                         token: token,
