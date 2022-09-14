@@ -19,7 +19,6 @@ export default function UserAccount() {
         >
           <Box p="2">
             <Heading size="xl">你的帳戶資料</Heading>
-
           </Box>
         </Flex>
         <Flex
@@ -94,7 +93,9 @@ export default function UserAccount() {
 
           <Button colorScheme="red">更改</Button>
         </Flex>
-        <Button colorScheme="red" maxWidth={20} m={3} >更改密碼?</Button>
+        <Button colorScheme="red" maxWidth={20} m={3}>
+          更改密碼?
+        </Button>
       </Flex>
     </>
   );
