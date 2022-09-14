@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { logger } from '../configs/winston'
 import { BookingServices } from '../services/bookingServices'
+import { formatDate } from '../utilities/formatDate'
 
 export class BookingController {
 	constructor(private bookingService: BookingServices) {}
@@ -24,6 +25,7 @@ export class BookingController {
 		} catch (e) {
 			logger.error(e.message)
 			res.json({ success: false })
+			return
 		}
 	}
 
@@ -44,14 +46,7 @@ export class BookingController {
 			}
 			// const result = await this.bookingService.postUserBooking()
 			let { date, time, dietitian_id, user } = bookingDetail
-			let dateType = new Date(date)
-			let formatedDate =
-				dateType.getFullYear().toString() +
-				'-' +
-				(dateType.getMonth() + 1).toString() +
-				'-' +
-				dateType.getDate().toString()
-			console.log(formatedDate, time, dietitian_id, user)
+			let formatedDate = formatDate(date)
 			const bookingID = await this.bookingService.postUserBooking(
 				user,
 				dietitian_id,
@@ -63,8 +58,9 @@ export class BookingController {
 			logger.error(e.message)
 			res.status(500).json({
 				success: false,
-				message: 'INternal Server Error'
+				message: 'Internal Server Error'
 			})
+			return
 		}
 	}
 
@@ -80,19 +76,14 @@ export class BookingController {
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
+			return
 		}
 	}
 
 	getAllBookingByDateAndDietitianID = async (req: Request, res: Response) => {
 		try {
-			let date = new Date(req.params.date)
 			let dietitianID = req.params.dietitian
-			let formatedDate =
-				date.getFullYear().toString() +
-				'-' +
-				(date.getMonth() + 1).toString() +
-				'-' +
-				date.getDate().toString()
+			let formatedDate = formatDate(req.params.date)
 			let result =
 				await this.bookingService.getAllBookingByDateAndDietitianID(
 					formatedDate,
@@ -102,6 +93,7 @@ export class BookingController {
 		} catch (e) {
 			logger.error(e.message)
 			res.json({ success: false, message: e.message })
+			return
 		}
 	}
 }

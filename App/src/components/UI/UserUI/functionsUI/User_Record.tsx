@@ -1,22 +1,184 @@
 import {
   Button,
+  CloseButton,
   Divider,
   Flex,
   Heading,
   Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  useDisclosure,
   useMediaQuery,
+  Text,
 } from "@chakra-ui/react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { BGDetail, BPDetail, WeightDetail } from "../../../../utility/models";
+
+const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserBPBGRecord() {
+  //FAKE UID
+  let uid = 1;
+  //FAKE UID
+
+  //MediaQuery hooks
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  //variables for weight, bp and bg submission
+  const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
+  const [weightInput, setWeightInput] = useState<string>("");
+  const [bpRec, setBpRec] = useState<Array<BPDetail>>([]);
+  const [diaInput, setDiaInput] = useState<string>("");
+  const [sysInput, setSysInput] = useState<string>("");
+  const [bgInput, setBGInput] = useState<string>("");
+  const [dateTimeSubmit, setDateTimeSubmit] = useState<Date>(new Date());
+  const [bgRec, setBgRec] = useState<Array<BGDetail>>([]);
+  const [modalPostControl, setModalPostControl] = useState<"bp" | "bg" | "">(
+    ""
+  );
+
+  //###############
+  //API Functions
+  //###############
+  //fetch
+  async function fetchWeightRecordFromServerByID() {
+    const { data } = await axios.get(
+      `${REACT_APP_API_SERVER}/diet/weight/${uid}`
+    );
+    setWeightRec(data.weightRec);
+  }
+  async function fetchBPRecordFromServerByID() {
+    const { data } = await axios.get(`${REACT_APP_API_SERVER}/diet/bp/${uid}`);
+    setBpRec(data.bpRec);
+  }
+  async function fetchBGRecordFromServerByID() {
+    const { data } = await axios.get(`${REACT_APP_API_SERVER}/diet/bg/${uid}`);
+    setBgRec(data.bgRec);
+  }
+  //delete
+  async function deleteRecord(
+    type: "weight" | "bp" | "bg",
+    rid: number | string
+  ) {
+    await axios.delete(`${REACT_APP_API_SERVER}/diet/${type}/${rid}`);
+    switch (type) {
+      case "weight":
+        fetchWeightRecordFromServerByID();
+        return;
+      case "bp":
+        fetchBPRecordFromServerByID();
+        return;
+      case "bg":
+        fetchBGRecordFromServerByID();
+        return;
+      default:
+        return;
+    }
+  }
+  //post
+  async function postWeightRecord(weight: number, date: string, uid: number) {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/weight`, {
+        weight,
+        date,
+        uid,
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳體重",
+        });
+        fetchWeightRecordFromServerByID();
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳體重，請稍後再試",
+        });
+      });
+  }
+
+  async function postBPRecord(
+    sys_bp: number,
+    dia_bp: number,
+    date: string,
+    time: string,
+    uid: number
+  ) {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/bp`, {
+        sys_bp,
+        dia_bp,
+        date,
+        time,
+        uid,
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳血壓指數",
+        });
+        fetchBPRecordFromServerByID();
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳血壓指數，請稍後再試",
+        });
+      });
+  }
+  async function postBGRecord(
+    bg: number,
+    date: string,
+    time: string,
+    uid: number
+  ) {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/bg`, {
+        bg,
+        date,
+        time,
+        uid,
+      })
+      .then((result) => {
+        console.log("bg status", result.status);
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳血糖指數",
+        });
+        fetchBGRecordFromServerByID();
+      })
+      .catch((e) => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳血糖指數，請稍後再試",
+        });
+      });
+  }
+  //end API functions
+  //###############
+  useEffect(() => {
+    fetchWeightRecordFromServerByID();
+    fetchBGRecordFromServerByID();
+    fetchBPRecordFromServerByID();
+  }, []);
+
   return (
     <>
       <Flex
@@ -32,10 +194,10 @@ export default function UserBPBGRecord() {
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"800px"}
+          maxH={"720px"}
           p={5}
         >
-          <Flex>
+          <Flex h={isSmallerThan600 ? "auto" : "150px"}>
             <Flex>
               <Image
                 boxSize={isSmallerThan600 ? "100px" : "150px"}
@@ -55,9 +217,33 @@ export default function UserBPBGRecord() {
                   placeholder="體重(kg)"
                   htmlSize={isSmallerThan600 ? 6 : 4}
                   width="auto"
+                  type={"number"}
+                  value={weightInput}
                   size={"sm"}
+                  onChange={(e) => {
+                    setWeightInput(e.target.value);
+                  }}
                 />
-                <Button size={"sm"}>更新</Button>
+                <Button
+                  size={"sm"}
+                  onClick={async () => {
+                    if (!weightInput || isNaN(parseInt(weightInput))) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "請輸入數字",
+                      });
+                      return;
+                    }
+                    await postWeightRecord(
+                      parseInt(weightInput),
+                      new Date().toISOString(),
+                      uid
+                    );
+                    setWeightInput("");
+                  }}
+                >
+                  更新
+                </Button>
               </Flex>
             </Flex>
           </Flex>
@@ -65,22 +251,41 @@ export default function UserBPBGRecord() {
           <Heading textAlign={"center"} my={2}>
             體重記錄
           </Heading>
-          <Flex w={"100%"} maxH={"500px"} overflow={"auto"}>
+          <Flex w={"100%"} maxH={"480px"} overflow={"auto"}>
             {/* Weight Table */}
             <Table variant="simple" size={"sm"}>
-              <Thead position="sticky" top={0} bg={"gray.300"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
                 <Tr>
                   <Th>日期</Th>
-                  <Th>時間</Th>
-                  <Th isNumeric>體重(kg)</Th>
+                  <Th textAlign={"center"}>體重(kg)</Th>
+                  <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>22/09/2022</Td>
-                  <Td>09:00</Td>
-                  <Td isNumeric>60.4</Td>
-                </Tr>
+                {weightRec.map((rec) => {
+                  return (
+                    <Tr key={`weight_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.weight}
+                      </Td>
+                      <Td>
+                        <CloseButton
+                          size="sm"
+                          fontSize={"8"}
+                          onClick={() => {
+                            deleteRecord("weight", rec.id);
+                          }}
+                        />
+                      </Td>
+                    </Tr>
+                  );
+                })}
               </Tbody>
             </Table>
             {/* Weight Table end */}
@@ -92,10 +297,10 @@ export default function UserBPBGRecord() {
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"800px"}
+          maxH={"720px"}
           p={5}
         >
-          <Flex>
+          <Flex h={isSmallerThan600 ? "auto" : "150px"}>
             <Flex>
               <Image
                 boxSize={isSmallerThan600 ? "70px" : "130px"}
@@ -116,16 +321,41 @@ export default function UserBPBGRecord() {
                     placeholder="上壓(mmHg)"
                     htmlSize={6}
                     width="auto"
-                    size={"sm"}
+                    size={"xs"}
+                    value={sysInput}
+                    onChange={(e) => setSysInput(e.target.value)}
                   />
                   <Input
                     placeholder="下壓(mmHg)"
                     htmlSize={6}
                     width="auto"
-                    size={"sm"}
+                    size={"xs"}
+                    value={diaInput}
+                    onChange={(e) => setDiaInput(e.target.value)}
                   />
                 </Flex>
-                <Button size={"sm"}>更新</Button>
+                <Button
+                  size={"sm"}
+                  onClick={() => {
+                    if (
+                      !sysInput ||
+                      isNaN(parseInt(sysInput)) ||
+                      !diaInput ||
+                      isNaN(parseInt(diaInput))
+                    ) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "請輸入數字",
+                      });
+                      return;
+                    } else {
+                      setModalPostControl("bp");
+                      onOpen();
+                    }
+                  }}
+                >
+                  更新
+                </Button>
               </Flex>
             </Flex>
           </Flex>
@@ -134,21 +364,49 @@ export default function UserBPBGRecord() {
             血壓記錄
           </Heading>
           {/* BP Table */}
-          <Flex w={"100%"} maxH={"500px"} overflow={"auto"}>
+          <Flex
+            w={"100%"}
+            maxH={"500px"}
+            overflow={"auto"}
+            overflowX={"hidden"}
+          >
             <Table variant="simple" size={"sm"}>
-              <Thead position="sticky" top={0} bg={"gray.300"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
                 <Tr>
                   <Th>日期</Th>
                   <Th>時間</Th>
-                  <Th isNumeric>上壓/下壓(mmHg)</Th>
+                  <Th textAlign={"center"}>上壓/下壓(mmHg)</Th>
+                  <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>22/09/2022</Td>
-                  <Td>09:00</Td>
-                  <Td isNumeric>110/60</Td>
-                </Tr>
+                {bpRec.map((rec) => {
+                  return (
+                    <Tr key={`bp_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {rec.time.slice(0, -3)}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.sys_bp}/{rec.dia_bp}
+                      </Td>
+                      <Td w={"1%"}>
+                        <CloseButton
+                          size="sm"
+                          fontSize={"8"}
+                          onClick={() => {
+                            deleteRecord("bp", rec.id);
+                          }}
+                        />
+                      </Td>
+                    </Tr>
+                  );
+                })}
               </Tbody>
             </Table>
           </Flex>
@@ -160,10 +418,10 @@ export default function UserBPBGRecord() {
           bg={"gray.500"}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"800px"}
+          maxH={"720px"}
           p={5}
         >
-          <Flex>
+          <Flex h={isSmallerThan600 ? "auto" : "150px"}>
             <Flex>
               <Image
                 boxSize={isSmallerThan600 ? "100px" : "150px"}
@@ -184,8 +442,28 @@ export default function UserBPBGRecord() {
                   htmlSize={isSmallerThan600 ? 6 : 2}
                   width="auto"
                   size={"sm"}
+                  value={bgInput}
+                  onChange={(e) => {
+                    setBGInput(e.target.value);
+                  }}
                 />
-                <Button size={"sm"}>更新</Button>
+                <Button
+                  size={"sm"}
+                  onClick={() => {
+                    if (!bgInput || isNaN(parseInt(bgInput))) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "請輸入數字",
+                      });
+                      return;
+                    } else {
+                      setModalPostControl("bg");
+                      onOpen();
+                    }
+                  }}
+                >
+                  更新
+                </Button>
               </Flex>
             </Flex>
           </Flex>
@@ -194,27 +472,161 @@ export default function UserBPBGRecord() {
             血糖度數記錄
           </Heading>
           {/* BG Table */}
-          <Flex w={"100%"} maxH={"500px"} overflow={"auto"}>
+          <Flex
+            w={"100%"}
+            maxH={"500px"}
+            overflow={"auto"}
+            overflowX={"hidden"}
+          >
             <Table variant="simple" size={"sm"}>
-              <Thead position="sticky" top={0} bg={"gray.300"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
                 <Tr>
                   <Th>日期</Th>
                   <Th>時間</Th>
-                  <Th isNumeric>血糖(mmol/L)</Th>
+                  <Th fontSize={"12"} textAlign={"center"}>
+                    血糖(mmol/L)
+                  </Th>
+                  <Th w={"1%"}></Th>
                 </Tr>
               </Thead>
-              <Tbody>
-                <Tr>
-                  <Td>22/09/2022</Td>
-                  <Td>09:00</Td>
-                  <Td isNumeric>5.6</Td>
-                </Tr>
+              <Tbody fontSize={"2px"}>
+                {bgRec.map((rec) => {
+                  return (
+                    <Tr key={`bg_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {rec.time.slice(0, -3)}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.bg_measurement}
+                      </Td>
+                      <Td w={"1%"}>
+                        <CloseButton
+                          size="sm"
+                          fontSize={"8"}
+                          onClick={() => {
+                            deleteRecord("bg", rec.id);
+                          }}
+                        />
+                      </Td>
+                    </Tr>
+                  );
+                })}
               </Tbody>
             </Table>
           </Flex>
           {/* BG Table end */}
         </Flex>
       </Flex>
+      {/* Modal for timeDate submit */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>請選擇你的日期和時間</ModalHeader>
+          <ModalCloseButton
+            onClick={() => {
+              setSysInput("");
+              setDiaInput("");
+              setBGInput("");
+              setModalPostControl("");
+            }}
+          />
+          <ModalBody>
+            {modalPostControl === "bp" ? (
+              <>
+                <Text>
+                  <b>上壓： </b>
+                  {sysInput} mmHg
+                </Text>
+                <Text>
+                  <b>下壓： </b>
+                  {diaInput} mmHg
+                </Text>
+              </>
+            ) : (
+              ""
+            )}
+            {modalPostControl === "bg" ? (
+              <>
+                <Text>
+                  <b>血糖：</b> {bgInput} mmol/L
+                </Text>
+              </>
+            ) : (
+              ""
+            )}
+            <Text mt={5} mb={2} fontWeight={"bold"}>
+              日期及時間：
+            </Text>
+            <Input
+              placeholder="Select Date and Time"
+              size="md"
+              type="datetime-local"
+              onChange={(e) => setDateTimeSubmit(new Date(e.target.value))}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={async () => {
+                if (modalPostControl === "") {
+                  await Swal.fire({
+                    icon: "error",
+                    title: "發生錯誤，請再重新更新資料",
+                  });
+                }
+                if (modalPostControl === "bp") {
+                  await postBPRecord(
+                    parseInt(sysInput),
+                    parseInt(diaInput),
+                    dateTimeSubmit.toISOString(),
+                    dateTimeSubmit.toLocaleTimeString(),
+                    uid
+                  );
+                  setSysInput("");
+                  setDiaInput("");
+                }
+                if (modalPostControl === "bg") {
+                  console.log(
+                    bgInput,
+                    dateTimeSubmit.toISOString(),
+                    dateTimeSubmit.toLocaleTimeString()
+                  );
+                  await postBGRecord(
+                    parseInt(bgInput),
+                    dateTimeSubmit.toISOString(),
+                    dateTimeSubmit.toLocaleTimeString(),
+                    uid
+                  );
+                  setBGInput("");
+                }
+                onClose();
+                setModalPostControl("");
+              }}
+            >
+              確認
+            </Button>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                onClose();
+                setSysInput("");
+                setDiaInput("");
+                setBGInput("");
+                setModalPostControl("");
+              }}
+            >
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/*  */}
     </>
   );
 }
