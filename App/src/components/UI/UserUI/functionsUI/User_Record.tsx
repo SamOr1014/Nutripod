@@ -93,26 +93,25 @@ export default function UserBPBGRecord() {
   }
   //post
   async function postWeightRecord(weight: number, date: string, uid: number) {
-    const { data, status } = await axios.post(
-      `${REACT_APP_API_SERVER}/diet/weight`,
-      {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/weight`, {
         weight,
         date,
         uid,
-      }
-    );
-    if (!data.success || status === 500) {
-      Swal.fire({
-        icon: "error",
-        title: "暫時未能上傳體重，請稍後再試",
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳體重",
+        });
+        fetchWeightRecordFromServerByID();
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳體重，請稍後再試",
+        });
       });
-    } else {
-      Swal.fire({
-        icon: "success",
-        title: "你成功上傳體重",
-      });
-      fetchWeightRecordFromServerByID();
-    }
   }
 
   async function postBPRecord(
@@ -122,28 +121,27 @@ export default function UserBPBGRecord() {
     time: string,
     uid: number
   ) {
-    const { data, status } = await axios.post(
-      `${REACT_APP_API_SERVER}/diet/bp`,
-      {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/bp`, {
         sys_bp,
         dia_bp,
         date,
         time,
         uid,
-      }
-    );
-    if (!data.success || status === 500) {
-      Swal.fire({
-        icon: "error",
-        title: "暫時未能上傳血壓指數，請稍後再試",
+      })
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳血壓指數",
+        });
+        fetchBPRecordFromServerByID();
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳血壓指數，請稍後再試",
+        });
       });
-    } else {
-      Swal.fire({
-        icon: "success",
-        title: "你成功上傳血壓指數",
-      });
-      fetchBPRecordFromServerByID();
-    }
   }
   async function postBGRecord(
     bg: number,
@@ -151,28 +149,27 @@ export default function UserBPBGRecord() {
     time: string,
     uid: number
   ) {
-    const { data, status } = await axios.post(
-      `${REACT_APP_API_SERVER}/diet/bg`,
-      {
+    axios
+      .post(`${REACT_APP_API_SERVER}/diet/bg`, {
         bg,
         date,
         time,
         uid,
-      }
-    );
-    console.log("bg status", status);
-    if (!data.success || status === 500) {
-      Swal.fire({
-        icon: "error",
-        title: "暫時未能上傳血糖指數，請稍後再試",
+      })
+      .then((result) => {
+        console.log("bg status", result.status);
+        Swal.fire({
+          icon: "success",
+          title: "你成功上傳血糖指數",
+        });
+        fetchBGRecordFromServerByID();
+      })
+      .catch((e) => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能上傳血糖指數，請稍後再試",
+        });
       });
-    } else {
-      Swal.fire({
-        icon: "success",
-        title: "你成功上傳血糖指數",
-      });
-      fetchBGRecordFromServerByID();
-    }
   }
   //end API functions
   //###############

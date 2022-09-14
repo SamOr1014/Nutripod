@@ -3,11 +3,6 @@ import { Knex } from 'knex'
 export class DietRecordServices {
 	constructor(private knex: Knex) {}
 
-	async get() {
-		const result = await this.knex('users_diets').select('*')
-		return result
-	}
-
 	async getWeightByUserID(userID: number | string) {
 		const result = await this.knex('users_weight')
 			.select('id', 'date', 'weight')
@@ -48,16 +43,16 @@ export class DietRecordServices {
 	}
 
 	async postBP(
-		dia_bp: number,
 		sys_bp: number,
+		dia_bp: number,
 		date: string,
 		time: string,
 		userID: string | number
 	) {
 		const result = await this.knex('users_blood_pressure')
 			.insert({
-				dia_bp: dia_bp,
 				sys_bp: sys_bp,
+				dia_bp: dia_bp,
 				date: date,
 				time: time,
 				user_id: userID

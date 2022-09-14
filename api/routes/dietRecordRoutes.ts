@@ -3,8 +3,6 @@ import { dietRecordController } from '../server'
 
 export const dietRecordRoutes = express.Router()
 
-dietRecordRoutes.get('/', dietRecordController.get)
-
 dietRecordRoutes.get('/weight/:uid', dietRecordController.getWeightByUserID)
 dietRecordRoutes.get('/bp/:uid', dietRecordController.getBPByUserID)
 dietRecordRoutes.get('/bg/:uid', dietRecordController.getBGByUserID)
