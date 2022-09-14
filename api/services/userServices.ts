@@ -1,7 +1,7 @@
 import { Knex } from 'knex'
 
 export class UserServices {
-    constructor(private knex: Knex) { }
+	constructor(private knex: Knex) {}
 
     async login(username: string) {
         const userResult = await this.knex('users')
@@ -17,6 +17,10 @@ export class UserServices {
         }
         return userResult
 
-    }
-
+	async getAllDietitian() {
+		const dietitians = await this.knex('dietitian')
+			.select('id', 'first_name', 'last_name')
+			.where('is_deleted', false)
+		return dietitians
+	}
 }

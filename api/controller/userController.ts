@@ -6,14 +6,13 @@ import jwt from "../jwt"
 import { checkPassword } from "../utilities/hash"
 
 export class UserController {
-    constructor(private userService: UserServices) { }
+	constructor(private userService: UserServices) {}
 
-    login = async (req: Request, res: Response) => {
-
-        try {
-            console.log("received in server userController")
-            const username = req.body.data.user.username
-            const password = req.body.data.user.password
+	login = async (req: Request, res: Response) => {
+		try {
+			console.log('received in server userController')
+			const username = req.body.data.user.username
+			const password = req.body.data.user.password
 
             if (!username || !password) {
                 res.status(400).json({
@@ -23,7 +22,7 @@ export class UserController {
                 return
             }
 
-            const result = await this.userService.login(username)
+			const result = await this.userService.login(username)
 
             if (result.length === 0) {
                 res.status(400).json({ success: false, message: "No such user" })

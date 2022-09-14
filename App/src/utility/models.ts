@@ -33,3 +33,23 @@ export interface UserBookingDetailByDateAndDietitian {
   users_id: number;
   dietitian_id: number;
 }
+
+export interface WeightDetail {
+  id: number;
+  date: string;
+  weight: number;
+}
+export interface BPDetail {
+  id: number;
+  date: string;
+  sys_bp: number;
+  dia_bp: number;
+  time: string;
+}
+
+export interface BGDetail {
+  id: number;
+  date: string;
+  bg_measurement: number;
+  time: string;
+}

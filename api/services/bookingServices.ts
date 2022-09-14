@@ -18,9 +18,9 @@ export class BookingServices {
 				'dietitian.last_name'
 			)
 			.innerJoin('timeslot', 'booking.time', 'timeslot.id')
-			.innerJoin('users', 'booking.users_id', 'users.id')
+			.innerJoin('users', 'booking.user_id', 'users.id')
 			.innerJoin('dietitian', 'booking.dietitian_id', 'dietitian.id')
-			.where('booking.users_id', userID)
+			.where('booking.user_id', userID)
 			.andWhere('booking.is_deleted', 'false')
 			.andWhere('booking.date', '>=', 'NOW()')
 			.orderBy('booking.date', 'asc')
@@ -37,7 +37,7 @@ export class BookingServices {
 				{
 					date: date,
 					time: timeslotID,
-					users_id: userID,
+					user_id: userID,
 					dietitian_id: dietitianID
 				}
 			])
@@ -52,7 +52,7 @@ export class BookingServices {
 		const result = await this.knex('booking')
 			.update({ is_deleted: true })
 			.where('id', bookingID)
-			.andWhere('users_id', userID)
+			.andWhere('user_id', userID)
 			.returning('*')
 		return result
 	}
