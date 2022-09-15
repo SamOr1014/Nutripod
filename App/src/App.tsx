@@ -17,8 +17,8 @@ import { IRootState, useAppDispatch } from "./redux/store";
 import { fetchDietitianDetail } from "./redux/Slice/dietitianSlice";
 import { fetchTimeSlotToRedux } from "./redux/Slice/timeslotSlice";
 import { useSelector } from "react-redux";
-import UserPrivate from "../src/components/userPrivate"
-import DietitianPrivate from "../src/components/userPrivate"
+import UserPrivate from "./components/userPrivate"
+import DietitianPrivate from "./components/dietitianPrivate"
 
 function App() {
   const dispatch = useAppDispatch();
@@ -31,7 +31,7 @@ function App() {
       <Route path="/" element={<FrontPage />} />
 
       <Route path="dashboard" element={<UserPrivate/>}>
-      <Route path="" element={<DashBoard />}>
+      <Route element={<DashBoard />}>
         <Route index element={<UserMain />} />
         <Route path="booking" element={<UserBooking />} />
         <Route path="history" element={<UserBPBGRecord />} />
@@ -42,7 +42,7 @@ function App() {
       </Route>
 
       <Route path="dietitian" element={<DietitianPrivate/>}>
-      <Route path="" element={<DashBoardDietitian />}>
+      <Route element={<DashBoardDietitian />}>
         <Route index element={<DietitianMain />} />
         <Route path="patients" element={<PatientSearchPanel />} />
         <Route path="posts" element={<UserPost />} />

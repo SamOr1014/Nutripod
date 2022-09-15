@@ -23,10 +23,11 @@ import {
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
-import { Link as ReactLink } from "react-router-dom";
+import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { IRootState } from "../../redux/store";
 
 export default function Banner(props: { element: any }) {
+  const navigate = useNavigate();
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
@@ -40,6 +41,12 @@ export default function Banner(props: { element: any }) {
   // If the role is dietitian render a different route for account
   const accountDir = "/dashboard/account";
   //   state.role === "dietitian" ? "/dietitian/account" : "/dashboard/account";
+
+  const logout = async () => {
+    window.localStorage.clear()
+    window.sessionStorage.clear()
+    window.location.href = "http://localhost:3000";
+  }
 
   function MobileNav() {
     return (
@@ -132,10 +139,11 @@ export default function Banner(props: { element: any }) {
               </MenuItem>
             </Link>
 
-            <Link as={ReactLink} to="/api/logout">
+            <Link >
               <MenuItem
                 fontWeight="bold"
                 fontSize={isLargerThan1700 ? "xl" : "md"}
+                onClick={() => logout()}
               >
                 登出
               </MenuItem>

@@ -7,8 +7,9 @@ import { Outlet } from "react-router-dom"
 export function UserPrivate() {
 
     const isLoggedInByUser = useSelector((state: IRootState) => state.user.user[0].is_user)
+    const isDietitian = useSelector((state: IRootState) => state.user.dietitian[0].is_user)
 
-    if (isLoggedInByUser === null) {
+    if (isLoggedInByUser === null || isDietitian === false ) {
         return <Navigate to="/login" replace />;
 
     }
@@ -16,6 +17,7 @@ export function UserPrivate() {
     return (
        <Outlet/>
     )
+
 }
 
 export default UserPrivate

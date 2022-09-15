@@ -6,7 +6,37 @@ import jwt from '../jwt'
 import { checkPassword } from '../utilities/hash'
 
 export class UserController {
-	constructor(private userService: UserServices) {}
+	constructor(private userService: UserServices) { }
+
+	checkUserByToken = async (req: Request, res: Response) => {
+
+		try {
+			const id = req.body.data.id
+			const username = req.body.data.username
+
+			if (!id || !username) {
+				res.status(400).json({
+					success: false,
+				})
+				return
+			}
+
+			const result = await this.userService.checkToken(id,username)
+
+			if (result.length === 0) {
+				res.status(400).json({
+					success: false,
+				})
+				return
+			}
+			res.json({success:true, result: result[0]})
+
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(400).json({ success: false })
+		}
+	}
 
 	login = async (req: Request, res: Response) => {
 		try {
@@ -51,7 +81,7 @@ export class UserController {
 			}
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false })
+			res.status(500).json({ success: false })
 		}
 	}
 

@@ -53,3 +53,8 @@ export interface BGDetail {
   bg_measurement: number;
   time: string;
 }
+
+export interface token {
+  id: number
+  username: string
+}

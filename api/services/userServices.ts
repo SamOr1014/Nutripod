@@ -1,17 +1,30 @@
 import { Knex } from 'knex'
 
 export class UserServices {
-	constructor(private knex: Knex) {}
+	constructor(private knex: Knex) { }
 
-	async login(username: string) {
+	async checkToken(id: number, username: string) {
+
 		const userResult = await this.knex('users')
-			.select('*')
-			.where('username', username)
+			.select("*").where("id", id).andWhere('username', username).andWhere("is_deleted", false)
 
 		if (userResult.length === 0) {
 			const dietitianResult = await this.knex('dietitian')
-				.select('*')
-				.where('username', username)
+			.select('*').where("id", id).andWhere('username', username).andWhere("is_deleted", false)
+
+			return dietitianResult
+		}
+
+		return userResult
+	}
+
+	async login(username: string) {
+		const userResult = await this.knex('users')
+			.select('*').where('username', username).andWhere("is_deleted", false)
+
+		if (userResult.length === 0) {
+			const dietitianResult = await this.knex('dietitian')
+				.select('*').where('username', username).andWhere("is_deleted", false)
 			return dietitianResult
 		}
 		return userResult

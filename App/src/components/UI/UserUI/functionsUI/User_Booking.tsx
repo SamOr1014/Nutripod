@@ -18,6 +18,8 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../redux/store";
 import { UserBookingDetailByDateAndDietitian } from "../../../../utility/models";
+import locateToken from "../../../../utility/Token"
+
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserBooking() {
@@ -43,12 +45,18 @@ export default function UserBooking() {
     date: string
   ) {
     axios
-      .post(`${REACT_APP_API_SERVER}/booking`, {
+      .post(`${REACT_APP_API_SERVER}/booking`,
+      {
         date: date,
         time: timeslotID,
         dietitian_id: dietitianID,
         uid: userInfo[0].id,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
       })
+
       .then(async () => {
         await fetchBookingDetail();
       })

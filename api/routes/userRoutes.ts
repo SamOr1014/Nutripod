@@ -4,7 +4,7 @@ import { userController } from '../server'
 export const userRoutes = express.Router()
 
 userRoutes.post('/login', userController.login)
-// userRoutes.post("/", userController.get)
+userRoutes.post('/checkToken', userController.checkUserByToken)
 // userRoutes.put("/", userController.get)
 // userRoutes.delete("/", userController.get)
 userRoutes.get('/dietitians', userController.getAllDietitian)

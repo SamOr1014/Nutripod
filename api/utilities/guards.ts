@@ -1,8 +1,8 @@
 import { Bearer } from 'permit';
-// import jwtSimple from 'jwt-simple';
+import jwtSimple from 'jwt-simple';
 import express from 'express';
-// import jwt from '../jwt';
-// import { userServices } from "../server"
+import jwt from '../jwt';
+import { userServices } from "../server"
 import { logger } from '../configs/winston'
 
 
@@ -20,7 +20,7 @@ declare global {
 }
 
 const permit = new Bearer({
-    query:"access_token"
+    query: "access_token"
 })
 
 export async function isUserLoggedIn(
@@ -30,12 +30,21 @@ export async function isUserLoggedIn(
 ) {
     try {
         const token = permit.check(req)
-        console.log(token)
-        console.log("Return")
-        return 
-    }catch(e) {
+
+        if (token === "null") {
+            res.status(401).json({ msg: "Permission Denied" })
+            return
+        }
+        const payload = jwtSimple.decode(token, jwt.jwtSecret as string)
+
+        const user = await userServices.checkToken(payload.id, payload.username)
+        if (user) {
+            return next()
+        }
+
+    } catch (e) {
         logger.error(e.message)
-        res.status(401).json({msg:"Permission Denied"})
-        return 
+        res.status(401).json({ msg: "Permission Denied" })
+        return
     }
 }
