@@ -56,4 +56,13 @@ export class UserController {
 			res.json({ success: false })
 		}
 	}
+
+	getAllDietitian = async (req: Request, res: Response) => {
+		try {
+			res.json(await this.userService.getAllDietitian())
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
 }
