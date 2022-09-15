@@ -252,8 +252,12 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>早餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image
+            boxSize={isSmallerThan600 ? 8 : 20}
+            src="/images/breakfast.png"
+          />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>早餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -272,8 +276,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>午餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>午餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -292,8 +297,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>晚餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>晚餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -312,8 +318,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>小食</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>小食</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>

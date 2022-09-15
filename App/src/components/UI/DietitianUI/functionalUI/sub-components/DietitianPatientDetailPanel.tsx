@@ -230,7 +230,7 @@ export default function DietitianPatientDetailPanel(
     return (
       <>
         {/* The popover date picker */}
-        <Flex alignSelf={"center"} justifyContent={"center"} w="100%">
+        <Flex alignSelf={"center"} justifyContent={"center"} w="100%" my={-3}>
           <Popover>
             <PopoverTrigger>
               <Box as="button" fontSize={"xl"} fontWeight={"extrabold"}>
@@ -282,7 +282,7 @@ export default function DietitianPatientDetailPanel(
           <Flex
             w={isSmallerThan600 ? "100%" : "47%"}
             maxH={isSmallerThan600 ? "100%" : "480px"}
-            minH={"480px"}
+            minH={"500px"}
             justifyContent={"center"}
             gap={5}
             flexWrap={"wrap"}
@@ -294,9 +294,8 @@ export default function DietitianPatientDetailPanel(
               bg={"gray.500"}
               minW={"100%"}
               maxH={isSmallerThan600 ? "auto" : "45%"}
+              p={4}
             >
-              <Heading textAlign={"center"}>攝取統計📊</Heading>
-              <Divider my={3} />
               <Center flex={1} justifyContent={"center"}>
                 <StatGroup flex={"1 1 0%"}>
                   <Stat textAlign={"center"}>
@@ -308,7 +307,9 @@ export default function DietitianPatientDetailPanel(
                       />
                     </StatLabel>
                     <StatLabel>本日攝取量📈</StatLabel>
-                    <StatNumber>345,670kcal</StatNumber>
+                    <StatNumber fontSize={isSmallerThan600 ? "md" : "auto"}>
+                      345,670kcal
+                    </StatNumber>
                     <StatHelpText>
                       比前一日
                       <StatArrow type="increase" />
@@ -325,7 +326,9 @@ export default function DietitianPatientDetailPanel(
                       />
                     </StatLabel>
                     <StatLabel>本月平均攝取量📈</StatLabel>
-                    <StatNumber>345,670kcal</StatNumber>
+                    <StatNumber fontSize={isSmallerThan600 ? "md" : "auto"}>
+                      345,670kcal
+                    </StatNumber>
                     <StatHelpText>
                       比上月
                       <StatArrow type="increase" />
@@ -341,12 +344,16 @@ export default function DietitianPatientDetailPanel(
               flexDir={"column"}
               bg={"gray.500"}
               maxH={"45%"}
+              minH={"500px"}
               w={"100%"}
               borderRadius={"3xl"}
               alignItems={"center"}
+              p={3}
             >
-              <Heading textAlign={"center"}>Exercise</Heading>
-              <Flex w={"95%"} maxH={"80%"} overflow={"auto"}>
+              <Heading textAlign={"center"} fontSize={"xl"} mb={1}>
+                Exercise
+              </Heading>
+              <Flex w={"100%"} maxH={"90%"} overflow={"auto"}>
                 <Table
                   size={isSmallerThan600 ? "sm" : "md"}
                   maxW={"100%"}

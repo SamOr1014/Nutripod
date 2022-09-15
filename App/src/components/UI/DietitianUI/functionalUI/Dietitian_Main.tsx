@@ -198,12 +198,6 @@ export default function DietitianMain() {
               }}
               required={true}
               fixedWeeks
-              disabled={[
-                {
-                  from: new Date(0, 1, 1),
-                  to: date,
-                },
-              ]}
             />
           </Flex>
           <Flex alignItems={"center"} flexDir={"column"} mt={-5}>
