@@ -15,10 +15,7 @@ export const loginThunk = createAsyncThunk<any, userInfo, ThunkExtraInfo>(
         try {
         let info = { username, password }
         const result = await axios.post
-        (`${REACT_APP_API_SERVER}/api/user/`, {
-            headers: {
-                "content-type": "application/json"
-            },
+        (`${REACT_APP_API_SERVER}/user/login`, {
             data: {
                 user:info
             }
