@@ -46,13 +46,29 @@ export default function UserBooking() {
     dietitianID: string,
     date: string
   ) {
-    const result = await axios.post(`${REACT_APP_API_SERVER}/booking`, {
-      date: date,
-      time: timeslotID,
-      dietitian_id: dietitianID,
-      user: uID,
-    });
-    await fetchBookingDetail();
+    axios
+      .post(`${REACT_APP_API_SERVER}/booking`, {
+        date: date,
+        time: timeslotID,
+        dietitian_id: dietitianID,
+        uid: uID,
+      })
+      .then(async () => {
+        await fetchBookingDetail();
+      })
+      .catch(({ response }) => {
+        if (response.data.rebook) {
+          Swal.fire({
+            icon: "warning",
+            title: "同日不能重複預約",
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "發生錯誤，請稍後再試",
+          });
+        }
+      });
   }
 
   async function fetchBookingDetail() {
@@ -221,7 +237,7 @@ export default function UserBooking() {
                       onClick={() => {
                         Swal.fire({
                           icon: "question",
-                          title: "請",
+                          title: "請確認以下時間",
                           text: `Time: ${
                             timeslotDetail.time
                           }, Date: ${selectedDate.toLocaleDateString()}`,
@@ -236,9 +252,10 @@ export default function UserBooking() {
                             );
                             Swal.fire({
                               icon: "success",
-                              title: `你已經預約${selectedDate.toLocaleDateString()}的${
-                                timeslotDetail.time
-                              }`,
+                              title: `你已經預約${selectedDate.toLocaleDateString()}的${timeslotDetail.time.slice(
+                                0,
+                                -3
+                              )}`,
                             });
                           }
                         });

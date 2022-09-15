@@ -3,4 +3,7 @@ import { medicalRecordController } from '../server'
 
 export const medicalRecordRoutes = express.Router()
 
-medicalRecordRoutes.get('/', medicalRecordController.get)
+medicalRecordRoutes.get(
+	'/user/:uid',
+	medicalRecordController.getUserMedRecByUserID
+)

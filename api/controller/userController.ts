@@ -39,7 +39,7 @@ export class UserController {
 			res.json(await this.userService.getAllDietitian())
 		} catch (e) {
 			logger.error(e.message)
-			res.status(500).json({ success: false })
+			res.status(500).json({ success: false, message: e.message })
 		}
 	}
 }

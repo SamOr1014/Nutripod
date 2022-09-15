@@ -2,7 +2,7 @@ import { Knex } from 'knex'
 
 export class DietRecordServices {
 	constructor(private knex: Knex) {}
-
+	//##############Weight BP BG Record Services#############################
 	async getWeightByUserID(userID: number | string) {
 		const result = await this.knex('users_weight')
 			.select('id', 'date', 'weight')
@@ -104,6 +104,22 @@ export class DietRecordServices {
 			})
 			.where('id', rid)
 			.returning('id')
+		return result
+	}
+
+	//##################Exercise Services###############################
+
+	async getExerciseByID(uid: string | number, date: string) {
+		const result = await this.knex('users_exercises')
+			.select('*')
+			.where('user_id', uid)
+			.andWhere('date', date)
+			.andWhere('is_deleted', false)
+			.innerJoin(
+				'exercises_types',
+				'users_exercises.exercise',
+				'exercises_types.id'
+			)
 		return result
 	}
 }

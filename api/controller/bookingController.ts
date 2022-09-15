@@ -35,22 +35,37 @@ export class BookingController {
 				date: string
 				time: number
 				dietitian_id: number
-				user: number
+				uid: number
 			} = req.body
+			//check if 4 params are collected
 			if (Object.keys(bookingDetail).length < 4) {
 				res.status(400).json({
 					success: false,
+					rebook: false,
 					message: 'Invalid information provided'
 				})
 				return
 			}
-			// const result = await this.bookingService.postUserBooking()
-			let { date, time, dietitian_id, user } = bookingDetail
-			let formatedDate = formatDate(date)
+			let { date, time, dietitian_id, uid } = bookingDetail
+			let formattedDate = formatDate(date)
+			//Prevent rebooking in the same date
+			const checkRebookInSameDay =
+				await this.bookingService.checkIfSameDayHasBooking(
+					uid,
+					formattedDate
+				)
+			if (checkRebookInSameDay.length > 0) {
+				res.status(403).json({
+					success: false,
+					rebook: true,
+					message: 'Cannot Rebook in the same day'
+				})
+				return
+			}
 			const bookingID = await this.bookingService.postUserBooking(
-				user,
+				uid,
 				dietitian_id,
-				formatedDate,
+				formattedDate,
 				time
 			)
 			res.status(200).json({ success: true, bookingID: bookingID })

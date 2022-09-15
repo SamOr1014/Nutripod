@@ -16,10 +16,14 @@ import {
   Thead,
   Tr,
   useMediaQuery,
+  Text,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../redux/store";
+
 const { REACT_APP_API_SERVER } = process.env;
 interface UserBookingData {
   id: number;
@@ -30,43 +34,73 @@ interface UserBookingData {
 }
 
 export default function UserMed() {
-  const userID = 1;
-
+  const uID = 1;
+  const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const [booking, setBooking] = useState<Array<UserBookingData>>([]);
+  const [medRec, setMedRec] = useState<Array<any>>([]);
 
-  async function fetchBooking() {
-    let userBooking = await axios.get(
-      `${REACT_APP_API_SERVER}/booking/user/${userID}`
-    );
-    if (userBooking.data.success) {
-      if (userBooking.data.data) {
-        setBooking(userBooking.data.data);
-      } else {
-        setBooking([]);
-      }
-    } else {
-      await Swal.fire({
-        icon: "error",
-        title: "Fail to get your booking, Please try again",
-      });
+  const userAge = () => {
+    let today = new Date();
+    let birthDate = new Date(medRec[0].birthday);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
+    return age;
+  };
+  //#############
+  //API FUNCTIONS
+  //#############
+  //fetching
+  async function fetchBooking() {
+    axios
+      .get(`${REACT_APP_API_SERVER}/booking/user/${uID}`)
+      .then((response) => {
+        setBooking(response.data.data);
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能取得你的預約，請稍後再試",
+        });
+      });
   }
 
-  async function deleteBooking(bookingID: number | string) {
-    let deleteRes = await axios.delete(
-      `${REACT_APP_API_SERVER}/booking/user/${userID}/${bookingID}`
-    );
-    if (deleteRes.data.success) {
-      Swal.fire({
-        icon: "success",
-        title: "Delete Successful",
+  async function fetchMedEvaluation() {
+    axios
+      .get(`${REACT_APP_API_SERVER}/medical/user/${uID}`)
+      .then(({ data }) => {
+        setMedRec(data.result);
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "暫時未能取得你的預約，請稍後再試",
+        });
       });
-      await fetchBooking();
-      return;
-    }
+  }
+  //delete
+  async function deleteBooking(bookingID: number | string) {
+    axios
+      .delete(`${REACT_APP_API_SERVER}/booking/user/${uID}/${bookingID}`)
+      .then(() => {
+        Swal.fire({
+          icon: "success",
+          title: "移除成功",
+        });
+        fetchBooking();
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試",
+        });
+      });
   }
   useEffect(() => {
     fetchBooking();
+    fetchMedEvaluation();
   }, []);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
@@ -100,12 +134,12 @@ export default function UserMed() {
         </Heading>
         <Flex w={"100%"} maxH={"80%"} overflow={"auto"} flexDir={"column"}>
           <Table size={isSmallerThan600 ? "sm" : "md"}>
-            <Thead position="sticky" top={0} bg={"gray.300"} zIndex={100}>
+            <Thead position="sticky" top={0} bg={"gray.300"} zIndex={1}>
               <Tr>
-                <Th>Date</Th>
-                <Th>Time</Th>
-                <Th>Dietitian</Th>
-                <Th isNumeric>Cancel</Th>
+                <Th>日期</Th>
+                <Th>時間</Th>
+                <Th>營養師</Th>
+                <Th isNumeric></Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -123,8 +157,7 @@ export default function UserMed() {
                         onClick={() => {
                           Swal.fire({
                             icon: "question",
-                            title:
-                              "Can you confirm that you want to delete this booking",
+                            title: "請確定你想取消此預約",
                             html: `<p><b>Date</b>: ${new Date(
                               detail.date
                             ).toLocaleDateString()}</p> <br> <p><b>Time</b>: ${detail.time.slice(
@@ -142,7 +175,7 @@ export default function UserMed() {
                           });
                         }}
                       >
-                        Cancel
+                        取消
                       </Button>
                     </Td>
                   </Tr>
@@ -175,7 +208,7 @@ export default function UserMed() {
             objectFit={"scale-down"}
             src="https://4.bp.blogspot.com/-xbPNbw-wskQ/WD_cc2HtA-I/AAAAAAABAGg/NxmpkevkdtgfxJg2JUqCQAS3FqWpcfDdgCLcB/s400/enkaku_iryou_man.png"
           />
-          病人病歷記錄
+          病人診症記錄
         </Heading>
         <Box w={"100%"} maxH={"80%"} overflow={"auto"}>
           <Accordion allowToggle>
@@ -183,18 +216,91 @@ export default function UserMed() {
               <h2>
                 <AccordionButton>
                   <Box flex="1" textAlign="left">
-                    Section 1 title
+                    1 的診症記錄
                   </Box>
                   <AccordionIcon />
                 </AccordionButton>
               </h2>
               <AccordionPanel pb={4}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                <Text fontWeight={"bold"}>主診營養師： 1</Text>
+                <Text fontWeight={"bold"}>日期： 1</Text>
+                <Text fontWeight={"bold"}>姓： 1</Text>
+                <Text fontWeight={"bold"}>名： 1</Text>
+                <Text fontWeight={"bold"}>HKID： 1</Text>
+                <Text fontWeight={"bold"}>年齡： 1</Text>
+                <Text fontWeight={"bold"}>性別：1</Text>
+                <Text fontWeight={"bold"}>身高：111 cm</Text>
+                <Text fontWeight={"bold"}>體重： 111 kg</Text>
+                <Text fontWeight={"bold"}>BMI： 111</Text>
+                <Text fontWeight={"bold"}>血壓： 1mmHG</Text>
+                <Text fontWeight={"bold"}>血糖：1 mmol/L</Text>
+                <Text fontWeight={"bold"}>慢性疾病：1</Text>
+                <Text fontWeight={"bold"}>評估：</Text>
+                <Text fontWeight={"bold"}>1</Text>
               </AccordionPanel>
             </AccordionItem>
+            {medRec.map((rec) => {
+              return (
+                <AccordionItem key={`dietitian_reports_${rec.rid}`}>
+                  <h2>
+                    <AccordionButton>
+                      <Box flex="1" textAlign="left">
+                        {new Date(rec.date).getFullYear().toString() +
+                          "年" +
+                          (new Date(rec.date).getMonth() + 1).toString() +
+                          "月" +
+                          new Date(rec.date).getDate().toString() +
+                          "日"}
+                        的診症記錄
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel pb={4}>
+                    <Text fontWeight={"bold"}>
+                      主診營養師：{" "}
+                      {dietitianList.filter(
+                        (dietitian) => dietitian.id === rec.dietitian_id
+                      )[0].first_name +
+                        " " +
+                        dietitianList.filter(
+                          (dietitian) => dietitian.id === rec.dietitian_id
+                        )[0].last_name}
+                    </Text>
+                    <Text fontWeight={"bold"}>
+                      日期： {new Date(rec.date).toLocaleDateString()}
+                    </Text>
+                    <Text fontWeight={"bold"}>姓： {rec.last_name}</Text>
+                    <Text fontWeight={"bold"}>名： {rec.first_name}</Text>
+                    <Text fontWeight={"bold"}>HKID： {rec.hkid}</Text>
+                    <Text fontWeight={"bold"}>年齡： {userAge()}</Text>
+                    <Text fontWeight={"bold"}>
+                      性別：{" "}
+                      {rec.gender === 1
+                        ? "男"
+                        : rec.gender === 2
+                        ? "女"
+                        : "其他"}
+                    </Text>
+                    <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
+                    <Text fontWeight={"bold"}>體重： {rec.weight} kg</Text>
+                    <Text fontWeight={"bold"}>
+                      BMI：{" "}
+                      {(rec.weight / (rec.height / 100) ** 2)
+                        .toString()
+                        .slice(0, 5)}{" "}
+                    </Text>
+                    <Text fontWeight={"bold"}>
+                      血壓： {rec.bp}/{rec.bp} mmHG
+                    </Text>
+                    <Text fontWeight={"bold"}>血糖：{rec.bg} mmol/L</Text>
+                    <Text fontWeight={"bold"}>慢性疾病：{rec.disease} </Text>
+                    <Text fontWeight={"bold"}>評估：</Text>
+                    <Text fontWeight={"bold"}>{rec.content}</Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              );
+            })}
           </Accordion>
         </Box>
       </Flex>

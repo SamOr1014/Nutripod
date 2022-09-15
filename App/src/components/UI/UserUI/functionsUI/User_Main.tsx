@@ -23,11 +23,13 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { MdToday } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { AddIcon } from "@chakra-ui/icons";
 
 import "react-day-picker/dist/style.css";
+import axios from "axios";
+const { REACT_APP_API_SERVER } = process.env;
 const css = `
 .my-selected:not([disabled]) { 
   font-weight: bold; 
@@ -45,11 +47,29 @@ const css = `
 `;
 
 export default function UserMain() {
+  //####FAKE USER#######
+  const uid = 1;
+  //####################
+
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
+
+  //API FUNCTIONS
+
+  async function fetchExercisesFromServer() {
+    axios
+      .get(
+        `${REACT_APP_API_SERVER}/diet/exercises/${uid}/${selectedDate?.toISOString()}`
+      )
+      .then(({ data }) => {
+        console.log(data);
+      });
+  }
+
+  useEffect(() => {}, [selectedDate]);
 
   return (
     <>

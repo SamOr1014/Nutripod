@@ -6,6 +6,8 @@ import { formatDate } from '../utilities/formatDate'
 export class DietRecordController {
 	constructor(private dietRecordService: DietRecordServices) {}
 
+	//##############Weight BP BG Record Controller#############################
+
 	getWeightByUserID = async (req: Request, res: Response) => {
 		try {
 			let userID = req.params.uid
@@ -173,6 +175,31 @@ export class DietRecordController {
 			}
 			const deletedRec = await this.dietRecordService.deleteBGRecord(rid)
 			res.status(200).json({ success: true, deletedRec: deletedRec })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	//#########################Exercise Controllers##################################
+
+	getExercisesByID = async (req: Request, res: Response) => {
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+			}
+			let formattedDate = formatDate(date)
+			const exerciseRec = await this.dietRecordService.getExerciseByID(
+				uid,
+				formattedDate
+			)
+			res.status(200).json({ success: true, exercises: exerciseRec })
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })

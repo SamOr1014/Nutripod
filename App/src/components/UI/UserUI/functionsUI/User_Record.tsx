@@ -157,7 +157,6 @@ export default function UserBPBGRecord() {
         uid,
       })
       .then((result) => {
-        console.log("bg status", result.status);
         Swal.fire({
           icon: "success",
           title: "你成功上傳血糖指數",
@@ -279,7 +278,15 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("weight", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                              showCancelButton: true,
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("weight", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -400,7 +407,14 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("bp", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("bp", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -510,7 +524,14 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("bg", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("bg", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -591,11 +612,6 @@ export default function UserBPBGRecord() {
                   setDiaInput("");
                 }
                 if (modalPostControl === "bg") {
-                  console.log(
-                    bgInput,
-                    dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString()
-                  );
                   await postBGRecord(
                     parseInt(bgInput),
                     dateTimeSubmit.toISOString(),
