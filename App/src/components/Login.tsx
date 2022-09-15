@@ -18,17 +18,16 @@ import {
   useBoolean,
   Stack
 } from "@chakra-ui/react"
-import { Link as ReactLink } from "react-router-dom"
+import { Link as ReactLink, useNavigate } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch, IRootState } from "../redux/store"
-import { login } from "../redux/Slice/AuthSlice"
+import { userLogin, dietitianLogin, userSavedInfo, dietitianSavedInfo } from "../redux/Slice/AuthSlice"
 import { loginThunk } from "../redux/Thunk/AuthThunk"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
-
 
 type user = {
   userName: string
@@ -40,20 +39,55 @@ export function Login() {
   const [saveUser, setSaveUser] = useBoolean(false)
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
-
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const loadingStatus = useSelector((state: IRootState) => state.user.loading);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
 
 
   const LoginSubmit = async () => {
-    let info = { username: username, password: userPassword }
-    console.log(`userName::${username}`)
-    console.log(`Password::${userPassword}`)
-    console.log('submit login to server')
+    let info = { username: username, password: userPassword, saveLoggedIn: saveUser }
     const result = await dispatch(loginThunk(info))
-    console.log(result)
-
+    if (result.payload.success) {
+      const userInfo = result.payload.data
+      if (userInfo.is_user) {
+        const userData: userSavedInfo = {
+          id: userInfo.id,
+          username: userInfo.username,
+          first_name: userInfo.first_name,
+          last_name: userInfo.last_name,
+          email: userInfo.email,
+          birthday: userInfo.birthday,
+          height: userInfo.height,
+          weight: userInfo.weight,
+          gender: userInfo.gender,
+          phone: userInfo.phone,
+          address: userInfo.address,
+          profession: userInfo.profession,
+          HKID: userInfo.HKID,
+          chronic_condition: userInfo.chronic_condition,
+          education: userInfo.education,
+          is_deleted: userInfo.is_deleted,
+          is_user: userInfo.is_User,
+          saveToken: saveUser
+        }
+        dispatch(userLogin(userData))
+        navigate("/dashboard")
+      } else if (!userInfo.is_user) {
+        const dietitianData: dietitianSavedInfo = {
+          id: userInfo.id,
+          username: userInfo.username,
+          first_name: userInfo.first_name,
+          last_name: userInfo.last_name,
+          email: userInfo.email,
+          is_user: userInfo.is_user,
+          is_deleted: userInfo.is_deleted,
+          saveToken: saveUser
+        }
+        dispatch(dietitianLogin(dietitianData))
+        navigate("/dietitian")
+      }
+    }
   }
 
   if (loadingStatus) {
@@ -261,33 +295,33 @@ export function Login() {
           display='flex'
           justifyContent='center'
           direction='row'
-          w={isSmallerThan600? "10%": "100%"}
+          w={isSmallerThan600 ? "10%" : "100%"}
           gap='2'
           mt='2'
           flexWrap={"wrap"}>
 
-            <Link as={ReactLink} to="/">
-          <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid' w={"32"}>
-            Email
-          </Button>
+          <Link as={ReactLink} to="/">
+            <Button leftIcon={<EmailIcon />} colorScheme='teal' variant='solid' w={"32"}>
+              Email
+            </Button>
           </Link>
 
-          <Link as={ReactLink} to="/">
-          <Button colorScheme='facebook' leftIcon={<FaFacebook />} w={"32"}>
-            Facebook
-          </Button>
+          <Link href='https://www.facebook.com/' isExternal>
+            <Button colorScheme='facebook' leftIcon={<FaFacebook />} w={"32"}>
+              Facebook
+            </Button>
           </Link>
 
-          <Link as={ReactLink} to="/">
-          <Button colorScheme='twitter' leftIcon={<FaTwitter />} w={"32"}>
-            Twitter
-          </Button>
+          <Link href="https://twitter.com/" isExternal>
+            <Button colorScheme='twitter' leftIcon={<FaTwitter />} w={"32"}>
+              Twitter
+            </Button>
           </Link>
 
-          <Link as={ReactLink} to="/">
-          <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline' w={"32"}>
-            Call us
-          </Button>
+          <Link as={ReactLink} to="/" >
+            <Button rightIcon={<ArrowForwardIcon />} colorScheme='teal' variant='outline' w={"32"}>
+              Call us
+            </Button>
           </Link>
 
         </Stack>
