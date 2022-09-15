@@ -1,14 +1,22 @@
 import { Container, Flex, useMediaQuery } from "@chakra-ui/react";
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { Outlet, useNavigate } from "react-router-dom";
+import { IRootState } from "../../../redux/store";
 
 import Banner from "../Banner";
 import UserNav from "./User_Nav";
 import UserNavLinks from "./User_nav_links";
 
-
-
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const user = useSelector((state: IRootState) => state.user.user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user[0].id === (undefined || null)) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <>
       <Banner element={<UserNavLinks />} />

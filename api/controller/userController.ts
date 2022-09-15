@@ -10,7 +10,6 @@ export class UserController {
 
 	login = async (req: Request, res: Response) => {
 		try {
-			console.log('received in server userController')
 			const username = req.body.data.user.username
 			const password = req.body.data.user.password
 
@@ -33,7 +32,6 @@ export class UserController {
 			}
 			const hashedPassword = result[0].password
 			const matchResult = await checkPassword(password, hashedPassword)
-
 			if (matchResult) {
 				const payload = {
 					id: result[0].id,
