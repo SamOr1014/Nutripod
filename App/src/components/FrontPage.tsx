@@ -10,6 +10,9 @@ export default function FrontPage() {
       <Link as={ReactLink} to="/dietitian">
         Dietitians
       </Link>
+      <Link as={ReactLink} to="/login">
+        Login
+      </Link>
     </>
   );
 }
