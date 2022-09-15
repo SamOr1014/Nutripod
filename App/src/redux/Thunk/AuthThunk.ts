@@ -7,7 +7,7 @@ export type Error = {
     error: string;
 };
 type userInfo = { username: string, password: string, saveLoggedIn: boolean }
-type ThunkExtraInfo = { rejectValue: Error; extra: { jwt: string | null } }
+type ThunkExtraInfo = { rejectValue: Error; extra: { jwt: string | null} }
 
 export const loginThunk = createAsyncThunk<any, userInfo, ThunkExtraInfo>(
     '@user/login', async ({ username, password, saveLoggedIn }: { username: string, password: string, saveLoggedIn: boolean }, thunkAPI) => {

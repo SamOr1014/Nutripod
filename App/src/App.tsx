@@ -17,6 +17,8 @@ import { IRootState, useAppDispatch } from "./redux/store";
 import { fetchDietitianDetail } from "./redux/Slice/dietitianSlice";
 import { fetchTimeSlotToRedux } from "./redux/Slice/timeslotSlice";
 import { useSelector } from "react-redux";
+import UserPrivate from "../src/components/userPrivate"
+import DietitianPrivate from "../src/components/userPrivate"
 
 function App() {
   const dispatch = useAppDispatch();
@@ -27,7 +29,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<FrontPage />} />
-      <Route path="dashboard" element={<DashBoard />}>
+
+      <Route path="dashboard" element={<UserPrivate/>}>
+      <Route path="" element={<DashBoard />}>
         <Route index element={<UserMain />} />
         <Route path="booking" element={<UserBooking />} />
         <Route path="history" element={<UserBPBGRecord />} />
@@ -35,12 +39,17 @@ function App() {
         <Route path="posts" element={<UserPost />} />
         <Route path="account" element={<UserAccount />} />
       </Route>
-      <Route path="dietitian" element={<DashBoardDietitian />}>
+      </Route>
+
+      <Route path="dietitian" element={<DietitianPrivate/>}>
+      <Route path="" element={<DashBoardDietitian />}>
         <Route index element={<DietitianMain />} />
         <Route path="patients" element={<PatientSearchPanel />} />
         <Route path="posts" element={<UserPost />} />
         <Route path="account" element={<p>Diet ac</p>} />
       </Route>
+      </Route>
+
       <Route path="login" element={<Login />} />
       <Route path="*" element={<NotFound />} />
     </Routes>

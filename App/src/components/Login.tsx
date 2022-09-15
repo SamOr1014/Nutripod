@@ -29,10 +29,6 @@ import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons"
 import { FaFacebook, FaTwitter } from "react-icons/fa"
 
-type user = {
-  userName: string
-  password: string | number
-}
 export function Login() {
   const [username, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
@@ -68,7 +64,7 @@ export function Login() {
           chronic_condition: userInfo.chronic_condition,
           education: userInfo.education,
           is_deleted: userInfo.is_deleted,
-          is_user: userInfo.is_User,
+          is_user: userInfo.is_user,
           saveToken: saveUser
         }
         dispatch(userLogin(userData))
