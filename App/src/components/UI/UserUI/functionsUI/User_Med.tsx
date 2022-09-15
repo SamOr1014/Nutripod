@@ -34,7 +34,8 @@ interface UserBookingData {
 }
 
 export default function UserMed() {
-  const uID = 1;
+  const user = useSelector((state: IRootState) => state.user.user);
+  const uID = user[0].id;
   const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const [booking, setBooking] = useState<Array<UserBookingData>>([]);
   const [medRec, setMedRec] = useState<Array<any>>([]);
@@ -99,9 +100,11 @@ export default function UserMed() {
       });
   }
   useEffect(() => {
-    fetchBooking();
-    fetchMedEvaluation();
-  }, []);
+    if (uID) {
+      fetchBooking();
+      fetchMedEvaluation();
+    }
+  }, [user]);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <Flex
@@ -158,12 +161,12 @@ export default function UserMed() {
                           Swal.fire({
                             icon: "question",
                             title: "請確定你想取消此預約",
-                            html: `<p><b>Date</b>: ${new Date(
+                            html: `<p><b>日期</b>: ${new Date(
                               detail.date
-                            ).toLocaleDateString()}</p> <br> <p><b>Time</b>: ${detail.time.slice(
+                            ).toLocaleDateString()}</p> <br> <p><b>時間</b>: ${detail.time.slice(
                               0,
                               -3
-                            )}</p> <br> <p><b>Dietitian</b>: ${
+                            )}</p> <br> <p><b>營養師</b>: ${
                               detail.first_name + " " + detail.last_name
                             }</p>`,
                             showCloseButton: true,
@@ -212,33 +215,6 @@ export default function UserMed() {
         </Heading>
         <Box w={"100%"} maxH={"80%"} overflow={"auto"}>
           <Accordion allowToggle>
-            <AccordionItem>
-              <h2>
-                <AccordionButton>
-                  <Box flex="1" textAlign="left">
-                    1 的診症記錄
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-              </h2>
-              <AccordionPanel pb={4}>
-                <Text fontWeight={"bold"}>主診營養師： 1</Text>
-                <Text fontWeight={"bold"}>日期： 1</Text>
-                <Text fontWeight={"bold"}>姓： 1</Text>
-                <Text fontWeight={"bold"}>名： 1</Text>
-                <Text fontWeight={"bold"}>HKID： 1</Text>
-                <Text fontWeight={"bold"}>年齡： 1</Text>
-                <Text fontWeight={"bold"}>性別：1</Text>
-                <Text fontWeight={"bold"}>身高：111 cm</Text>
-                <Text fontWeight={"bold"}>體重： 111 kg</Text>
-                <Text fontWeight={"bold"}>BMI： 111</Text>
-                <Text fontWeight={"bold"}>血壓： 1mmHG</Text>
-                <Text fontWeight={"bold"}>血糖：1 mmol/L</Text>
-                <Text fontWeight={"bold"}>慢性疾病：1</Text>
-                <Text fontWeight={"bold"}>評估：</Text>
-                <Text fontWeight={"bold"}>1</Text>
-              </AccordionPanel>
-            </AccordionItem>
             {medRec.map((rec) => {
               return (
                 <AccordionItem key={`dietitian_reports_${rec.rid}`}>

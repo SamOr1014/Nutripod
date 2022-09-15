@@ -19,13 +19,18 @@ import {
   MenuItem,
   MenuList,
   useMediaQuery,
+  Image,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import { Link as ReactLink } from "react-router-dom";
+import { IRootState } from "../../redux/store";
 
 export default function Banner(props: { element: any }) {
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
+  const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
+  const user = useSelector((state: IRootState) => state.user.user);
   const {
     isOpen: isDrawerOpen,
     onOpen: onDrawerOpen,
@@ -73,7 +78,14 @@ export default function Banner(props: { element: any }) {
           </Button>
         </Hide>
       </Center>
-      <Center flex="8">
+      <Center flex="8" flexDir={"row"}>
+        <Image
+          src="/logo.png"
+          boxSize={
+            isSmallerThan800 ? "40px" : isLargerThan1700 ? "100px" : "60px"
+          }
+          mx={2}
+        />
         <Text fontSize={isLargerThan1700 ? "6xl" : "2xl"} as="b">
           NutriPOD
         </Text>
@@ -85,7 +97,7 @@ export default function Banner(props: { element: any }) {
             fontSize={isLargerThan1700 ? "xl" : "md"}
             fontWeight="extrabold"
           >
-            你好, Stranger
+            你好, {user[0].last_name}
           </Text>
         </Show>
         <Menu>

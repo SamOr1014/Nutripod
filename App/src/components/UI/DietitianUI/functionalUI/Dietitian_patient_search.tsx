@@ -6,14 +6,16 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../../redux/store";
 import DietitianPatientDetailPanel from "./sub-components/DietitianPatientDetailPanel";
 
 export default function PatientSearchPanel() {
   return (
     <Flex gap={5} flexDir={"column"} w={"100%"}>
-      <Flex gap={5} flexDir={"column"} w={"100%"}>
+      <Flex gap={5} w={"100%"}>
         <Heading textAlign={"center"} fontSize={"xl"}>
-          Search Patient With HKID here:
+          Patient HKID:
         </Heading>
         <InputGroup>
           <InputLeftElement

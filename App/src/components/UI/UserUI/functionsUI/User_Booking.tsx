@@ -25,12 +25,8 @@ export default function UserBooking() {
     (state: IRootState) => state.dietitian
   );
   const staticTimeSlot = useSelector((state: IRootState) => state.timeslot);
-  //######################
-  //#####Fake UserID######
-  const uID = 1;
-  //####Remember to#######
-  //####Use JWT Token####
-  //######################
+
+  const userInfo = useSelector((state: IRootState) => state.user.user);
 
   let date = new Date();
   date.setDate(date.getDate() + 1);
@@ -51,7 +47,7 @@ export default function UserBooking() {
         date: date,
         time: timeslotID,
         dietitian_id: dietitianID,
-        uid: uID,
+        uid: userInfo[0].id,
       })
       .then(async () => {
         await fetchBookingDetail();
