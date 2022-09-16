@@ -1,18 +1,19 @@
 import express from 'express'
 import { bookingController } from '../server'
-
+import { isUserLoggedIn } from "../utilities/guards"
 export const bookingRoutes = express.Router()
 
 bookingRoutes.get('/timeslot', bookingController.getTimeslot)
 
-bookingRoutes.get('/user/:id', bookingController.getAllUserBookingByID)
+bookingRoutes.get('/user/:id',isUserLoggedIn, bookingController.getAllUserBookingByID)
 
-bookingRoutes.post('/', bookingController.postUserBooking)
+bookingRoutes.post('/', isUserLoggedIn, bookingController.postUserBooking)
 
-bookingRoutes.delete('/user/:id/:bID', bookingController.deleteUserBooking)
+bookingRoutes.delete('/user/:id/:bID', isUserLoggedIn, bookingController.deleteUserBooking)
 
 //get all booking of a specific date
 bookingRoutes.get(
 	'/date/:date/:dietitian',
+	isUserLoggedIn,
 	bookingController.getAllBookingByDateAndDietitianID
 )

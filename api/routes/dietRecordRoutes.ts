@@ -1,23 +1,25 @@
 import express from 'express'
 import { dietRecordController } from '../server'
+import { isUserLoggedIn } from "../utilities/guards"
 
 export const dietRecordRoutes = express.Router()
 
 //Weight BP BG Record Routes
-dietRecordRoutes.get('/weight/:uid', dietRecordController.getWeightByUserID)
-dietRecordRoutes.get('/bp/:uid', dietRecordController.getBPByUserID)
-dietRecordRoutes.get('/bg/:uid', dietRecordController.getBGByUserID)
+dietRecordRoutes.get('/weight/:uid',isUserLoggedIn, dietRecordController.getWeightByUserID)
+dietRecordRoutes.get('/bp/:uid', isUserLoggedIn, dietRecordController.getBPByUserID)
+dietRecordRoutes.get('/bg/:uid', isUserLoggedIn, dietRecordController.getBGByUserID)
 
-dietRecordRoutes.post('/weight', dietRecordController.postWeight)
-dietRecordRoutes.post('/bp', dietRecordController.postBP)
-dietRecordRoutes.post('/bg', dietRecordController.postBGlu)
+dietRecordRoutes.post('/weight',isUserLoggedIn, dietRecordController.postWeight)
+dietRecordRoutes.post('/bp',isUserLoggedIn, dietRecordController.postBP)
+dietRecordRoutes.post('/bg',isUserLoggedIn, dietRecordController.postBGlu)
 
-dietRecordRoutes.delete('/weight/:rid', dietRecordController.deleteWeightRecord)
-dietRecordRoutes.delete('/bp/:rid', dietRecordController.deleteBPRecord)
-dietRecordRoutes.delete('/bg/:rid', dietRecordController.deleteBGRecord)
+dietRecordRoutes.delete('/weight/:rid',isUserLoggedIn, dietRecordController.deleteWeightRecord)
+dietRecordRoutes.delete('/bp/:rid', isUserLoggedIn, dietRecordController.deleteBPRecord)
+dietRecordRoutes.delete('/bg/:rid', isUserLoggedIn, dietRecordController.deleteBGRecord)
 
 // Exercise Routes
 dietRecordRoutes.get(
 	'/exercise/:uid/:date',
+	isUserLoggedIn,
 	dietRecordController.getExercisesByID
 )

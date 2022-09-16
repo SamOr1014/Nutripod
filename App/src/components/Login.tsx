@@ -37,11 +37,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
+import { token } from "../utility/models"
+import jwt from "../jwt"
+import jwt_decode, { JwtPayload } from "jwt-decode"
+import axios from "axios";
 
-type user = {
-  userName: string;
-  password: string | number;
-};
 export function Login() {
   const [username, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
@@ -53,16 +53,77 @@ export function Login() {
   const loadingStatus = useSelector((state: IRootState) => state.user.loading);
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
+  const { REACT_APP_API_SERVER } = process.env;
+
+  const checkToken = window.localStorage.getItem("userLocalToken")
+
+  const checkTokenLogin = async() => {
+    const payload: token = jwt_decode(checkToken as string)
+
+    const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`,
+      {
+        data: {
+          id: payload.id,
+          username: payload.username
+        }
+      })
+      if (result.data.result.is_user) {
+        const userinfo = result.data.result
+        const userData: userSavedInfo = {
+          id: userinfo.id,
+          username: userinfo.username,
+          first_name: userinfo.first_name,
+          last_name: userinfo.last_name,
+          email: userinfo.email,
+          birthday: userinfo.birthday,
+          height: userinfo.height,
+          weight: userinfo.weight,
+          gender: userinfo.gender,
+          phone: userinfo.phone,
+          address: userinfo.address,
+          profession: userinfo.profession,
+          HKID: userinfo.hkid,
+          chronic_condition: userinfo.chronic_condition,
+          education: userinfo.education,
+          is_deleted: userinfo.is_deleted,
+          is_user: userinfo.is_user,
+          saveToken: true,
+        };
+        dispatch(userLogin(userData));
+        navigate("/dashboard");
+      }else if (!result.data.result.is_user) {
+        const dietitianInfo = result.data.result
+        const dietitianData: dietitianSavedInfo = {
+          id: dietitianInfo.id,
+          username: dietitianInfo.username,
+          first_name: dietitianInfo.first_name,
+          last_name: dietitianInfo.last_name,
+          email: dietitianInfo.email,
+          is_user: dietitianInfo.is_user,
+          is_deleted: dietitianInfo.is_deleted,
+          saveToken: true,
+        };
+        dispatch(dietitianLogin(dietitianData));
+        navigate("/dietitian");
+      }
+  }
+  
+
+  if (checkToken != null) {
+    checkTokenLogin()
+  }
+
   const LoginSubmit = async () => {
     let info = {
       username: username,
       password: userPassword,
       saveLoggedIn: saveUser,
     };
+
     const result = await dispatch(loginThunk(info));
     if (result.payload.success) {
       const userInfo = result.payload.data;
-      if (userInfo.is_user) {
+      if (userInfo.is_user === true) {
         const userData: userSavedInfo = {
           id: userInfo.id,
           username: userInfo.username,
@@ -76,16 +137,16 @@ export function Login() {
           phone: userInfo.phone,
           address: userInfo.address,
           profession: userInfo.profession,
-          HKID: userInfo.HKID,
+          HKID: userInfo.hkid,
           chronic_condition: userInfo.chronic_condition,
           education: userInfo.education,
           is_deleted: userInfo.is_deleted,
-          is_user: userInfo.is_User,
+          is_user: userInfo.is_user,
           saveToken: saveUser,
         };
         dispatch(userLogin(userData));
         navigate("/dashboard");
-      } else if (!userInfo.is_user) {
+      } else if (userInfo.is_user === false) {
         const dietitianData: dietitianSavedInfo = {
           id: userInfo.id,
           username: userInfo.username,

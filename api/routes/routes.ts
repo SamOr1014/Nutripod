@@ -4,7 +4,6 @@ import { bookingRoutes } from './bookingRoutes'
 import { postRoutes } from './postRoutes'
 import { medicalRecordRoutes } from './medicalRecordRoutes'
 import { dietRecordRoutes } from './dietRecordRoutes'
-
 export const routes = express.Router()
 
 routes.use('/user', userRoutes)

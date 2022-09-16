@@ -65,3 +65,8 @@ export interface UserDetailInDietiainPanel {
   phone: string;
   hkid: string;
 }
+
+export interface token {
+  id: number;
+  username: string;
+}

@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../redux/store";
 import { BGDetail, BPDetail, WeightDetail } from "../../../../utility/models";
-
+import locateToken from "../../../../utility/Token"
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserBPBGRecord() {
@@ -60,18 +60,33 @@ export default function UserBPBGRecord() {
   async function fetchWeightRecordFromServerByID() {
     const { data } = await axios.get(
       `${REACT_APP_API_SERVER}/diet/weight/${user[0].id}`
+      ,{
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }
     );
     setWeightRec(data.weightRec);
   }
   async function fetchBPRecordFromServerByID() {
     const { data } = await axios.get(
       `${REACT_APP_API_SERVER}/diet/bp/${user[0].id}`
+      ,{
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }
     );
     setBpRec(data.bpRec);
   }
   async function fetchBGRecordFromServerByID() {
     const { data } = await axios.get(
       `${REACT_APP_API_SERVER}/diet/bg/${user[0].id}`
+      ,{
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }
     );
     setBgRec(data.bgRec);
   }
@@ -80,7 +95,12 @@ export default function UserBPBGRecord() {
     type: "weight" | "bp" | "bg",
     rid: number | string
   ) {
-    await axios.delete(`${REACT_APP_API_SERVER}/diet/${type}/${rid}`);
+    await axios.delete(`${REACT_APP_API_SERVER}/diet/${type}/${rid}`
+    , {
+      headers: {
+        'Authorization': `Bearer ${locateToken()}`
+      }
+    });
     switch (type) {
       case "weight":
         fetchWeightRecordFromServerByID();
@@ -102,6 +122,11 @@ export default function UserBPBGRecord() {
         weight,
         date,
         uid,
+      }
+      ,{
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
       })
       .then(() => {
         Swal.fire({
@@ -130,6 +155,10 @@ export default function UserBPBGRecord() {
         dia_bp,
         dateString,
         uid,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
       })
       .then(() => {
         Swal.fire({
@@ -151,6 +180,10 @@ export default function UserBPBGRecord() {
         bg,
         dateString,
         uid,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
       })
       .then((result) => {
         Swal.fire({

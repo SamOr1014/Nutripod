@@ -24,7 +24,7 @@ app.use(
 	})
 )
 
-const userServices = new UserServices(knex)
+export const userServices = new UserServices(knex)
 export const userController = new UserController(userServices)
 const postServices = new PostServices(knex)
 export const postController = new PostController(postServices)
