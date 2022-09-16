@@ -34,28 +34,135 @@ import {
   Radio,
   RadioGroup,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { MdToday } from "react-icons/md";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../../redux/store";
 import {
   BGDetail,
   BPDetail,
   DietitianPatientPanel,
+  UserBookingData,
   WeightDetail,
 } from "../../../../../utility/models";
+import locateToken from "../../../../../utility/Token";
+
+const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianPatientDetailPanel(
   patient: DietitianPatientPanel
 ) {
+  const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
+  const [booking, setBooking] = useState<Array<UserBookingData>>([]);
+  const [medRec, setMedRec] = useState<Array<any>>([]);
+  const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
+  const [bpRec, setBpRec] = useState<Array<BPDetail>>([]);
+  const [bgRec, setBgRec] = useState<Array<BGDetail>>([]);
+
+  //#######Age Function#######
+  const userAge = () => {
+    let today = new Date();
+    let birthDate = new Date(medRec[0].birthday);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+  //###################
 
   //################
   //API Functions
   //################
+  async function fetchPaitentsRecords() {
+    const patientBooking = axios.get(
+      `${REACT_APP_API_SERVER}/booking/user/${patient.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    );
+    const patientMedRec = axios.get(
+      `${REACT_APP_API_SERVER}/medical/user/${patient.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    );
 
-  // User Information components
+    axios
+      .all([patientBooking, patientMedRec])
+      .then(
+        axios.spread((...responses) => {
+          let patientBookingResult = responses[0];
+          let patientMedRecResult = responses[1];
+          setBooking(patientBookingResult.data.data);
+          setMedRec(patientMedRecResult.data.result);
+        })
+      )
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試",
+        });
+      });
+  }
+  async function fetchUserBodyState() {
+    const weightFetch = axios.get(
+      `${REACT_APP_API_SERVER}/diet/weight/${patient.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    );
+    const BPFetch = axios.get(`${REACT_APP_API_SERVER}/diet/bp/${patient.id}`, {
+      headers: {
+        Authorization: `Bearer ${locateToken()}`,
+      },
+    });
+    const BGFetch = axios.get(`${REACT_APP_API_SERVER}/diet/bg/${patient.id}`, {
+      headers: {
+        Authorization: `Bearer ${locateToken()}`,
+      },
+    });
+
+    axios
+      .all([weightFetch, BPFetch, BGFetch])
+      .then(
+        axios.spread((...responses) => {
+          let weightResult = responses[0];
+          let BPResult = responses[1];
+          let BGResult = responses[2];
+          setWeightRec(weightResult.data.weightRec);
+          setBpRec(BPResult.data.bpRec);
+          setBgRec(BGResult.data.bgRec);
+        })
+      )
+      .catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試",
+        });
+      });
+  }
+  //Fetch when patient id changes and patient id is not undefined/null
+  useEffect(() => {
+    if (patient.id) {
+      fetchPaitentsRecords();
+      fetchUserBodyState();
+    }
+  }, [patient.id]);
+  //#############################
+  // User Information components (first tab first element)
   function UserDetailAndBooking() {
     return (
       <Flex
@@ -152,8 +259,8 @@ export default function DietitianPatientDetailPanel(
       </Flex>
     );
   }
-
-  //All User Medical Record and Booking
+  //#######################################
+  //All User Medical Record and Booking (first tab second and third element)
   function PatientsBookingAndRecordPanel() {
     return (
       <>
@@ -191,14 +298,25 @@ export default function DietitianPatientDetailPanel(
                 </Tr>
               </Thead>
               <Tbody>
-                <Tr>
-                  <Td>22/9/2022</Td>
-                  <Td>09:00</Td>
-                  <Td>Gigi Wong</Td>
-                </Tr>
+                {booking.map((item) => {
+                  return (
+                    <Tr key={`user_${patient.id}_booking_${item.id}`}>
+                      <Td>{new Date(item.date).toLocaleDateString()}</Td>
+                      <Td>{item.time.slice(0, -3)}</Td>
+                      <Td>{item.first_name + " " + item.last_name}</Td>
+                    </Tr>
+                  );
+                })}
               </Tbody>
             </Table>
           </Flex>
+          {booking[0] === undefined ? (
+            <Heading textAlign={"center"} color={"red.700"} fontSize={"xl"}>
+              此用戶暫時未有已預約診期
+            </Heading>
+          ) : (
+            ""
+          )}
         </Flex>
 
         <Flex
@@ -225,31 +343,83 @@ export default function DietitianPatientDetailPanel(
             />
             病人病歷記錄
           </Heading>
-          <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
+          <Box
+            w={"90%"}
+            maxH={
+              isSmallerThan600 ? "auto" : isLargerThan1700 ? "500px" : "390px"
+            }
+            overflow={"auto"}
+          >
             <Accordion allowToggle>
-              <AccordionItem>
-                <h2>
-                  <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                      Section 1 title
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                </h2>
-                <AccordionPanel pb={4}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat.
-                </AccordionPanel>
-              </AccordionItem>
+              {medRec.map((rec) => {
+                return (
+                  <AccordionItem key={`dietitian_reports_${rec.rid}`}>
+                    <h2>
+                      <AccordionButton>
+                        <Box flex="1" textAlign="left">
+                          {new Date(rec.date).getFullYear().toString() +
+                            "年" +
+                            (new Date(rec.date).getMonth() + 1).toString() +
+                            "月" +
+                            new Date(rec.date).getDate().toString() +
+                            "日"}
+                          的診症記錄
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel pb={4}>
+                      <Text fontWeight={"bold"}>
+                        主診營養師：{" "}
+                        {dietitianList.filter(
+                          (dietitian) => dietitian.id === rec.dietitian_id
+                        )[0].first_name +
+                          " " +
+                          dietitianList.filter(
+                            (dietitian) => dietitian.id === rec.dietitian_id
+                          )[0].last_name}
+                      </Text>
+                      <Text fontWeight={"bold"}>
+                        日期： {new Date(rec.date).toLocaleDateString()}
+                      </Text>
+                      <Text fontWeight={"bold"}>姓： {rec.last_name}</Text>
+                      <Text fontWeight={"bold"}>名： {rec.first_name}</Text>
+                      <Text fontWeight={"bold"}>HKID： {rec.hkid}</Text>
+                      <Text fontWeight={"bold"}>年齡： {userAge()}</Text>
+                      <Text fontWeight={"bold"}>
+                        性別：{" "}
+                        {rec.gender === 1
+                          ? "男"
+                          : rec.gender === 2
+                          ? "女"
+                          : "其他"}
+                      </Text>
+                      <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
+                      <Text fontWeight={"bold"}>體重： {rec.weight} kg</Text>
+                      <Text fontWeight={"bold"}>
+                        BMI：{" "}
+                        {(rec.weight / (rec.height / 100) ** 2)
+                          .toString()
+                          .slice(0, 5)}{" "}
+                      </Text>
+                      <Text fontWeight={"bold"}>
+                        血壓： {rec.bp}/{rec.bp} mmHG
+                      </Text>
+                      <Text fontWeight={"bold"}>血糖：{rec.bg} mmol/L</Text>
+                      <Text fontWeight={"bold"}>慢性疾病：{rec.disease} </Text>
+                      <Text fontWeight={"bold"}>評估：</Text>
+                      <Text fontWeight={"bold"}>{rec.content}</Text>
+                    </AccordionPanel>
+                  </AccordionItem>
+                );
+              })}
             </Accordion>
           </Box>
         </Flex>
       </>
     );
   }
-
+  //#######################################
   function DietitianUserExerciseAndFoodDetailPanel() {
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
       new Date()
@@ -451,11 +621,8 @@ export default function DietitianPatientDetailPanel(
       </>
     );
   }
-
+  //#######################################
   function UserWeightBPBGData() {
-    const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
-    const [bpRec, setBpRec] = useState<Array<BPDetail>>([]);
-    const [bgRec, setBgRec] = useState<Array<BGDetail>>([]);
     return (
       <>
         {/* Weight part */}
@@ -667,7 +834,7 @@ export default function DietitianPatientDetailPanel(
       </>
     );
   }
-
+  //#######################################
   return (
     <>
       <Tabs variant="soft-rounded" colorScheme="green" w={"100%"} h={"100%"}>

@@ -23,6 +23,14 @@ export interface DietitianPatientPanel {
   birthday: any;
 }
 
+export interface UserBookingData {
+  id: number;
+  date: string;
+  first_name: string;
+  last_name: string;
+  time: string;
+}
+
 export interface UserBookingDetailByDateAndDietitian {
   id: number;
   date: string;

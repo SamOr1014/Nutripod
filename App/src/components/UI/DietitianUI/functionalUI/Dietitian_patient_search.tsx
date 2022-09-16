@@ -28,11 +28,9 @@ export default function PatientSearchPanel() {
   const isSmallerThan600 = useMediaQuery("max-width: 600px");
 
   async function searchUserByHKID(hkid: string) {
-    console.log("fetch", hkid);
     axios
       .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`)
       .then(({ data }) => {
-        console.log(data);
         setUserinfo(data.user);
       })
       .catch((e) => {
@@ -43,9 +41,6 @@ export default function PatientSearchPanel() {
       });
   }
 
-  useEffect(() => {
-    console.log(userInfo);
-  }, [userInfo]);
   interface SearchValue {
     hkid: string;
   }
