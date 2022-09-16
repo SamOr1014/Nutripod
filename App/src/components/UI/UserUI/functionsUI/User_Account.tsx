@@ -39,7 +39,7 @@ export default function UserAccount() {
     });
 
     if (birthday) {
-      Swal.fire(`你的電郵已更改為: ${birthday}`);
+      Swal.fire(`你的出生日期已更改為: ${birthday}`);
     }
   }
   async function changeMobile() {
@@ -50,7 +50,7 @@ export default function UserAccount() {
     });
 
     if (mobile) {
-      Swal.fire(`你的電日日已更改為: ${mobile}`);
+      Swal.fire(`你的電話號碼已更改為: ${mobile}`);
     }
   }
 
