@@ -23,4 +23,22 @@ export class UserServices {
 			.where('is_deleted', false)
 		return dietitians
 	}
+
+	async getUserBYHKID(hkid: string) {
+		const user = await this.knex('users')
+			.select(
+				'id',
+				'first_name',
+				'last_name',
+				'birthday',
+				'height',
+				'weight',
+				'gender',
+				'phone',
+				'hkid'
+			)
+			.where('hkid', hkid)
+			.andWhere('is_deleted', false)
+		return user
+	}
 }

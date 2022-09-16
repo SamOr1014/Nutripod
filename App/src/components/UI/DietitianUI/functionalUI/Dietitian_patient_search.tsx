@@ -1,45 +1,136 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import {
+  Button,
+  Center,
   Flex,
+  FormControl,
+  FormErrorMessage,
   Heading,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
+  Text,
+  useMediaQuery,
 } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
-import { IRootState } from "../../../../redux/store";
+import axios from "axios";
+import { Field, Formik } from "formik";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { UserDetailInDietiainPanel } from "../../../../utility/models";
 import DietitianPatientDetailPanel from "./sub-components/DietitianPatientDetailPanel";
 
+const { REACT_APP_API_SERVER } = process.env;
+
 export default function PatientSearchPanel() {
+  const [userInfo, setUserinfo] = useState<Array<UserDetailInDietiainPanel>>(
+    []
+  );
+  const isSmallerThan600 = useMediaQuery("max-width: 600px");
+
+  async function searchUserByHKID(hkid: string) {
+    console.log("fetch", hkid);
+    axios
+      .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`)
+      .then(({ data }) => {
+        console.log(data);
+        setUserinfo(data.user);
+      })
+      .catch((e) => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試",
+        });
+      });
+  }
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
+  interface SearchValue {
+    hkid: string;
+  }
+  const initialValues: SearchValue = { hkid: "" };
+
   return (
-    <Flex gap={5} flexDir={"column"} w={"100%"}>
-      <Flex gap={5} w={"100%"}>
-        <Heading textAlign={"center"} fontSize={"xl"}>
-          Patient HKID:
-        </Heading>
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            children={<Search2Icon color="gray.300" />}
-          />
-          <Input type="text" placeholder="HKID" />
-        </InputGroup>
+    <>
+      <Flex
+        w={"100%"}
+        alignItems={"center"}
+        gap={3}
+        justifyContent={"center"}
+        flexDir={"row"}
+        h={12}
+      >
+        <Formik
+          initialValues={initialValues}
+          onSubmit={async (values, actions) => {
+            searchUserByHKID(values.hkid);
+            actions.setSubmitting(false);
+          }}
+        >
+          {({ handleSubmit, errors, touched }) => (
+            <form onSubmit={handleSubmit}>
+              <FormControl isInvalid={!!errors.hkid && touched.hkid}>
+                <InputGroup size="md">
+                  <Field
+                    as={Input}
+                    placeholder={"請輸入HKID"}
+                    id="hkid"
+                    name="hkid"
+                    validate={(value: string) => {
+                      let error;
+
+                      if (!value) {
+                        error = "Please Input HKID";
+                      } else if (!/^[A-Z]{1,2}[0-9]{6}[0-9A]$/.test(value)) {
+                        error = "HKID format is Wrong";
+                      }
+                      return error;
+                    }}
+                  />
+                  <InputRightElement
+                    pointerEvents="none"
+                    color="gray.300"
+                    children={<Search2Icon />}
+                  />
+                </InputGroup>
+                <FormErrorMessage mt={isSmallerThan600 ? 0 : -10}>
+                  {errors.hkid}
+                </FormErrorMessage>
+              </FormControl>
+            </form>
+          )}
+        </Formik>
       </Flex>
-      {/* Patient Detail Panel */}
-      <Flex maxHeight={"100%"} w={"100%"} flex={1}>
-        {/* If user exist show this */}
-        <DietitianPatientDetailPanel
-          id={1}
-          first_name={"billy"}
-          last_name={"wong"}
-          height={175}
-          weight={70}
-          gender={"Male"}
-          HKID={"A1234567"}
-          phone={"23456789"}
-          birthday={"1-1-1997"}
-        />
+      <Flex gap={5} flexDir={"column"} w={"100%"}>
+        {/* Patient Detail Panel */}
+        <Flex
+          maxHeight={"100%"}
+          w={"100%"}
+          flex={1}
+          mt={isSmallerThan600 ? 0 : -10}
+        >
+          {userInfo.map((item) => {
+            if (!item.id) {
+              return <></>;
+            }
+            return (
+              <DietitianPatientDetailPanel
+                key={`Dietitian_user_search_panel`}
+                id={userInfo[0].id}
+                first_name={userInfo[0].first_name}
+                last_name={userInfo[0].last_name}
+                height={userInfo[0].height}
+                weight={userInfo[0].weight}
+                gender={userInfo[0].gender}
+                HKID={userInfo[0].hkid}
+                phone={userInfo[0].phone}
+                birthday={userInfo[0].birthday}
+              />
+            );
+          })}
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 }

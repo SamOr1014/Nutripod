@@ -121,16 +121,14 @@ export default function UserBPBGRecord() {
   async function postBPRecord(
     sys_bp: number,
     dia_bp: number,
-    date: string,
-    time: string,
+    dateString: string,
     uid: number
   ) {
     axios
       .post(`${REACT_APP_API_SERVER}/diet/bp`, {
         sys_bp,
         dia_bp,
-        date,
-        time,
+        dateString,
         uid,
       })
       .then(() => {
@@ -147,17 +145,11 @@ export default function UserBPBGRecord() {
         });
       });
   }
-  async function postBGRecord(
-    bg: number,
-    date: string,
-    time: string,
-    uid: number
-  ) {
+  async function postBGRecord(bg: number, dateString: string, uid: number) {
     axios
       .post(`${REACT_APP_API_SERVER}/diet/bg`, {
         bg,
-        date,
-        time,
+        dateString,
         uid,
       })
       .then((result) => {
@@ -611,7 +603,6 @@ export default function UserBPBGRecord() {
                     parseInt(sysInput),
                     parseInt(diaInput),
                     dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString(),
                     user[0].id as number
                   );
                   setSysInput("");
@@ -621,7 +612,6 @@ export default function UserBPBGRecord() {
                   await postBGRecord(
                     parseInt(bgInput),
                     dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString(),
                     user[0].id as number
                   );
                   setBGInput("");

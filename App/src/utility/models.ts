@@ -17,7 +17,7 @@ export interface DietitianPatientPanel {
   last_name: string;
   height: number;
   weight: number;
-  gender: string;
+  gender: number | string;
   HKID: string;
   phone: string;
   birthday: any;
@@ -52,4 +52,16 @@ export interface BGDetail {
   date: string;
   bg_measurement: number;
   time: string;
+}
+
+export interface UserDetailInDietiainPanel {
+  id: number;
+  first_name: string;
+  last_name: string;
+  birthday: string;
+  height: number;
+  weight: number;
+  gender: number;
+  phone: string;
+  hkid: string;
 }
