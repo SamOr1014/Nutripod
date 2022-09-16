@@ -1,13 +1,44 @@
 import { Box, Flex, Heading, Button, Text, Divider } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { IRootState } from "../../../../redux/store";
+import axios from "axios";
+import locateToken from "../../../../utility/Token";
+import { useNavigate } from "react-router";
+
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserAccount() {
   // obtain data from redux
+  const navigate = useNavigate();
+  const user = useSelector((state: IRootState) => state.user.user);
+
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
-  
+
+  const userEmail = useSelector(
+    (state: IRootState) => state.user.user[0].email
+  );
+  const userFirstName = useSelector(
+    (state: IRootState) => state.user.user[0].first_name
+  );
+  const userLastName = useSelector(
+    (state: IRootState) => state.user.user[0].last_name
+  );
+  const userGender = useSelector(
+    (state: IRootState) => state.user.user[0].gender
+  );
+  const userPhone = useSelector(
+    (state: IRootState) => state.user.user[0].phone
+  );
+  const userBirthday = useSelector(
+    (state: IRootState) => state.user.user[0].birthday
+  );
+  const userAddress = useSelector(
+    (state: IRootState) => state.user.user[0].address
+  );
+
+  const saveToken = useSelector((state: IRootState) => state.user.saveToken);
 
   async function changeName() {
     const { value: name } = await Swal.fire({
@@ -55,17 +86,57 @@ export default function UserAccount() {
   }
 
   async function changeEmail() {
-    const { value: email } = await Swal.fire({
+    const email = await Swal.fire({
       title: "請輸入你的電郵",
       input: "email",
       inputLabel: "Your email address",
       inputPlaceholder: "Enter your email address",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log("ok");
+        console.log(result.value);
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/info`,
+          {
+            id: userID,
+            email: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        if (results.data.success) {
+          Swal.fire("Success");
+          navigate("/dashboard/account");
+        } else {
+          Swal.fire("Fail");
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Fail");
+      }
     });
 
-    if (email) {
-      Swal.fire(`你的電郵已更改為: ${email}`);
-    }
+    // if (email) {
+    //   Swal.fire(`你的電郵已更改為: ${email}`);
+    // }
   }
+
+  async function fetchUserInfo() {
+    const { data } = await axios.get(
+      `${REACT_APP_API_SERVER}/user/login/${user[0].id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    );
+    console.log(data);
+  }
+  useEffect(() => {
+    fetchUserInfo();
+  });
 
   return (
     <>
@@ -97,7 +168,7 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">姓名</Text>
-          <Text size="md">陳大文</Text>
+          <Text size="md">{userFirstName + userLastName!}</Text>
 
           <Button
             colorScheme="red"
@@ -116,7 +187,7 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">性別</Text>
-          <Text size="md">男性</Text>
+          <Text size="md">{userGender}</Text>
 
           <Button
             colorScheme="red"
@@ -136,7 +207,9 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">出生日期</Text>
-          <Text size="md">1991年1月1日</Text>
+          <Text size="md">
+            {userBirthday ? new Date(userBirthday).toLocaleDateString() : ""}
+          </Text>
 
           <Button
             colorScheme="red"
@@ -155,7 +228,7 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">電話號碼</Text>
-          <Text size="md">+852 66556655</Text>
+          <Text size="md">+852 {userPhone}</Text>
 
           <Button
             colorScheme="red"
@@ -174,7 +247,7 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">地址</Text>
-          <Text size="md">新界荃灣one mid town 5樓16室 </Text>
+          <Text size="md">{userAddress}</Text>
 
           <Button colorScheme="red">更改</Button>
         </Flex>
@@ -186,7 +259,7 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">電郵</Text>
-          <Text size="md">peter123@gmail.com</Text>
+          <Text size="md">{userEmail}</Text>
 
           <Button
             colorScheme="red"

@@ -29,7 +29,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../redux/store";
 import { BGDetail, BPDetail, WeightDetail } from "../../../../utility/models";
-import locateToken from "../../../../utility/Token"
+import locateToken from "../../../../utility/Token";
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserBPBGRecord() {
@@ -59,33 +59,33 @@ export default function UserBPBGRecord() {
   //fetch
   async function fetchWeightRecordFromServerByID() {
     const { data } = await axios.get(
-      `${REACT_APP_API_SERVER}/diet/weight/${user[0].id}`
-      ,{
+      `${REACT_APP_API_SERVER}/diet/weight/${user[0].id}`,
+      {
         headers: {
-          'Authorization': `Bearer ${locateToken()}`
-        }
+          Authorization: `Bearer ${locateToken()}`,
+        },
       }
     );
     setWeightRec(data.weightRec);
   }
   async function fetchBPRecordFromServerByID() {
     const { data } = await axios.get(
-      `${REACT_APP_API_SERVER}/diet/bp/${user[0].id}`
-      ,{
+      `${REACT_APP_API_SERVER}/diet/bp/${user[0].id}`,
+      {
         headers: {
-          'Authorization': `Bearer ${locateToken()}`
-        }
+          Authorization: `Bearer ${locateToken()}`,
+        },
       }
     );
     setBpRec(data.bpRec);
   }
   async function fetchBGRecordFromServerByID() {
     const { data } = await axios.get(
-      `${REACT_APP_API_SERVER}/diet/bg/${user[0].id}`
-      ,{
+      `${REACT_APP_API_SERVER}/diet/bg/${user[0].id}`,
+      {
         headers: {
-          'Authorization': `Bearer ${locateToken()}`
-        }
+          Authorization: `Bearer ${locateToken()}`,
+        },
       }
     );
     setBgRec(data.bgRec);
@@ -95,11 +95,10 @@ export default function UserBPBGRecord() {
     type: "weight" | "bp" | "bg",
     rid: number | string
   ) {
-    await axios.delete(`${REACT_APP_API_SERVER}/diet/${type}/${rid}`
-    , {
+    await axios.delete(`${REACT_APP_API_SERVER}/diet/${type}/${rid}`, {
       headers: {
-        'Authorization': `Bearer ${locateToken()}`
-      }
+        Authorization: `Bearer ${locateToken()}`,
+      },
     });
     switch (type) {
       case "weight":
@@ -118,16 +117,19 @@ export default function UserBPBGRecord() {
   //post
   async function postWeightRecord(weight: number, date: string, uid: number) {
     axios
-      .post(`${REACT_APP_API_SERVER}/diet/weight`, {
-        weight,
-        date,
-        uid,
-      }
-      ,{
-        headers: {
-          'Authorization': `Bearer ${locateToken()}`
+      .post(
+        `${REACT_APP_API_SERVER}/diet/weight`,
+        {
+          weight,
+          date,
+          uid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
         }
-      })
+      )
       .then(() => {
         Swal.fire({
           icon: "success",
@@ -151,17 +153,21 @@ export default function UserBPBGRecord() {
     uid: number
   ) {
     axios
-      .post(`${REACT_APP_API_SERVER}/diet/bp`, {
-        sys_bp,
-        dia_bp,
-        date,
-        time,
-        uid,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${locateToken()}`
+      .post(
+        `${REACT_APP_API_SERVER}/diet/bp`,
+        {
+          sys_bp,
+          dia_bp,
+          date,
+          time,
+          uid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
         }
-      })
+      )
       .then(() => {
         Swal.fire({
           icon: "success",
@@ -183,16 +189,20 @@ export default function UserBPBGRecord() {
     uid: number
   ) {
     axios
-      .post(`${REACT_APP_API_SERVER}/diet/bg`, {
-        bg,
-        date,
-        time,
-        uid,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${locateToken()}`
+      .post(
+        `${REACT_APP_API_SERVER}/diet/bg`,
+        {
+          bg,
+          date,
+          time,
+          uid,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
         }
-      })
+      )
       .then((result) => {
         Swal.fire({
           icon: "success",
