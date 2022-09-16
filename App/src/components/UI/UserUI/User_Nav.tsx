@@ -4,19 +4,11 @@ import UserNavLinks from "./User_nav_links";
 export default function UserNav() {
   function CollapsedNav() {
     return (
-      <>
-        <Hide below="1200px">
-          <VStack
-            direction="column"
-            width="120px"
-            maxH="100%"
-            spacing="5"
-            p="10"
-          >
-            <UserNavLinks />
-          </VStack>
-        </Hide>
-      </>
+      <Hide below="1200px">
+        <VStack direction="column" width="120px" maxH="100%" spacing="5" p="10">
+          <UserNavLinks />
+        </VStack>
+      </Hide>
     );
   }
 
