@@ -8,3 +8,5 @@ userRoutes.post('/checkToken', userController.checkUserByToken)
 // userRoutes.put("/", userController.get)
 // userRoutes.delete("/", userController.get)
 userRoutes.get('/dietitians', userController.getAllDietitian)
+
+userRoutes.get('/hkid/:hkid', userController.getUserByHKID)

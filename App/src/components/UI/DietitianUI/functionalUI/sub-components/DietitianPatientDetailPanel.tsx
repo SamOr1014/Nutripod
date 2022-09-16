@@ -29,38 +29,61 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Center,
   Divider,
-  Stat,
-  StatArrow,
-  StatGroup,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
+  PopoverAnchor,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { MdToday } from "react-icons/md";
-import { DietitianPatientPanel } from "../../../../../utility/models";
+import Swal from "sweetalert2";
+import {
+  BGDetail,
+  BPDetail,
+  DietitianPatientPanel,
+  WeightDetail,
+} from "../../../../../utility/models";
 
 export default function DietitianPatientDetailPanel(
   patient: DietitianPatientPanel
 ) {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
 
-  // User Information
+  //################
+  //API Functions
+  //################
+
+  // User Information components
   function UserDetailAndBooking() {
     return (
       <Flex
         flexDir={"column"}
         w={isSmallerThan600 ? "100%" : "30%"}
-        h={isSmallerThan600 ? "100%" : "530px"}
-        fontSize={isSmallerThan600 ? "sm" : "xl"}
+        h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "682px" : "580px"}
+        fontSize={isSmallerThan600 ? "sm" : "md"}
         borderRadius={"3xl"}
         bg={"gray.500"}
         p={5}
+        gap={2}
       >
-        <Heading>病人個人資料</Heading>
+        <Heading
+          textAlign={"center"}
+          w={"100%"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          flexDir={"column"}
+          fontSize={"xl"}
+        >
+          <Image
+            boxSize={"50px"}
+            objectFit={"scale-down"}
+            src="https://4.bp.blogspot.com/-GkpJdW--_FQ/UYtb30fxqwI/AAAAAAAARsI/BYtuOrQAebw/s400/job_information.png"
+          />
+          病人個人資料
+        </Heading>
         <Divider my={3} />
         <Flex>
           <Text flex={1} fontWeight={"extrabold"}>
@@ -82,7 +105,7 @@ export default function DietitianPatientDetailPanel(
         </Flex>
         <Flex>
           <Text flex={1} fontWeight={"extrabold"}>
-            體重:
+            起始體重:
           </Text>
           <Text>{patient.weight}kg</Text>
         </Flex>
@@ -104,7 +127,9 @@ export default function DietitianPatientDetailPanel(
           <Text flex={1} fontWeight={"extrabold"}>
             性別:
           </Text>
-          <Text>{patient.gender}</Text>
+          <Text>
+            {patient.gender === 1 ? "男" : patient.gender === 2 ? "女" : "其他"}
+          </Text>
         </Flex>
         <Flex>
           <Text flex={1} fontWeight={"extrabold"}>
@@ -122,7 +147,7 @@ export default function DietitianPatientDetailPanel(
           <Text flex={1} fontWeight={"extrabold"}>
             出生日期:
           </Text>
-          <Text>{patient.birthday}</Text>
+          <Text>{new Date(patient.birthday).toLocaleDateString()}</Text>
         </Flex>
       </Flex>
     );
@@ -147,6 +172,7 @@ export default function DietitianPatientDetailPanel(
             justifyContent={"center"}
             alignItems={"center"}
             flexDir={"column"}
+            fontSize={"xl"}
           >
             <Image
               boxSize={"50px"}
@@ -156,7 +182,7 @@ export default function DietitianPatientDetailPanel(
             病人已預約診期
           </Heading>
           <Flex w={"90%"} maxH={"80%"} overflow={"auto"}>
-            <Table size={isSmallerThan600 ? "sm" : "md"}>
+            <Table size={"sm"}>
               <Thead position="sticky" top={0} bg={"gray.300"} zIndex={100}>
                 <Tr>
                   <Th>日期</Th>
@@ -190,6 +216,7 @@ export default function DietitianPatientDetailPanel(
             justifyContent={"center"}
             alignItems={"center"}
             flexDir={"column"}
+            fontSize={"xl"}
           >
             <Image
               boxSize={"60px"}
@@ -227,6 +254,22 @@ export default function DietitianPatientDetailPanel(
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
       new Date()
     );
+    const [meal, setMeal] = useState<string>("早餐");
+    const [foodDetail, setFoodDetail] = useState<Array<any>>([]);
+    useEffect(() => {
+      if (meal === "早餐") {
+        console.log("B");
+      }
+      if (meal === "午餐") {
+        console.log("L");
+      }
+      if (meal === "晚餐") {
+        console.log("D");
+      }
+      if (meal === "小食") {
+        console.log("S");
+      }
+    }, [meal]);
     return (
       <>
         {/* The popover date picker */}
@@ -281,81 +324,27 @@ export default function DietitianPatientDetailPanel(
         >
           <Flex
             w={isSmallerThan600 ? "100%" : "47%"}
-            maxH={isSmallerThan600 ? "100%" : "480px"}
+            h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "655px" : "560px"}
             minH={"500px"}
             justifyContent={"center"}
             gap={5}
             flexWrap={"wrap"}
           >
-            {/* net kcal */}
-            <Flex
-              flexDir={"column"}
-              borderRadius={"3xl"}
-              bg={"gray.500"}
-              minW={"100%"}
-              maxH={isSmallerThan600 ? "auto" : "45%"}
-              p={4}
-            >
-              <Center flex={1} justifyContent={"center"}>
-                <StatGroup flex={"1 1 0%"}>
-                  <Stat textAlign={"center"}>
-                    <StatLabel justifyContent={"center"} display={"flex"}>
-                      <Image
-                        boxSize={"50px"}
-                        objectFit={"scale-down"}
-                        src="https://3.bp.blogspot.com/-DVesu5jkbJY/V-SzHXVJrVI/AAAAAAAA-D8/S2GvFrXsOvMT7IwOjZHsa2VM83Q9LZSVACLcB/s400/syokuji_girl.png"
-                      />
-                    </StatLabel>
-                    <StatLabel>本日攝取量📈</StatLabel>
-                    <StatNumber fontSize={isSmallerThan600 ? "md" : "auto"}>
-                      345,670kcal
-                    </StatNumber>
-                    <StatHelpText>
-                      比前一日
-                      <StatArrow type="increase" />
-                      23.36%
-                    </StatHelpText>
-                  </Stat>
-
-                  <Stat textAlign={"center"}>
-                    <StatLabel justifyContent={"center"} display={"flex"}>
-                      <Image
-                        boxSize={"50px"}
-                        objectFit={"scale-down"}
-                        src="https://4.bp.blogspot.com/-M4s-kw3pnK4/VVGU_vRA5ZI/AAAAAAAAtgc/gurhjQK24X0/s400/diet_after_woman.png"
-                      />
-                    </StatLabel>
-                    <StatLabel>本月平均攝取量📈</StatLabel>
-                    <StatNumber fontSize={isSmallerThan600 ? "md" : "auto"}>
-                      345,670kcal
-                    </StatNumber>
-                    <StatHelpText>
-                      比上月
-                      <StatArrow type="increase" />
-                      23.36%
-                    </StatHelpText>
-                  </Stat>
-                </StatGroup>
-              </Center>
-            </Flex>
-            {/* end of net kcal */}
             {/* exercise panel dietitian */}
             <Flex
               flexDir={"column"}
               bg={"gray.500"}
-              maxH={"45%"}
-              minH={"500px"}
               w={"100%"}
               borderRadius={"3xl"}
               alignItems={"center"}
               p={3}
             >
-              <Heading textAlign={"center"} fontSize={"xl"} mb={1}>
-                Exercise
+              <Heading textAlign={"center"} fontSize={"2xl"}>
+                運動
               </Heading>
-              <Flex w={"100%"} maxH={"90%"} overflow={"auto"}>
+              <Flex w={"100%"} overflow={"auto"} mt={2}>
                 <Table
-                  size={isSmallerThan600 ? "sm" : "md"}
+                  size={"sm"}
                   maxW={"100%"}
                   fontSize={isSmallerThan600 ? "xs" : "md"}
                 >
@@ -387,98 +376,61 @@ export default function DietitianPatientDetailPanel(
           {/* end of exercise panel for dietitian view */}
           <Flex
             w={isSmallerThan600 ? "100%" : "47%"}
-            maxH={isSmallerThan600 ? "100%" : "480px"}
+            h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "655px" : "560px"}
+            minH={"500px"}
             justifyContent={"center"}
             gap={5}
             flexWrap={"wrap"}
-            p={1}
           >
             <Flex
               flexDir={"column"}
-              w={isSmallerThan600 ? "100%" : "45%"}
-              maxH={isSmallerThan600 ? "200px" : "45%"}
-              borderRadius={"3xl"}
               bg={"gray.500"}
-              alignItems={"center"}
-            >
-              <Heading textAlign={"center"}>早餐</Heading>
-              <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="left">
-                          food + gram
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>nutrition info</AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Box>
-            </Flex>
-            <Flex
-              flexDir={"column"}
-              w={isSmallerThan600 ? "100%" : "45%"}
-              maxH={isSmallerThan600 ? "100%" : "45%"}
+              w={"100%"}
               borderRadius={"3xl"}
-              bg={"gray.500"}
-              p={1}
               alignItems={"center"}
+              p={3}
+              position={"relative"}
             >
-              <Heading textAlign={"center"}>午餐</Heading>
-              <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="left">
-                          food + gram
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>nutrition info</AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Box>
-            </Flex>
-            <Flex
-              flexDir={"column"}
-              w={isSmallerThan600 ? "100%" : "45%"}
-              borderRadius={"3xl"}
-              bg={"gray.500"}
-              p={1}
-              alignItems={"center"}
-            >
-              <Heading textAlign={"center"}>晚餐</Heading>
-              <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
-                <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="left">
-                          food + gram
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>nutrition info</AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Box>
-            </Flex>
-            <Flex
-              flexDir={"column"}
-              w={isSmallerThan600 ? "100%" : "45%"}
-              bg={"gray.500"}
-              borderRadius={"3xl"}
-              p={1}
-              alignItems={"center"}
-            >
-              <Heading textAlign={"center"}>小食</Heading>
-              <Box w={"90%"} maxH={"80%"} overflow={"auto"}>
+              <Flex>
+                <Popover>
+                  <Box flex={"1"}>
+                    <PopoverAnchor>
+                      <Heading textAlign={"center"} fontSize={"2xl"}>
+                        {meal}
+                      </Heading>
+                    </PopoverAnchor>
+                  </Box>
+                  <PopoverTrigger>
+                    <Button position={"absolute"} right={10} size={"sm"}>
+                      更改
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent>
+                    <PopoverBody>
+                      進食時間：
+                      <RadioGroup
+                        value={meal}
+                        onChange={(value) => setMeal(value)}
+                      >
+                        <Radio mx={1} value="早餐">
+                          早餐
+                        </Radio>
+                        <Radio mx={1} value="午餐">
+                          午餐
+                        </Radio>
+                        <Radio mx={1} value="晚餐">
+                          晚餐
+                        </Radio>
+                        <Radio mx={1} value="小食">
+                          小食
+                        </Radio>
+                      </RadioGroup>
+                    </PopoverBody>
+                  </PopoverContent>
+                </Popover>
+              </Flex>
+
+              <Box w={"90%"} maxH={"80%"} overflow={"auto"} mt={2}>
                 <Accordion allowToggle>
                   <AccordionItem>
                     <h2>
@@ -500,12 +452,229 @@ export default function DietitianPatientDetailPanel(
     );
   }
 
+  function UserWeightBPBGData() {
+    const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
+    const [bpRec, setBpRec] = useState<Array<BPDetail>>([]);
+    const [bgRec, setBgRec] = useState<Array<BGDetail>>([]);
+    return (
+      <>
+        {/* Weight part */}
+        <Flex
+          flexDir={"column"}
+          w={isSmallerThan600 ? "100%" : "30%"}
+          h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "682px" : "580px"}
+          fontSize={isSmallerThan600 ? "sm" : "md"}
+          borderRadius={"3xl"}
+          bg={"gray.500"}
+          p={5}
+          gap={2}
+        >
+          <Flex
+            h={isSmallerThan600 ? "auto" : "100px"}
+            justifyContent={"center"}
+            alignContent={"center"}
+          >
+            <Flex
+              flexDir={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Image
+                boxSize={isSmallerThan600 ? "100px" : "100px"}
+                objectFit={"scale-down"}
+                src="https://4.bp.blogspot.com/-SXG--O1E2i0/VVGVgRDH8QI/AAAAAAAAtmQ/U8HhB5NUFgc/s800/kenkoushindan03_taijuu.png"
+              />
+              <Heading textAlign={"center"} my={2}>
+                體重記錄
+              </Heading>
+            </Flex>
+          </Flex>
+          <Divider />
+          <Flex w={"100%"} maxH={"480px"} overflow={"auto"}>
+            {/* Weight Table */}
+            <Table variant="simple" size={"sm"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
+                <Tr>
+                  <Th>日期</Th>
+                  <Th textAlign={"center"}>體重(kg)</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {weightRec.map((rec) => {
+                  return (
+                    <Tr key={`weight_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.weight}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+            {/* Weight Table end */}
+          </Flex>
+        </Flex>
+        {/* BP */}
+        <Flex
+          flexDir={"column"}
+          w={isSmallerThan600 ? "100%" : "30%"}
+          h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "682px" : "580px"}
+          fontSize={isSmallerThan600 ? "sm" : "md"}
+          borderRadius={"3xl"}
+          bg={"gray.500"}
+          p={5}
+          gap={2}
+        >
+          <Flex
+            h={isSmallerThan600 ? "auto" : "100px"}
+            justifyContent={"center"}
+            alignContent={"center"}
+          >
+            <Flex
+              flexDir={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Image
+                boxSize={isSmallerThan600 ? "70px" : "100px"}
+                objectFit={"scale-down"}
+                src="https://1.bp.blogspot.com/-YIL1WatLnQc/U82wyiz4GnI/AAAAAAAAjDk/i1S5WQtHxWs/s400/body_shinzou_good.png"
+              />
+              <Heading textAlign={"center"} my={2}>
+                血壓記錄
+              </Heading>
+            </Flex>
+          </Flex>
+          <Divider />
+          {/* BP Table */}
+          <Flex
+            w={"100%"}
+            maxH={"500px"}
+            overflow={"auto"}
+            overflowX={"hidden"}
+          >
+            <Table variant="simple" size={"sm"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
+                <Tr>
+                  <Th>日期</Th>
+                  <Th>時間</Th>
+                  <Th textAlign={"center"}>上壓/下壓(mmHg)</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {bpRec.map((rec) => {
+                  return (
+                    <Tr key={`bp_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {rec.time.slice(0, -3)}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.sys_bp}/{rec.dia_bp}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Flex>
+          {/* BP Table end */}
+        </Flex>
+        {/* BG */}
+        <Flex
+          flexDir={"column"}
+          w={isSmallerThan600 ? "100%" : "30%"}
+          h={isSmallerThan600 ? "100%" : isLargerThan1700 ? "682px" : "580px"}
+          fontSize={isSmallerThan600 ? "sm" : "md"}
+          borderRadius={"3xl"}
+          bg={"gray.500"}
+          p={5}
+          gap={2}
+        >
+          <Flex
+            h={isSmallerThan600 ? "auto" : "100px"}
+            justifyContent={"center"}
+            alignContent={"center"}
+          >
+            <Flex
+              flexDir={"row"}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
+              <Image
+                boxSize={isSmallerThan600 ? "70px" : "100px"}
+                objectFit={"scale-down"}
+                src="https://1.bp.blogspot.com/-ksgJvY53NnY/VVGVGspTMlI/AAAAAAAAtho/B6brGWmDc9Y/s400/insulin_woman.png"
+              />
+              <Heading textAlign={"center"} my={2}>
+                血糖度數記錄
+              </Heading>
+            </Flex>
+          </Flex>
+          <Divider />
+          {/* BG Table */}
+          <Flex
+            w={"100%"}
+            maxH={"500px"}
+            overflow={"auto"}
+            overflowX={"hidden"}
+          >
+            <Table variant="simple" size={"sm"}>
+              <Thead position="sticky" top={0} bg={"gray.100"}>
+                <Tr>
+                  <Th>日期</Th>
+                  <Th>時間</Th>
+                  <Th fontSize={"12"} textAlign={"center"}>
+                    血糖(mmol/L)
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody fontSize={"2px"}>
+                {bgRec.map((rec) => {
+                  return (
+                    <Tr key={`bg_rec_${rec.id}`}>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {new Date(rec.date).toLocaleDateString()}
+                      </Td>
+                      <Td fontSize={isSmallerThan600 ? "14" : "16"}>
+                        {rec.time.slice(0, -3)}
+                      </Td>
+                      <Td
+                        fontSize={isSmallerThan600 ? "14" : "16"}
+                        textAlign={"center"}
+                      >
+                        {rec.bg_measurement}
+                      </Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Flex>
+          {/* BG Table end */}
+        </Flex>
+      </>
+    );
+  }
+
   return (
     <>
       <Tabs variant="soft-rounded" colorScheme="green" w={"100%"} h={"100%"}>
         <TabList>
           <Tab>病人記錄</Tab>
           <Tab>飲食詳情</Tab>
+          <Tab>用家記錄</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -524,11 +693,22 @@ export default function DietitianPatientDetailPanel(
             <Flex
               w={"100%"}
               h={"100%"}
-              justifyContent={"center"}
+              justifyContent={"space-evenly"}
               gap={5}
               flexWrap={"wrap"}
             >
               <DietitianUserExerciseAndFoodDetailPanel />
+            </Flex>
+          </TabPanel>
+          <TabPanel>
+            <Flex
+              w={"100%"}
+              h={"100%"}
+              justifyContent={"space-evenly"}
+              gap={5}
+              flexWrap={"wrap"}
+            >
+              <UserWeightBPBGData />{" "}
             </Flex>
           </TabPanel>
         </TabPanels>

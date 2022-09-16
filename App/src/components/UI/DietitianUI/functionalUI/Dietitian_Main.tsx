@@ -154,7 +154,7 @@ export default function DietitianMain() {
         borderRadius="2xl"
         flexWrap={"wrap"}
         gap={5}
-        maxH={"800px"}
+        h={"720px"}
       >
         <Flex
           flex={1}

@@ -93,4 +93,16 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+
+	getUserByHKID = async (req: Request, res: Response) => {
+		try {
+			let hkid = req.params.hkid
+			hkid = hkid.toUpperCase()
+			const user = await this.userService.getUserBYHKID(hkid)
+			res.status(200).json({ success: true, user })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
 }
