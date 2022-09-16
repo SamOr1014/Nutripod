@@ -9,7 +9,7 @@ export default function DashBoardDietitian() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <>
-      <Banner element={<DietitianNavLinks />} />
+      <Banner />
       <Container
         minW={"100%"}
         display="flex"

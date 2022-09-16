@@ -148,8 +148,7 @@ export default function UserBPBGRecord() {
   async function postBPRecord(
     sys_bp: number,
     dia_bp: number,
-    date: string,
-    time: string,
+    dateString: string,
     uid: number
   ) {
     axios
@@ -158,8 +157,7 @@ export default function UserBPBGRecord() {
         {
           sys_bp,
           dia_bp,
-          date,
-          time,
+          dateString,
           uid,
         },
         {
@@ -182,19 +180,13 @@ export default function UserBPBGRecord() {
         });
       });
   }
-  async function postBGRecord(
-    bg: number,
-    date: string,
-    time: string,
-    uid: number
-  ) {
+  async function postBGRecord(bg: number, dateString: string, uid: number) {
     axios
       .post(
         `${REACT_APP_API_SERVER}/diet/bg`,
         {
           bg,
-          date,
-          time,
+          dateString,
           uid,
         },
         {
@@ -203,14 +195,14 @@ export default function UserBPBGRecord() {
           },
         }
       )
-      .then((result) => {
+      .then(() => {
         Swal.fire({
           icon: "success",
           title: "你成功上傳血糖指數",
         });
         fetchBGRecordFromServerByID();
       })
-      .catch((e) => {
+      .catch(() => {
         Swal.fire({
           icon: "error",
           title: "暫時未能上傳血糖指數，請稍後再試",
@@ -654,7 +646,6 @@ export default function UserBPBGRecord() {
                     parseInt(sysInput),
                     parseInt(diaInput),
                     dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString(),
                     user[0].id as number
                   );
                   setSysInput("");
@@ -664,7 +655,6 @@ export default function UserBPBGRecord() {
                   await postBGRecord(
                     parseInt(bgInput),
                     dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString(),
                     user[0].id as number
                   );
                   setBGInput("");

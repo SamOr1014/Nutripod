@@ -26,12 +26,16 @@ import { useSelector } from "react-redux";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { IRootState } from "../../redux/store";
 
-export default function Banner(props: { element: any }) {
+import DietitianNavLinks from "./DietitianUI/Dietitian_nav_links";
+import UserNavLinks from "./UserUI/User_nav_links";
+
+export default function Banner() {
   const navigate = useNavigate();
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
   const user = useSelector((state: IRootState) => state.user.user);
+  const dietitian = useSelector((state: IRootState) => state.user.dietitian);
   const {
     isOpen: isDrawerOpen,
     onOpen: onDrawerOpen,
@@ -43,14 +47,19 @@ export default function Banner(props: { element: any }) {
   //   state.role === "dietitian" ? "/dietitian/account" : "/dashboard/account";
 
   const logout = async () => {
-    window.localStorage.clear()
-    window.sessionStorage.clear()
+    window.localStorage.clear();
+    window.sessionStorage.clear();
     window.location.href = "http://localhost:3000";
-  }
+  };
 
   function MobileNav() {
     return (
-      <Drawer placement="top" onClose={onDrawerClose} isOpen={isDrawerOpen}>
+      <Drawer
+        placement="top"
+        onClose={onDrawerClose}
+        isOpen={isDrawerOpen}
+        closeOnOverlayClick={false}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">
@@ -61,7 +70,11 @@ export default function Banner(props: { element: any }) {
           <DrawerBody>
             <Center>
               {/* If the role is dietitian render a different mobile nav */}
-              {props.element}
+              {dietitian[0].id !== null ? (
+                <DietitianNavLinks closeDrawer={onDrawerClose} />
+              ) : (
+                <UserNavLinks closeDrawer={onDrawerClose} />
+              )}
             </Center>
           </DrawerBody>
         </DrawerContent>
@@ -104,7 +117,7 @@ export default function Banner(props: { element: any }) {
             fontSize={isLargerThan1700 ? "xl" : "md"}
             fontWeight="extrabold"
           >
-            你好, {user[0].last_name}
+            你好, {user[0].last_name || dietitian[0].last_name}
           </Text>
         </Show>
         <Menu>
@@ -139,7 +152,7 @@ export default function Banner(props: { element: any }) {
               </MenuItem>
             </Link>
 
-            <Link >
+            <Link>
               <MenuItem
                 fontWeight="bold"
                 fontSize={isLargerThan1700 ? "xl" : "md"}

@@ -29,6 +29,9 @@ import { AddIcon } from "@chakra-ui/icons";
 
 import "react-day-picker/dist/style.css";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../../redux/store";
+import locateToken from "../../../../utility/Token";
 const { REACT_APP_API_SERVER } = process.env;
 const css = `
 .my-selected:not([disabled]) { 
@@ -47,9 +50,8 @@ const css = `
 `;
 
 export default function UserMain() {
-  //####FAKE USER#######
-  const uid = 1;
-  //####################
+
+  const userInfo = useSelector((state: IRootState) => state.user.user[0])
 
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -62,14 +64,21 @@ export default function UserMain() {
   async function fetchExercisesFromServer() {
     axios
       .get(
-        `${REACT_APP_API_SERVER}/diet/exercises/${uid}/${selectedDate?.toISOString()}`
+        `${REACT_APP_API_SERVER}/diet/exercises/${userInfo.id}/${selectedDate?.toISOString()}`
+        , {
+          headers: {
+            'Authorization': `Bearer ${locateToken()}`
+          }
+        }
       )
       .then(({ data }) => {
         console.log(data);
-      });
+      })
   }
 
-  useEffect(() => {}, [selectedDate]);
+  useEffect(() => {
+    fetchExercisesFromServer()
+   }, [selectedDate]);
 
   return (
     <>

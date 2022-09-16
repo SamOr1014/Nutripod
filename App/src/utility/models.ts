@@ -17,10 +17,18 @@ export interface DietitianPatientPanel {
   last_name: string;
   height: number;
   weight: number;
-  gender: string;
+  gender: number | string;
   HKID: string;
   phone: string;
   birthday: any;
+}
+
+export interface UserBookingData {
+  id: number;
+  date: string;
+  first_name: string;
+  last_name: string;
+  time: string;
 }
 
 export interface UserBookingDetailByDateAndDietitian {
@@ -54,7 +62,19 @@ export interface BGDetail {
   time: string;
 }
 
+export interface UserDetailInDietiainPanel {
+  id: number;
+  first_name: string;
+  last_name: string;
+  birthday: string;
+  height: number;
+  weight: number;
+  gender: number;
+  phone: string;
+  hkid: string;
+}
+
 export interface token {
-  id: number
-  username: string
+  id: number;
+  username: string;
 }

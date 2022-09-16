@@ -7,6 +7,7 @@ import {
   BsFillFileMedicalFill,
 } from "react-icons/bs";
 
+import { GiArchiveRegister } from "react-icons/gi";
 interface OptionalFunction {
   closeDrawer?: (state: any) => void;
 }
@@ -58,6 +59,21 @@ export default function DietitianNavLinks(props: OptionalFunction) {
           <BsFillChatRightTextFill size={isLargerThan1700 ? "40px" : "30px"} />
           <Text mt={1} fontSize={isLargerThan1700 ? "2xl" : "md"}>
             快訊
+          </Text>
+        </Button>
+      </Link>
+      <Link to="/dietitian/register" as={ReactLink}>
+        <Button
+          w={isLargerThan1700 ? 24 : 16}
+          h={isLargerThan1700 ? 24 : 16}
+          rounded="full"
+          flexDir="column"
+          p={2}
+          onClick={props.closeDrawer}
+        >
+          <GiArchiveRegister size={isLargerThan1700 ? "40px" : "30px"} />
+          <Text mt={1} fontSize={isLargerThan1700 ? "2xl" : "md"}>
+            登記
           </Text>
         </Button>
       </Link>

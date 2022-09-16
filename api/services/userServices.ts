@@ -46,12 +46,30 @@ export class UserServices {
 		return dietitians
 	}
 
-	async changeEmail(id: string | number, email: string) {
-		const result = await this.knex('users')
-			.update('email', email)
-			.where('id', id)
-			.returning('id')
-
-		return result
+	async getUserBYHKID(hkid: string) {
+		const user = await this.knex('users')
+			.select(
+				'id',
+				'first_name',
+				'last_name',
+				'birthday',
+				'height',
+				'weight',
+				'gender',
+				'phone',
+				'hkid'
+			)
+			.where('hkid', hkid)
+			.andWhere('is_deleted', false)
+		return user
 	}
+}
+
+async changeEmail(id: string | number, email: string) {
+	const result = await this.knex('users')
+		.update('email', email)
+		.where('id', id)
+		.returning('id')
+
+	return result
 }

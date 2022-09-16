@@ -82,20 +82,22 @@ export class DietRecordController {
 
 	postBP = async (req: Request, res: Response) => {
 		try {
-			const { sys_bp, dia_bp, date, time, uid } = req.body
-			if (!sys_bp || !dia_bp || !date || !time || !uid) {
+			const { sys_bp, dia_bp, dateString, uid } = req.body
+			if (!sys_bp || !dia_bp || !dateString || !uid) {
 				res.status(400).json({
 					success: false,
 					message: 'Not Enough Information Provided'
 				})
 				return
 			}
+			let date = new Date(dateString).toISOString()
 			let formattedDate = formatDate(date)
+			let formattedTime = new Date(dateString).toLocaleTimeString()
 			const result = await this.dietRecordService.postBP(
 				sys_bp,
 				dia_bp,
 				formattedDate,
-				time,
+				formattedTime,
 				uid
 			)
 			res.status(200).json({ success: true, data: result })
@@ -140,19 +142,22 @@ export class DietRecordController {
 
 	postBGlu = async (req: Request, res: Response) => {
 		try {
-			const { bg, date, time, uid } = req.body
-			if (!bg || !date || !uid || !time) {
+			const { bg, dateString, uid } = req.body
+			if (!bg || !uid || !dateString) {
 				res.status(400).json({
 					success: false,
 					message: 'Not Enough Information Provided'
 				})
 				return
 			}
+			let date = new Date(dateString).toISOString()
 			let formattedDate = formatDate(date)
+			let formattedTime = new Date(dateString).toLocaleTimeString()
+			console.log(bg, formattedDate, formattedTime, uid)
 			const result = await this.dietRecordService.postBG(
 				bg,
 				formattedDate,
-				time,
+				formattedTime,
 				uid
 			)
 			res.status(200).json({ success: true, data: result })
@@ -199,7 +204,11 @@ export class DietRecordController {
 				uid,
 				formattedDate
 			)
-			res.status(200).json({ success: true, exercises: exerciseRec })
+
+			res.status(200).json({
+				success: true,
+				exercises: exerciseRec
+			})
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
