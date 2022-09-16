@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../redux/store";
+import locateToken from "../../../../utility/Token";
 
 const { REACT_APP_API_SERVER } = process.env;
 interface UserBookingData {
@@ -56,7 +57,12 @@ export default function UserMed() {
   //fetching
   async function fetchBooking() {
     axios
-      .get(`${REACT_APP_API_SERVER}/booking/user/${uID}`)
+      .get(`${REACT_APP_API_SERVER}/booking/user/${uID}`
+        , {
+          headers: {
+            'Authorization': `Bearer ${locateToken()}`
+          }
+        })
       .then((response) => {
         setBooking(response.data.data);
       })
@@ -70,7 +76,12 @@ export default function UserMed() {
 
   async function fetchMedEvaluation() {
     axios
-      .get(`${REACT_APP_API_SERVER}/medical/user/${uID}`)
+      .get(`${REACT_APP_API_SERVER}/medical/user/${uID}`
+      ,{
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      })
       .then(({ data }) => {
         setMedRec(data.result);
       })
@@ -84,7 +95,12 @@ export default function UserMed() {
   //delete
   async function deleteBooking(bookingID: number | string) {
     axios
-      .delete(`${REACT_APP_API_SERVER}/booking/user/${uID}/${bookingID}`)
+      .delete(`${REACT_APP_API_SERVER}/booking/user/${uID}/${bookingID}`
+        , {
+          headers: {
+            'Authorization': `Bearer ${locateToken()}`
+          }
+        })
       .then(() => {
         Swal.fire({
           icon: "success",
@@ -166,9 +182,8 @@ export default function UserMed() {
                             ).toLocaleDateString()}</p> <br> <p><b>時間</b>: ${detail.time.slice(
                               0,
                               -3
-                            )}</p> <br> <p><b>營養師</b>: ${
-                              detail.first_name + " " + detail.last_name
-                            }</p>`,
+                            )}</p> <br> <p><b>營養師</b>: ${detail.first_name + " " + detail.last_name
+                              }</p>`,
                             showCloseButton: true,
                             showCancelButton: true,
                           }).then(async (result) => {
@@ -255,8 +270,8 @@ export default function UserMed() {
                       {rec.gender === 1
                         ? "男"
                         : rec.gender === 2
-                        ? "女"
-                        : "其他"}
+                          ? "女"
+                          : "其他"}
                     </Text>
                     <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
                     <Text fontWeight={"bold"}>體重： {rec.weight} kg</Text>
