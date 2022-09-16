@@ -17,6 +17,7 @@ import { Field, Formik } from "formik";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { UserDetailInDietiainPanel } from "../../../../utility/models";
+import locateToken from "../../../../utility/Token";
 import DietitianPatientDetailPanel from "./sub-components/DietitianPatientDetailPanel";
 
 const { REACT_APP_API_SERVER } = process.env;
@@ -29,7 +30,11 @@ export default function PatientSearchPanel() {
 
   async function searchUserByHKID(hkid: string) {
     axios
-      .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`)
+      .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`, {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      })
       .then(({ data }) => {
         setUserinfo(data.user);
       })

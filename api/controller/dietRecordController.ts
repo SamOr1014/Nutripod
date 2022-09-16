@@ -191,7 +191,6 @@ export class DietRecordController {
 
 	getExercisesByID = async (req: Request, res: Response) => {
 		try {
-			console.log("received in backend")
 			let uid = req.params.uid
 			let date = req.params.date
 			if (!uid || isNaN(parseInt(uid)) || !date) {
@@ -201,12 +200,15 @@ export class DietRecordController {
 				})
 			}
 			let formattedDate = formatDate(date)
-			console.log(formattedDate)
 			const exerciseRec = await this.dietRecordService.getExerciseByID(
 				uid,
 				formattedDate
 			)
-			res.status(200).json({ success: true, exercises: exerciseRec })
+
+			res.status(200).json({
+				success: true,
+				exercises: exerciseRec
+			})
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })

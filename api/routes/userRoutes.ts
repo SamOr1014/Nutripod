@@ -1,5 +1,6 @@
 import express from 'express'
 import { userController } from '../server'
+import { isUserLoggedIn } from '../utilities/guards'
 
 export const userRoutes = express.Router()
 
@@ -9,4 +10,4 @@ userRoutes.post('/checkToken', userController.checkUserByToken)
 // userRoutes.delete("/", userController.get)
 userRoutes.get('/dietitians', userController.getAllDietitian)
 
-userRoutes.get('/hkid/:hkid', userController.getUserByHKID)
+userRoutes.get('/hkid/:hkid', isUserLoggedIn, userController.getUserByHKID)

@@ -63,7 +63,12 @@ export default function DietitianPatientDetailPanel(
   const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
   const [bpRec, setBpRec] = useState<Array<BPDetail>>([]);
   const [bgRec, setBgRec] = useState<Array<BGDetail>>([]);
-
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date()
+  );
+  const [meal, setMeal] = useState<string>("早餐");
+  const [foodDetail, setFoodDetail] = useState<Array<any>>([]);
+  const [exDetail, setExDetail] = useState<Array<any>>([]);
   //#######Age Function#######
   const userAge = () => {
     let today = new Date();
@@ -154,6 +159,24 @@ export default function DietitianPatientDetailPanel(
         });
       });
   }
+  async function fetchExerciseAndDiet() {
+    const exerciseRec = axios.get(
+      `${REACT_APP_API_SERVER}/diet/exercise/${
+        patient.id
+      }/${selectedDate?.toISOString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    );
+    axios.all([exerciseRec]).then(
+      axios.spread((...responses) => {
+        let exerciseResult = responses[0];
+        setExDetail(exerciseResult.data.exercises);
+      })
+    );
+  }
   //Fetch when patient id changes and patient id is not undefined/null
   useEffect(() => {
     if (patient.id) {
@@ -161,7 +184,14 @@ export default function DietitianPatientDetailPanel(
       fetchUserBodyState();
     }
   }, [patient.id]);
-  //#############################
+
+  useEffect(() => {
+    if (patient.id && selectedDate) {
+      fetchExerciseAndDiet();
+    }
+  }, [patient.id, selectedDate]);
+
+  // #############################
   // User Information components (first tab first element)
   function UserDetailAndBooking() {
     return (
@@ -421,11 +451,6 @@ export default function DietitianPatientDetailPanel(
   }
   //#######################################
   function DietitianUserExerciseAndFoodDetailPanel() {
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-      new Date()
-    );
-    const [meal, setMeal] = useState<string>("早餐");
-    const [foodDetail, setFoodDetail] = useState<Array<any>>([]);
     useEffect(() => {
       if (meal === "早餐") {
         console.log("B");
@@ -528,16 +553,31 @@ export default function DietitianPatientDetailPanel(
                   </Thead>
 
                   <Tbody>
-                    <Tr>
-                      <Td>22/9/2022</Td>
-                      <Td>10</Td>
-                      <Td>
-                        <Text maxH={"50px"} maxW={"150px"} overflow="auto">
-                          Runungungugnugngungugnugnguhngdfffffffffffffffffffffffffffffffffffffff
-                        </Text>
-                      </Td>
-                      <Td>237</Td>
-                    </Tr>
+                    {exDetail[0]
+                      ? exDetail.map((item) => {
+                          return (
+                            <Tr>
+                              <Td>
+                                {new Date(item.date).toLocaleDateString()}
+                              </Td>
+                              <Td>{item.duration.slice(0, -3)}</Td>
+                              <Td>
+                                <Text
+                                  maxH={"50px"}
+                                  maxW={"150px"}
+                                  overflow="auto"
+                                >
+                                  {item.ex_type}
+                                </Text>
+                              </Td>
+                              <Td>
+                                {parseInt(item.ex_calories) *
+                                  (parseInt(item.duration) / 60)}
+                              </Td>
+                            </Tr>
+                          );
+                        })
+                      : ""}
                   </Tbody>
                 </Table>
               </Flex>
