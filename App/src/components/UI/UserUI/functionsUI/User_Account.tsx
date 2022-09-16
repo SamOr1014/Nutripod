@@ -1,8 +1,14 @@
 import { Box, Flex, Heading, Button, Text, Divider } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../redux/store";
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserAccount() {
+  // obtain data from redux
+  const userID = useSelector((state: IRootState) => state.user.user[0].id);
+  
+
   async function changeName() {
     const { value: name } = await Swal.fire({
       title: "請輸入你的姓名",

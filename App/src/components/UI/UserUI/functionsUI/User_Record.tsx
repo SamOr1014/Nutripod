@@ -25,15 +25,15 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../redux/store";
 import { BGDetail, BPDetail, WeightDetail } from "../../../../utility/models";
 
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserBPBGRecord() {
-  //FAKE UID
-  let uid = 1;
-  //FAKE UID
+  const user = useSelector((state: IRootState) => state.user.user);
 
   //MediaQuery hooks
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
@@ -59,16 +59,20 @@ export default function UserBPBGRecord() {
   //fetch
   async function fetchWeightRecordFromServerByID() {
     const { data } = await axios.get(
-      `${REACT_APP_API_SERVER}/diet/weight/${uid}`
+      `${REACT_APP_API_SERVER}/diet/weight/${user[0].id}`
     );
     setWeightRec(data.weightRec);
   }
   async function fetchBPRecordFromServerByID() {
-    const { data } = await axios.get(`${REACT_APP_API_SERVER}/diet/bp/${uid}`);
+    const { data } = await axios.get(
+      `${REACT_APP_API_SERVER}/diet/bp/${user[0].id}`
+    );
     setBpRec(data.bpRec);
   }
   async function fetchBGRecordFromServerByID() {
-    const { data } = await axios.get(`${REACT_APP_API_SERVER}/diet/bg/${uid}`);
+    const { data } = await axios.get(
+      `${REACT_APP_API_SERVER}/diet/bg/${user[0].id}`
+    );
     setBgRec(data.bgRec);
   }
   //delete
@@ -157,7 +161,6 @@ export default function UserBPBGRecord() {
         uid,
       })
       .then((result) => {
-        console.log("bg status", result.status);
         Swal.fire({
           icon: "success",
           title: "你成功上傳血糖指數",
@@ -174,10 +177,12 @@ export default function UserBPBGRecord() {
   //end API functions
   //###############
   useEffect(() => {
-    fetchWeightRecordFromServerByID();
-    fetchBGRecordFromServerByID();
-    fetchBPRecordFromServerByID();
-  }, []);
+    if (user[0].id) {
+      fetchWeightRecordFromServerByID();
+      fetchBGRecordFromServerByID();
+      fetchBPRecordFromServerByID();
+    }
+  }, [user]);
 
   return (
     <>
@@ -237,7 +242,7 @@ export default function UserBPBGRecord() {
                     await postWeightRecord(
                       parseInt(weightInput),
                       new Date().toISOString(),
-                      uid
+                      user[0].id as number
                     );
                     setWeightInput("");
                   }}
@@ -279,7 +284,15 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("weight", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                              showCancelButton: true,
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("weight", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -400,7 +413,14 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("bp", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("bp", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -510,7 +530,14 @@ export default function UserBPBGRecord() {
                           size="sm"
                           fontSize={"8"}
                           onClick={() => {
-                            deleteRecord("bg", rec.id);
+                            Swal.fire({
+                              icon: "question",
+                              title: "你確定要移除？",
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                deleteRecord("bg", rec.id);
+                              }
+                            });
                           }}
                         />
                       </Td>
@@ -585,22 +612,17 @@ export default function UserBPBGRecord() {
                     parseInt(diaInput),
                     dateTimeSubmit.toISOString(),
                     dateTimeSubmit.toLocaleTimeString(),
-                    uid
+                    user[0].id as number
                   );
                   setSysInput("");
                   setDiaInput("");
                 }
                 if (modalPostControl === "bg") {
-                  console.log(
-                    bgInput,
-                    dateTimeSubmit.toISOString(),
-                    dateTimeSubmit.toLocaleTimeString()
-                  );
                   await postBGRecord(
                     parseInt(bgInput),
                     dateTimeSubmit.toISOString(),
                     dateTimeSubmit.toLocaleTimeString(),
-                    uid
+                    user[0].id as number
                   );
                   setBGInput("");
                 }

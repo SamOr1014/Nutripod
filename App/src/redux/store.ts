@@ -15,7 +15,7 @@ export const store = configureStore({
     getDefaultMiddleware({
       thunk: {
         extraArgument: {
-          jwt: window.localStorage.getItem("token"),
+          jwt: window.localStorage.getItem("token")
         },
       },
     }).concat(logger),

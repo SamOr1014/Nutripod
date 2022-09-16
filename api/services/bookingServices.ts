@@ -3,6 +3,14 @@ import { Knex } from 'knex'
 export class BookingServices {
 	constructor(private knex: Knex) {}
 
+	async checkIfSameDayHasBooking(uid: number, date: string) {
+		const result = await this.knex('booking')
+			.select('*')
+			.where('user_id', uid)
+			.andWhere('date', date)
+		return result
+	}
+
 	async getTimeslot() {
 		const timeSlot = await this.knex('timeslot').select('*')
 		return timeSlot

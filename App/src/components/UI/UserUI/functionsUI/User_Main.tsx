@@ -23,11 +23,13 @@ import {
   Image,
 } from "@chakra-ui/react";
 import { MdToday } from "react-icons/md";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { AddIcon } from "@chakra-ui/icons";
 
 import "react-day-picker/dist/style.css";
+import axios from "axios";
+const { REACT_APP_API_SERVER } = process.env;
 const css = `
 .my-selected:not([disabled]) { 
   font-weight: bold; 
@@ -45,11 +47,29 @@ const css = `
 `;
 
 export default function UserMain() {
+  //####FAKE USER#######
+  const uid = 1;
+  //####################
+
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
+
+  //API FUNCTIONS
+
+  async function fetchExercisesFromServer() {
+    axios
+      .get(
+        `${REACT_APP_API_SERVER}/diet/exercises/${uid}/${selectedDate?.toISOString()}`
+      )
+      .then(({ data }) => {
+        console.log(data);
+      });
+  }
+
+  useEffect(() => {}, [selectedDate]);
 
   return (
     <>
@@ -232,8 +252,12 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>早餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image
+            boxSize={isSmallerThan600 ? 8 : 20}
+            src="/images/breakfast.png"
+          />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>早餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -252,8 +276,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>午餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>午餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -272,8 +297,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>晚餐</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>晚餐</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
@@ -292,8 +318,9 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Heading>小食</Heading>
-          <Text fontSize={"xl"}>500kcal</Text>
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
+          <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>小食</Heading>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
