@@ -107,8 +107,6 @@ export class DietRecordServices {
 		return result
 	}
 
-	//##################Exercise Services###############################
-
 	async getExerciseByID(uid: string | number, date: string) {
 		const result = await this.knex('users_exercises')
 			.select('*')
@@ -117,8 +115,8 @@ export class DietRecordServices {
 			.andWhere('is_deleted', false)
 			.innerJoin(
 				'exercises_types',
-				'users_exercises.exercise',
-				'exercises_types.id'
+				'exercises_types.id',
+				'users_exercises.exercise'
 			)
 		return result
 	}
@@ -129,11 +127,57 @@ export class DietRecordServices {
 		.where('user_id', uid)
 		.andWhere('date' , ">=" ,startDate)
 		.andWhere('date', "<=", endDate)
+		.andWhere('is_deleted', false)
 		.innerJoin(
 			'exercises_types',
-			'users_exercises.exercise',
-			'exercises_types.id'
+			'exercises_types.id',
+			'users_exercises.exercise'
 		)
+		return result
+	}
+
+	async getFoodIntakeByID(uid:string | number, date:string) {
+		const result = await this.knex('users_diets')
+		.select('*')
+		.where('user_id', uid)
+		.andWhere('date', date)
+		.innerJoin(
+			'food',
+			'food.id',
+			'users_diets.food'
+		).innerJoin(
+			'diets_types',
+			'diets_types.id',
+			'users_diets.diet_type'
+		).innerJoin(
+			'food_groups',
+			'food_groups.id',
+			'food.group_id'
+		)
+	
+		return result
+	}
+
+	async getFoodMonthlyIntakeByID(uid:string | number, startDate:string, endDate:string) {
+		const result = await this.knex('users_diets')
+		.select('*')
+		.where('user_id', uid)
+		.andWhere('date' , ">=" ,startDate)
+		.andWhere('date', "<=", endDate)
+		.innerJoin(
+			'food',
+			'food.id',
+			'users_diets.food'
+		).innerJoin(
+			'diets_types',
+			'diets_types.id',
+			'users_diets.diet_type'
+		).innerJoin(
+			'food_groups',
+			'food_groups.id',
+			'food.group_id'
+		)
+	
 		return result
 	}
 }

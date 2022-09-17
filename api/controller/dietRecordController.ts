@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { logger } from '../configs/winston'
 import { DietRecordServices } from '../services/dietRecordServices'
-import { formatDate, formatLastDate ,formatToMonthStartAndEnd, formatToLastMonthStartAndEnd, daysInMonth} from '../utilities/formatDate'
+import { formatDate, formatLastDate, formatToMonthStartAndEnd, formatToLastMonthStartAndEnd, daysInMonth } from '../utilities/formatDate'
 
 export class DietRecordController {
 	constructor(private dietRecordService: DietRecordServices) { }
@@ -198,6 +198,7 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
+				return
 			}
 			let formattedDate = formatDate(date)
 			let formattedPreviousDate = formatLastDate(date)
@@ -213,12 +214,12 @@ export class DietRecordController {
 			)
 
 			if (yesterdayExercises.length === 0 && todayExercises.length === 0) {
-				res.status(204).json({ hasExercises: false, message: "no exercise on both days" })
+				res.status(200).json({ hasExercises: false, message: "no exercise on both days" })
 				return
 			}
 
 			if (todayExercises.length === 0) {
-				res.status(204).json({ hasExercises: false, message: "No exercise for today" })
+				res.status(200).json({ hasExercises: false, message: "No exercise for today" })
 				return
 			}
 
@@ -264,6 +265,7 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
+				return
 			}
 
 			const selectDay = new Date(date)
@@ -275,18 +277,18 @@ export class DietRecordController {
 			const formattedLastDate = formatToLastMonthStartAndEnd(selectDay)
 
 			const thisMonthExercises = await this.dietRecordService.
-			getMonthlyExercisesByID(uid, formattedDate.start,formattedDate.end)
+				getMonthlyExercisesByID(uid, formattedDate.start, formattedDate.end)
 
 			const lastMonthExercises = await this.dietRecordService.
-			getMonthlyExercisesByID(uid, formattedLastDate.start,formattedLastDate.end)
+				getMonthlyExercisesByID(uid, formattedLastDate.start, formattedLastDate.end)
 
 			if (lastMonthExercises.length === 0 && thisMonthExercises.length === 0) {
-				res.status(201).json({is_exercised : false, message: "No exercises in 2 months!"})
+				res.status(200).json({ is_exercised: false, message: "No exercises in 2 months!" })
 				return
 			}
 
 			if (thisMonthExercises.length === 0) {
-				res.status(201).json({is_exercised : false, message: "No exercises in this months!"})
+				res.status(200).json({ is_exercised: false, message: "No exercises in this months!" })
 				return
 			}
 
@@ -301,16 +303,20 @@ export class DietRecordController {
 					for (let exercise of lastMonthExercises) {
 						lastMonthTotalCalories += exercise.duration / 60 * exercise.ex_calories
 					}
-					let thisMonthAverage = thisMonthTotalCalories/numbersOfDay
-					let lastMonthAverage = lastMonthTotalCalories/numbersOfDay
-					difference = ((thisMonthAverage - lastMonthAverage)/lastMonthAverage) * 100
+					let thisMonthAverage = thisMonthTotalCalories / numbersOfDay
+					let lastMonthAverage = lastMonthTotalCalories / numbersOfDay
+					difference = ((thisMonthAverage - lastMonthAverage) / lastMonthAverage) * 100
 
-					res.status(200).json({is_exercised:true, message: "had exercises in both months"
-					, rate:Math.round(difference), averageCalories:Math.round(thisMonthTotalCalories/today)})
+					res.status(200).json({
+						is_exercised: true, message: "had exercises in both months"
+						, rate: Math.round(difference), averageCalories: Math.round(thisMonthTotalCalories / today)
+					})
 					return
 				}
-				res.status(200).json({is_exercised:true, message:"Only exercise in this month"
-				,averageCalories:Math.round(thisMonthTotalCalories/today)})
+				res.status(200).json({
+					is_exercised: true, message: "Only exercise in this month"
+					, averageCalories: Math.round(thisMonthTotalCalories / today)
+				})
 			}
 
 
@@ -319,6 +325,137 @@ export class DietRecordController {
 			res.status(500).json({ success: false })
 			return
 		}
+	}
 
+	getDailyInTakeByID = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+				return
+			}
+
+			let formattedDate = formatDate(date)
+			let formattedPreviousDate = formatLastDate(date)
+
+			const todayIntake = await this.dietRecordService.getFoodIntakeByID(uid, formattedDate)
+			const yesterdayIntake = await this.dietRecordService.getFoodIntakeByID(uid, formattedPreviousDate)
+
+			if (todayIntake.length === 0 && yesterdayIntake.length === 0) {
+				res.status(200).json({ inTake: false, message: "No Intake for two days" })
+				return
+			}
+
+			if (todayIntake.length === 0) {
+				res.status(200).json({ inTake: false, message: "No Intake for today" })
+				return
+			}
+
+			if (todayIntake.length > 0) {
+				let todayIntakeCalories = 0
+				let yesterdayIntakeCalories = 0
+				let difference = 0
+				for (let intake of todayIntake) {
+					todayIntakeCalories += intake.food_calories * intake.food_amount
+				}
+				if (yesterdayIntake.length > 0) {
+					for (let intake of yesterdayIntake) {
+						yesterdayIntakeCalories += intake.food_calories * intake.food_amount
+					}
+					difference = ((todayIntakeCalories - yesterdayIntakeCalories) / yesterdayIntakeCalories) * 100
+
+					res.status(200).json({
+						inTake: true, message: "Intake for two days",
+						rate: Math.round(difference), intakeCalories: todayIntakeCalories / 100,
+						diet: todayIntake
+					})
+					return
+				}
+				res.status(200).json({
+					inTake: true, message: "Intake for today",
+					intakeCalories: todayIntakeCalories / 100, diet: todayIntake
+				})
+				return
+			}
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	getMonthlyInTakeByID = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+				return
+			}
+
+			const selectDay = new Date(date)
+			const day = new Date
+			const today = day.getDate()
+			const numbersOfDay = daysInMonth(selectDay)
+
+			const formattedDate = formatToMonthStartAndEnd(selectDay)
+			const formattedLastDate = formatToLastMonthStartAndEnd(selectDay)
+
+			const thisMonthIntake = await this.dietRecordService.
+				getFoodMonthlyIntakeByID(uid, formattedDate.start, formattedDate.end)
+
+			const lastMonthIntake = await this.dietRecordService.
+				getFoodMonthlyIntakeByID(uid, formattedLastDate.start, formattedLastDate.end)
+
+			if (thisMonthIntake.length === 0 && lastMonthIntake.length === 0) {
+				res.status(200).json({ inTake: false, message: "No intake in 2 months!" })
+				return
+			}
+
+			if (thisMonthIntake.length === 0) {
+				res.status(200).json({ inTake: false, message: "No intake in this month!" })
+				return
+			}
+
+			if (thisMonthIntake.length > 0) {
+				let thisMonthFoodIntake = 0
+				let lastMonthFoodIntake = 0
+				let difference = 0
+				for (let intake of thisMonthIntake) {
+					thisMonthFoodIntake += intake.food_calories * intake.food_amount
+				}
+				if (lastMonthIntake.length > 0) {
+					for (let intake of lastMonthIntake) {
+						lastMonthFoodIntake += intake.food_calories * intake.food_amount
+					}
+					let thisMonthAverage = thisMonthFoodIntake / numbersOfDay
+					let lastMonthAverage = lastMonthFoodIntake / numbersOfDay
+					difference = ((thisMonthAverage - lastMonthAverage) / lastMonthAverage) * 100
+
+					res.status(200).json({inTake:true, message: "Have intake in both months",
+					rate: Math.round(difference), thisMonthIntake: Math.round(thisMonthAverage/100/today)})
+				}
+				res.status(200).json({inTake:true, message: "intake for this month only",
+				thisMonthIntake: Math.round(thisMonthFoodIntake/100/today)})
+			}
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
 	}
 }
+
+
