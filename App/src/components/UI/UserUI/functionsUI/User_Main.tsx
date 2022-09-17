@@ -26,7 +26,7 @@ import { MdToday } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { AddIcon } from "@chakra-ui/icons";
-
+import Swal from "sweetalert2";
 import "react-day-picker/dist/style.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -53,13 +53,21 @@ export default function UserMain() {
 
   const userInfo = useSelector((state: IRootState) => state.user.user[0])
 
+  const [calories, setCalories] = useState(0)
+  const [yesterdayHasExercise, setYesterdayExercise] = useState(false)
+  const [rate, setRate] = useState(0)
+
+  const [averageCalories, setAverageCalories] = useState(0)
+  const [lastMonthHasExercise, setLastMonthHasExercise] = useState(false)
+  const [monthRate, SetMonthRate] = useState(0)
+
+
+
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-
-  //API FUNCTIONS
 
   async function fetchExercisesFromServer() {
     axios
@@ -72,13 +80,66 @@ export default function UserMain() {
         }
       )
       .then(({ data }) => {
-        console.log(data);
+        if (!data.hasExercises) {
+          setCalories(0)
+          setYesterdayExercise(false)
+          setRate(0)
+        }
+        if (data.hasExercises) {
+          setCalories(data.todayCalories)
+          if (data.rate) {
+            setYesterdayExercise(true)
+            setRate(data.rate)
+          } else if (!data.rate) {
+            setYesterdayExercise(false)
+            setRate(0)
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
+      })
+  }
+
+  async function fetchMonthlyExercisesFromServer() {
+    axios.get(`${REACT_APP_API_SERVER}/diet/monthlyExercises/${userInfo.id}/${selectedDate?.toISOString()}`
+      , {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }
+    )
+      .then(({ data }) => {
+        if (!data.is_exercised) {
+          setAverageCalories(0)
+          setLastMonthHasExercise(false)
+          SetMonthRate(0)
+        }
+
+        if (data.is_exercised) {
+          setAverageCalories(data.averageCalories)
+          if (data.rate){
+            setLastMonthHasExercise(true)
+            SetMonthRate(data.rate)
+          } else if (!data.rate) {
+            setLastMonthHasExercise(false)
+            SetMonthRate(0)
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
       })
   }
 
   useEffect(() => {
     fetchExercisesFromServer()
-   }, [selectedDate]);
+    fetchMonthlyExercisesFromServer()
+  }, [selectedDate]);
 
   return (
     <>
@@ -214,12 +275,22 @@ export default function UserMain() {
                 <StatLabel>
                   <Text>本日運動消耗量📈</Text>
                 </StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+
+                <StatNumber>{calories > 0 ? `${calories}Kcal` : "今天還沒有運動"}</StatNumber>
+
                 <StatHelpText>
-                  比前一日
-                  <StatArrow type="increase" />
-                  23.36%
+                  {yesterdayHasExercise ? "比前一日" : "昨天沒有運動"}
+
+                  {yesterdayHasExercise ?
+                    <StatArrow
+                      type={rate > 0 ? "increase" : "decrease"} />
+                    :
+                    <></>
+                  }
+
+                  {rate === 0 ? "" : `${rate}%`}
                 </StatHelpText>
+
               </Stat>
               <Stat textAlign={"center"}>
                 <StatLabel justifyContent={"center"} display={"flex"}>
@@ -229,12 +300,19 @@ export default function UserMain() {
                     src="https://4.bp.blogspot.com/-MeaPmMfyFEU/ViipeRRGWxI/AAAAAAAAz5Q/ZJ78UMjZfuQ/s450/shibou_nensyou.png"
                   />
                 </StatLabel>
-                <StatLabel>平均每日運動消耗量📈</StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+                <StatLabel>平均每月每日運動消耗量📈</StatLabel>
+                <StatNumber>{averageCalories > 0 ? `${averageCalories}Kcal` : "今個月沒有運動"}</StatNumber>
                 <StatHelpText>
-                  比本日
-                  <StatArrow type="increase" />
-                  23.36%
+                  { lastMonthHasExercise ? "比前一個月" : "上一個月沒有運動"}
+
+                  {lastMonthHasExercise ?
+                    <StatArrow
+                      type={ monthRate > 0 ? "increase" : "decrease"} />
+                    :
+                    <></>
+                  }
+                  {monthRate === 0 ? "" : `${monthRate}%`}
+
                 </StatHelpText>
               </Stat>
             </StatGroup>

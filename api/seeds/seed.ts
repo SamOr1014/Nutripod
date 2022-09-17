@@ -196,15 +196,81 @@ export async function seed(knex: Knex) {
 	await knex(exercisesTableName)
 		.insert([
 			{
-				date: '2022-09-20',
-				exercise: exercises_typesID[0].id,
+				date: '2022-08-12',
+				exercise: exercises_typesID[3].id,
+				duration: 34,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-02',
+				exercise: exercises_typesID[5].id,
 				duration: 30,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-07',
+				exercise: exercises_typesID[3].id,
+				duration: 45,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-18',
+				exercise: exercises_typesID[6].id,
+				duration: 78,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-23',
+				exercise: exercises_typesID[4].id,
+				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-17',
+				exercise: exercises_typesID[3].id,
+				duration: 31,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-20',
+				exercise: exercises_typesID[2].id,
+				duration: 30,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-20',
+				exercise: exercises_typesID[7].id,
+				duration: 12,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-20',
+				exercise: exercises_typesID[2].id,
+				duration: 56,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-21',
+				exercise: exercises_typesID[1].id,
+				duration: 45,
 				user_id: userID[0].id
 			},
 			{
 				date: '2022-09-22',
 				exercise: exercises_typesID[5].id,
 				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-23',
+				exercise: exercises_typesID[4].id,
+				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-24',
+				exercise: exercises_typesID[3].id,
+				duration: 35,
 				user_id: userID[0].id
 			},
 			{

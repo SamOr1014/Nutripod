@@ -1,10 +1,10 @@
 import { Request, Response } from 'express'
 import { logger } from '../configs/winston'
 import { DietRecordServices } from '../services/dietRecordServices'
-import { formatDate } from '../utilities/formatDate'
+import { formatDate, formatLastDate ,formatToMonthStartAndEnd, formatToLastMonthStartAndEnd, daysInMonth} from '../utilities/formatDate'
 
 export class DietRecordController {
-	constructor(private dietRecordService: DietRecordServices) {}
+	constructor(private dietRecordService: DietRecordServices) { }
 
 	//##############Weight BP BG Record Controller#############################
 
@@ -191,7 +191,6 @@ export class DietRecordController {
 
 	getExercisesByID = async (req: Request, res: Response) => {
 		try {
-			console.log("received in backend")
 			let uid = req.params.uid
 			let date = req.params.date
 			if (!uid || isNaN(parseInt(uid)) || !date) {
@@ -201,16 +200,125 @@ export class DietRecordController {
 				})
 			}
 			let formattedDate = formatDate(date)
-			console.log(formattedDate)
-			const exerciseRec = await this.dietRecordService.getExerciseByID(
+			let formattedPreviousDate = formatLastDate(date)
+
+			const todayExercises = await this.dietRecordService.getExerciseByID(
 				uid,
 				formattedDate
 			)
-			res.status(200).json({ success: true, exercises: exerciseRec })
+
+			const yesterdayExercises = await this.dietRecordService.getExerciseByID(
+				uid,
+				formattedPreviousDate
+			)
+
+			if (yesterdayExercises.length === 0 && todayExercises.length === 0) {
+				res.status(204).json({ hasExercises: false, message: "no exercise on both days" })
+				return
+			}
+
+			if (todayExercises.length === 0) {
+				res.status(204).json({ hasExercises: false, message: "No exercise for today" })
+				return
+			}
+
+			if (todayExercises.length > 0) {
+				let todayTotalCalories = 0
+				let yesterdayTotalCalories = 0
+				let difference = 0
+				for (let exercise of todayExercises) {
+					todayTotalCalories += exercise.duration / 60 * exercise.ex_calories
+				}
+
+				if (yesterdayExercises.length > 0) {
+					for (let exercise of yesterdayExercises) {
+						yesterdayTotalCalories += exercise.duration / 60 * exercise.ex_calories
+					}
+					let floorTodayTotalCalories = Math.floor(todayTotalCalories)
+					let floorYesterdayTotalCalories = Math.floor(yesterdayTotalCalories)
+					difference = ((floorTodayTotalCalories - floorYesterdayTotalCalories) / floorYesterdayTotalCalories) * 100
+
+					res.status(200).json({
+						hasExercises: true, message: "had exercises",
+						rate: Math.round(difference), todayCalories: floorTodayTotalCalories
+					})
+					return
+				}
+				res.status(200).json({ hasExercises: true, message: "had exercises", todayCalories: Math.floor(todayTotalCalories) })
+			}
+
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
 			return
 		}
+	}
+
+	getMonthlyExercises = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+			}
+
+			const selectDay = new Date(date)
+			const day = new Date
+			const today = day.getDate()
+			const numbersOfDay = daysInMonth(selectDay)
+
+			const formattedDate = formatToMonthStartAndEnd(selectDay)
+			const formattedLastDate = formatToLastMonthStartAndEnd(selectDay)
+
+			const thisMonthExercises = await this.dietRecordService.
+			getMonthlyExercisesByID(uid, formattedDate.start,formattedDate.end)
+
+			const lastMonthExercises = await this.dietRecordService.
+			getMonthlyExercisesByID(uid, formattedLastDate.start,formattedLastDate.end)
+
+			if (lastMonthExercises.length === 0 && thisMonthExercises.length === 0) {
+				res.status(201).json({is_exercised : false, message: "No exercises in 2 months!"})
+				return
+			}
+
+			if (thisMonthExercises.length === 0) {
+				res.status(201).json({is_exercised : false, message: "No exercises in this months!"})
+				return
+			}
+
+			if (thisMonthExercises.length > 0) {
+				let thisMonthTotalCalories = 0
+				let lastMonthTotalCalories = 0
+				let difference = 0
+				for (let exercise of thisMonthExercises) {
+					thisMonthTotalCalories += exercise.duration / 60 * exercise.ex_calories
+				}
+				if (lastMonthExercises.length > 0) {
+					for (let exercise of lastMonthExercises) {
+						lastMonthTotalCalories += exercise.duration / 60 * exercise.ex_calories
+					}
+					let thisMonthAverage = thisMonthTotalCalories/numbersOfDay
+					let lastMonthAverage = lastMonthTotalCalories/numbersOfDay
+					difference = ((thisMonthAverage - lastMonthAverage)/lastMonthAverage) * 100
+
+					res.status(200).json({is_exercised:true, message: "had exercises in both months"
+					, rate:Math.round(difference), averageCalories:Math.round(thisMonthTotalCalories/today)})
+					return
+				}
+				res.status(200).json({is_exercised:true, message:"Only exercise in this month"
+				,averageCalories:Math.round(thisMonthTotalCalories/today)})
+			}
+
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+
 	}
 }

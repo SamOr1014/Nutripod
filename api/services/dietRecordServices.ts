@@ -122,4 +122,18 @@ export class DietRecordServices {
 			)
 		return result
 	}
+
+	async getMonthlyExercisesByID(uid:string | number, startDate:string, endDate:string) {
+		const result = await this.knex('users_exercises')
+		.select('*')
+		.where('user_id', uid)
+		.andWhere('date' , ">=" ,startDate)
+		.andWhere('date', "<=", endDate)
+		.innerJoin(
+			'exercises_types',
+			'users_exercises.exercise',
+			'exercises_types.id'
+		)
+		return result
+	}
 }
