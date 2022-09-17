@@ -196,15 +196,81 @@ export async function seed(knex: Knex) {
 	await knex(exercisesTableName)
 		.insert([
 			{
-				date: '2022-09-20',
-				exercise: exercises_typesID[0].id,
+				date: '2022-08-12',
+				exercise: exercises_typesID[3].id,
+				duration: 34,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-02',
+				exercise: exercises_typesID[5].id,
 				duration: 30,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-07',
+				exercise: exercises_typesID[3].id,
+				duration: 45,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-18',
+				exercise: exercises_typesID[6].id,
+				duration: 78,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-23',
+				exercise: exercises_typesID[4].id,
+				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-17',
+				exercise: exercises_typesID[3].id,
+				duration: 31,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-08-20',
+				exercise: exercises_typesID[2].id,
+				duration: 30,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-20',
+				exercise: exercises_typesID[7].id,
+				duration: 12,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-20',
+				exercise: exercises_typesID[2].id,
+				duration: 56,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-21',
+				exercise: exercises_typesID[1].id,
+				duration: 45,
 				user_id: userID[0].id
 			},
 			{
 				date: '2022-09-22',
 				exercise: exercises_typesID[5].id,
 				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-23',
+				exercise: exercises_typesID[4].id,
+				duration: 60,
+				user_id: userID[0].id
+			},
+			{
+				date: '2022-09-24',
+				exercise: exercises_typesID[3].id,
+				duration: 35,
 				user_id: userID[0].id
 			},
 			{
@@ -659,7 +725,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'A bowl of rice',
 				group_id: food_groupID[0].id,
-				food_calories: 200,
+				food_calories: 280,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -670,7 +736,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'bean',
 				group_id: food_groupID[1].id,
-				food_calories: 200,
+				food_calories: 220,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -681,7 +747,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'veg',
 				group_id: food_groupID[2].id,
-				food_calories: 200,
+				food_calories: 220,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -692,7 +758,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'fruit',
 				group_id: food_groupID[3].id,
-				food_calories: 200,
+				food_calories: 230,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -703,7 +769,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'nut',
 				group_id: food_groupID[4].id,
-				food_calories: 200,
+				food_calories: 20,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -714,7 +780,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'pork',
 				group_id: food_groupID[5].id,
-				food_calories: 200,
+				food_calories: 190,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -725,7 +791,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'chicken',
 				group_id: food_groupID[6].id,
-				food_calories: 200,
+				food_calories: 120,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -736,7 +802,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'egg',
 				group_id: food_groupID[7].id,
-				food_calories: 200,
+				food_calories: 210,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -747,7 +813,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'milk',
 				group_id: food_groupID[8].id,
-				food_calories: 200,
+				food_calories: 57,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -758,7 +824,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'ice-cream',
 				group_id: food_groupID[9].id,
-				food_calories: 200,
+				food_calories: 150,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -780,7 +846,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'tea',
 				group_id: food_groupID[11].id,
-				food_calories: 200,
+				food_calories: 190,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -789,9 +855,9 @@ export async function seed(knex: Knex) {
 				sodium: 50
 			},
 			{
-				food_name: 'Bear',
+				food_name: 'Beer',
 				group_id: food_groupID[12].id,
-				food_calories: 200,
+				food_calories: 126,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -802,7 +868,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'soup',
 				group_id: food_groupID[13].id,
-				food_calories: 200,
+				food_calories: 126,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -813,7 +879,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'candy',
 				group_id: food_groupID[14].id,
-				food_calories: 200,
+				food_calories: 6221,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
@@ -824,7 +890,7 @@ export async function seed(knex: Knex) {
 			{
 				food_name: 'hotdog',
 				group_id: food_groupID[15].id,
-				food_calories: 200,
+				food_calories: 212,
 				carbohydrates: 30,
 				sugars: 5,
 				fat: 5,
