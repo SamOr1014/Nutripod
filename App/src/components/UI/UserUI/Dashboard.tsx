@@ -19,7 +19,7 @@ export default function DashBoard() {
   }, [user]);
   return (
     <>
-      <Banner element={<UserNavLinks />} />
+      <Banner />
       <Container
         minW={"100%"}
         display="flex"

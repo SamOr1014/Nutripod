@@ -6,32 +6,29 @@ import jwt from '../jwt'
 import { checkPassword } from '../utilities/hash'
 
 export class UserController {
-	constructor(private userService: UserServices) { }
+	constructor(private userService: UserServices) {}
 
 	checkUserByToken = async (req: Request, res: Response) => {
-
 		try {
 			const id = req.body.data.id
 			const username = req.body.data.username
 
 			if (!id || !username) {
 				res.status(400).json({
-					success: false,
+					success: false
 				})
 				return
 			}
 
-			const result = await this.userService.checkToken(id,username)
+			const result = await this.userService.checkToken(id, username)
 
 			if (result.length === 0) {
 				res.status(400).json({
-					success: false,
+					success: false
 				})
 				return
 			}
-			res.json({success:true, result: result[0]})
-
-
+			res.json({ success: true, result: result[0] })
 		} catch (e) {
 			logger.error(e.message)
 			res.status(400).json({ success: false })
@@ -100,6 +97,25 @@ export class UserController {
 			hkid = hkid.toUpperCase()
 			const user = await this.userService.getUserBYHKID(hkid)
 			res.status(200).json({ success: true, user })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeInformation = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const email = req.body.email
+
+			const result = await this.userService.changeEmail(uid, email)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false, message: e.message })
