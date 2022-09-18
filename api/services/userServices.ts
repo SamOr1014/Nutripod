@@ -63,13 +63,12 @@ export class UserServices {
 			.andWhere('is_deleted', false)
 		return user
 	}
-}
+	async changeEmail(id: string | number, email: string) {
+		const result = await this.knex('users')
+			.update('email', email)
+			.where('id', id)
+			.returning('id')
 
-async changeEmail(id: string | number, email: string) {
-	const result = await this.knex('users')
-		.update('email', email)
-		.where('id', id)
-		.returning('id')
-
-	return result
+		return result
+	}
 }
