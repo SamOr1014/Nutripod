@@ -46,8 +46,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import locateToken from "../../../../utility/Token";
-import { diet, dietList } from "../../../../utility/models"
-import { off } from "process";
+import { diet} from "../../../../utility/models"
+
 const { REACT_APP_API_SERVER } = process.env;
 const css = `
 .my-selected:not([disabled]) { 
@@ -101,15 +101,6 @@ export default function UserMain() {
   const [hasDinner, setHasDinner] = useState(false)
   const [snackList, setSnackList] = useState(Array<diet>)
   const [hasSnack, setHasSnack] = useState(false)
-
-  let breakfast = 0
-  let lunch = 0
-  let dinner = 0
-  let snack = 0
-  breakfastList.map((food) => breakfast += food.food_intake)
-  lunchList.map((food) => lunch += food.food_intake)
-  dinnerList.map((food) => dinner += food.food_intake)
-  snackList.map((food) => snack += food.food_intake)
 
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -237,7 +228,6 @@ export default function UserMain() {
           for (let food of data.diet) {
             if (food.d_type === "breakfast") {
               setHasBreakfast(true)
-              setBreakfastList(breakfastList => [])
               let breakfastInfo: diet = {
                 id: food.id,
                 name: food.food_name,
@@ -252,9 +242,7 @@ export default function UserMain() {
                 sugars: parseInt(food.sugars, 10),
                 fiber: parseInt(food.fiber, 10),
               }
-              let newBreakfastList = breakfastList.slice()
-              newBreakfastList.push(breakfastInfo)
-              setBreakfastList(newBreakfastList)
+              setBreakfastList((previousList) => [...previousList, breakfastInfo])
 
             } else if (food.d_type === "lunch") {
               setHasLunch(true)
@@ -272,9 +260,7 @@ export default function UserMain() {
                 sugars: parseInt(food.sugars, 10),
                 fiber: parseInt(food.fiber, 10),
               }
-              let newLunchList = lunchList.slice()
-              newLunchList.push(lunchInfo)
-              setLunchList(newLunchList)
+              setLunchList((previousList) => [...previousList, lunchInfo])
 
             } else if (food.d_type === "dinner") {
               setHasDinner(true)
@@ -292,9 +278,7 @@ export default function UserMain() {
                 sugars: parseInt(food.sugars, 10),
                 fiber: parseInt(food.fiber, 10),
               }
-              let newDinnerList = dinnerList.slice()
-              newDinnerList.push(dinnerInfo)
-              setDinnerList(newDinnerList)
+              setDinnerList((previousList) => [...previousList, dinnerInfo])
 
             } else if (food.d_type === "snack") {
               setHasSnack(true)
@@ -312,9 +296,7 @@ export default function UserMain() {
                 sugars: parseInt(food.sugars, 10),
                 fiber: parseInt(food.fiber, 10),
               }
-              let newSnackList = snackList.slice()
-              newSnackList.push(snackInfo)
-              setSnackList(newSnackList)
+              setSnackList((previousList) => [...previousList, snackInfo])
             }
           }
         }
@@ -366,13 +348,13 @@ export default function UserMain() {
   }
 
   useEffect(() => {
-    setBreakfastList(breakfastList => [])
+    setBreakfastList([])
     setHasBreakfast(false)
-    setLunchList(lunchList => [])
+    setLunchList([])
     setHasLunch(false)
-    setDinnerList(dinnerList => [])
+    setDinnerList([])
     setHasDinner(false)
-    setSnackList(snackLine => [])
+    setSnackList([])
     setHasSnack(false)
     fetchExercisesFromServer()
     fetchMonthlyExercisesFromServer()
@@ -380,6 +362,18 @@ export default function UserMain() {
     fetchMonthlyIntakeFromServer()
   }, [selectedDate]);
 
+  let lunch = 0
+  let dinner = 0
+  let snack = 0
+  let breakfast = 0
+  breakfastList.map((food) => breakfast += food.food_intake)
+  lunchList.map((food) => lunch += food.food_intake)
+  dinnerList.map((food) => dinner += food.food_intake)
+  snackList.map((food) => snack += food.food_intake)
+  
+  //Insert later
+  // const today = new Date();
+  // disabled={selectedDate && { after: today }}
 
   return (
     <>
@@ -401,6 +395,7 @@ export default function UserMain() {
               <Flex justifyContent={"center"} mb={-6}>
                 <DayPicker
                   mode="single"
+                  disabled={selectedDate}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   defaultMonth={new Date()}
