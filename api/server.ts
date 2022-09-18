@@ -19,8 +19,7 @@ const app = express()
 
 app.use(
 	cors({
-		origin: '*',
-		optionsSuccessStatus: 200
+		origin: '*'
 	})
 )
 

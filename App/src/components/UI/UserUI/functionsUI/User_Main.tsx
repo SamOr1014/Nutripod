@@ -21,17 +21,33 @@ import {
   Text,
   useMediaQuery,
   Image,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
 } from "@chakra-ui/react";
+
 import { MdToday } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { AddIcon } from "@chakra-ui/icons";
-
+import Swal from "sweetalert2";
 import "react-day-picker/dist/style.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import locateToken from "../../../../utility/Token";
+import { diet} from "../../../../utility/models"
+
 const { REACT_APP_API_SERVER } = process.env;
 const css = `
 .my-selected:not([disabled]) { 
@@ -42,7 +58,7 @@ const css = `
   border-color: red;
   color: red;
 }
-.my-today { 
+.my-today { console.log("???")
   font-weight: bold;
   font-size: 100%; 
   color: red;
@@ -52,14 +68,45 @@ const css = `
 export default function UserMain() {
 
   const userInfo = useSelector((state: IRootState) => state.user.user[0])
+  const { isOpen: breakfastOpen, onOpen: breakfastOnOpen, onClose: breakfastOnClose } = useDisclosure()
+  const { isOpen: lunchOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure()
+  const { isOpen: dinnerOpen, onOpen: dinnerOnOpen, onClose: dinnerOnClose } = useDisclosure()
+  const { isOpen: snackOpen, onOpen: snackOnOpen, onClose: snackOnClose } = useDisclosure()
+
+  const [calories, setCalories] = useState(0)
+  const [twoDaysHasExercise, setTwoDaysHasExercises] = useState(false)
+  const [yesterdayHasExercise, setYesterdayExercise] = useState(false)
+  const [rate, setRate] = useState(0)
+
+  const [averageCalories, setAverageCalories] = useState(0)
+  const [lastMonthHasExercise, setLastMonthHasExercise] = useState(false)
+  const [twoMonthsHasExercises, setTwoMonthsHasExercises] = useState(false)
+  const [monthRate, SetMonthRate] = useState(0)
+
+  const [inTake, setIntake] = useState(0)
+  const [twoDaysHasIntake, setTwoDaysHasIntake] = useState(false)
+  const [yesterdayHasIntake, setYesterdayHasIntake] = useState(false)
+  const [intakeRate, setIntakeRate] = useState(0)
+
+  const [averageIntake, setAverageIntake] = useState(0)
+  const [twoMonthsHasIntake, setTwoMonthsHasIntake] = useState(false)
+  const [lastMonthHasIntake, setLastMonthHasIntake] = useState(false)
+  const [averageIntakeRate, setAverageIntakeRate] = useState(0)
+
+  const [breakfastList, setBreakfastList] = useState(Array<diet>)
+  const [hasBreakfast, setHasBreakfast] = useState(false)
+  const [lunchList, setLunchList] = useState(Array<diet>)
+  const [hasLunch, setHasLunch] = useState(false)
+  const [dinnerList, setDinnerList] = useState(Array<diet>)
+  const [hasDinner, setHasDinner] = useState(false)
+  const [snackList, setSnackList] = useState(Array<diet>)
+  const [hasSnack, setHasSnack] = useState(false)
 
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-
-  //API FUNCTIONS
 
   async function fetchExercisesFromServer() {
     axios
@@ -72,13 +119,261 @@ export default function UserMain() {
         }
       )
       .then(({ data }) => {
-        console.log(data);
+        if (!data.hasExercises && data.message === "no exercise on both days") {
+          setCalories(0)
+          setRate(0)
+          setTwoDaysHasExercises(false)
+          setYesterdayExercise(false)
+        } else if (!data.hasExercises && data.message === "No exercise for today") {
+          setCalories(0)
+          setRate(0)
+          setYesterdayExercise(true)
+          setTwoDaysHasExercises(false)
+        }
+
+        if (data.hasExercises) {
+          setCalories(data.todayCalories)
+          if (data.rate) {
+            setYesterdayExercise(true)
+            setTwoDaysHasExercises(true)
+            setRate(data.rate)
+          } else if (!data.rate) {
+            setYesterdayExercise(false)
+            setTwoDaysHasExercises(false)
+            setRate(0)
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
+      })
+  }
+
+  async function fetchMonthlyExercisesFromServer() {
+    axios.get(`${REACT_APP_API_SERVER}/diet/monthlyExercises/${userInfo.id}/${selectedDate?.toISOString()}`
+      , {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }
+    )
+      .then(({ data }) => {
+        if (!data.is_exercised && data.message === "No exercises in 2 months!") {
+          setAverageCalories(0)
+          setTwoMonthsHasExercises(false)
+          setLastMonthHasExercise(false)
+          SetMonthRate(0)
+        } else if (!data.is_exercised && data.message === "No exercises in this months!") {
+          setAverageCalories(0)
+          setTwoMonthsHasExercises(false)
+          setLastMonthHasExercise(true)
+          SetMonthRate(0)
+        }
+
+        if (data.is_exercised) {
+          setAverageCalories(data.averageCalories)
+          if (data.rate) {
+            setTwoMonthsHasExercises(true)
+            setLastMonthHasExercise(true)
+            SetMonthRate(data.rate)
+          } else if (!data.rate) {
+            setTwoMonthsHasExercises(false)
+            setLastMonthHasExercise(false)
+            SetMonthRate(0)
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
+      })
+  }
+
+  async function fetchIntakeFromServer() {
+    axios.get(`${REACT_APP_API_SERVER}/diet/dailyDiet/${userInfo.id}/${selectedDate?.toISOString()}`
+      , {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }).then(({ data }) => {
+        if (!data.inTake && data.message === "No Intake for two days") {
+          setIntake(0)
+          setIntakeRate(0)
+          setYesterdayHasIntake(false)
+          setTwoDaysHasIntake(false)
+        } else if (!data.inTake && data.message === "No Intake for today") {
+          setIntake(0)
+          setIntakeRate(0)
+          setYesterdayHasIntake(true)
+          setTwoDaysHasIntake(false)
+        }
+
+        if (data.inTake) {
+          setIntake(data.intakeCalories)
+          if (data.rate) {
+            setYesterdayHasIntake(true)
+            setTwoDaysHasIntake(true)
+            setIntakeRate(data.rate)
+          } else if (!data.rate) {
+            setYesterdayHasIntake(false)
+            setTwoDaysHasIntake(false)
+            setIntakeRate(0)
+          }
+        }
+
+        if (data.diet) {
+          for (let food of data.diet) {
+            if (food.d_type === "breakfast") {
+              setHasBreakfast(true)
+              let breakfastInfo: diet = {
+                id: food.id,
+                name: food.food_name,
+                food_group: food.food_group,
+                food_amount: parseInt(food.food_amount, 10),
+                food_calories: parseInt(food.food_calories, 10),
+                food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
+                carbohydrates: parseInt(food.carbohydrates, 10),
+                protein: parseInt(food.protein, 10),
+                fat: parseInt(food.fat, 10),
+                sodium: parseInt(food.sodium, 10),
+                sugars: parseInt(food.sugars, 10),
+                fiber: parseInt(food.fiber, 10),
+              }
+              setBreakfastList((previousList) => [...previousList, breakfastInfo])
+
+            } else if (food.d_type === "lunch") {
+              setHasLunch(true)
+              let lunchInfo: diet = {
+                id: food.id,
+                name: food.food_name,
+                food_group: food.food_group,
+                food_amount: parseInt(food.food_amount, 10),
+                food_calories: parseInt(food.food_calories, 10),
+                food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
+                carbohydrates: parseInt(food.carbohydrates, 10),
+                protein: parseInt(food.protein, 10),
+                fat: parseInt(food.fat, 10),
+                sodium: parseInt(food.sodium, 10),
+                sugars: parseInt(food.sugars, 10),
+                fiber: parseInt(food.fiber, 10),
+              }
+              setLunchList((previousList) => [...previousList, lunchInfo])
+
+            } else if (food.d_type === "dinner") {
+              setHasDinner(true)
+              let dinnerInfo: diet = {
+                id: food.id,
+                name: food.food_name,
+                food_group: food.food_group,
+                food_amount: parseInt(food.food_amount, 10),
+                food_calories: parseInt(food.food_calories, 10),
+                food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
+                carbohydrates: parseInt(food.carbohydrates, 10),
+                protein: parseInt(food.protein, 10),
+                fat: parseInt(food.fat, 10),
+                sodium: parseInt(food.sodium, 10),
+                sugars: parseInt(food.sugars, 10),
+                fiber: parseInt(food.fiber, 10),
+              }
+              setDinnerList((previousList) => [...previousList, dinnerInfo])
+
+            } else if (food.d_type === "snack") {
+              setHasSnack(true)
+              let snackInfo: diet = {
+                id: food.id,
+                name: food.food_name,
+                food_group: food.food_group,
+                food_amount: parseInt(food.food_amount, 10),
+                food_calories: parseInt(food.food_calories, 10),
+                food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
+                carbohydrates: parseInt(food.carbohydrates, 10),
+                protein: parseInt(food.protein, 10),
+                fat: parseInt(food.fat, 10),
+                sodium: parseInt(food.sodium, 10),
+                sugars: parseInt(food.sugars, 10),
+                fiber: parseInt(food.fiber, 10),
+              }
+              setSnackList((previousList) => [...previousList, snackInfo])
+            }
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
+      })
+  }
+
+  async function fetchMonthlyIntakeFromServer() {
+    axios.get(`${REACT_APP_API_SERVER}/diet/monthlyDiet/${userInfo.id}/${selectedDate?.toISOString()}`
+      , {
+        headers: {
+          'Authorization': `Bearer ${locateToken()}`
+        }
+      }).then(({ data }) => {
+        if (!data.inTake && data.message === "No intake in 2 months!") {
+          setAverageIntake(0)
+          setAverageIntakeRate(0)
+          setTwoMonthsHasIntake(false)
+          setLastMonthHasIntake(false)
+        } else if (!data.inTake && data.message === "No intake in this month!") {
+          setAverageIntake(0)
+          setAverageIntakeRate(0)
+          setTwoMonthsHasIntake(false)
+          setLastMonthHasIntake(true)
+        }
+
+        if (data.inTake) {
+          setAverageIntake(data.thisMonthIntake)
+          if (data.rate) {
+            setAverageIntakeRate(data.rate)
+            setTwoMonthsHasIntake(true)
+            setLastMonthHasIntake(true)
+          } else if (!data.rate) {
+            setAverageIntakeRate(0)
+            setTwoMonthsHasIntake(false)
+            setLastMonthHasIntake(false)
+          }
+        }
+      }).catch(() => {
+        Swal.fire({
+          icon: "error",
+          title: "發生錯誤，請稍後再試"
+        })
       })
   }
 
   useEffect(() => {
+    setBreakfastList([])
+    setHasBreakfast(false)
+    setLunchList([])
+    setHasLunch(false)
+    setDinnerList([])
+    setHasDinner(false)
+    setSnackList([])
+    setHasSnack(false)
     fetchExercisesFromServer()
-   }, [selectedDate]);
+    fetchMonthlyExercisesFromServer()
+    fetchIntakeFromServer()
+    fetchMonthlyIntakeFromServer()
+  }, [selectedDate]);
+
+  let lunch = 0
+  let dinner = 0
+  let snack = 0
+  let breakfast = 0
+  breakfastList.map((food) => breakfast += food.food_intake)
+  lunchList.map((food) => lunch += food.food_intake)
+  dinnerList.map((food) => dinner += food.food_intake)
+  snackList.map((food) => snack += food.food_intake)
+  
+  //Insert later
+  // const today = new Date();
+  // disabled={selectedDate && { after: today }}
 
   return (
     <>
@@ -100,6 +395,7 @@ export default function UserMain() {
               <Flex justifyContent={"center"} mb={-6}>
                 <DayPicker
                   mode="single"
+                  disabled={selectedDate}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   defaultMonth={new Date()}
@@ -152,14 +448,25 @@ export default function UserMain() {
                   />
                 </StatLabel>
                 <StatLabel>本日攝取量📈</StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+
+                <StatNumber>
+                  {inTake > 0 ? `${inTake}kcal` : '還沒有紀錄'}
+                </StatNumber>
+
                 <StatHelpText>
-                  比前一日
-                  <StatArrow type="increase" />
-                  23.36%
+                  {twoDaysHasIntake ? "比前一日" : ""}
+
+                  {twoDaysHasIntake ?
+                    <StatArrow
+                      type={intakeRate > 0 ? "increase" : "decrease"} /> :
+
+                    yesterdayHasIntake ? "" : "昨天沒有紀錄"
+                  }
+
+                  {intakeRate === 0 ? "" : `${intakeRate}%`}
+
                 </StatHelpText>
               </Stat>
-
               <Stat textAlign={"center"}>
                 <StatLabel justifyContent={"center"} display={"flex"}>
                   <Image
@@ -169,11 +476,18 @@ export default function UserMain() {
                   />
                 </StatLabel>
                 <StatLabel>本月平均攝取量📈</StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+                <StatNumber>{averageIntake > 0 ? `${averageIntake}kcal` : "沒有紀錄"}</StatNumber>
                 <StatHelpText>
-                  比上月
-                  <StatArrow type="increase" />
-                  23.36%
+                  {twoMonthsHasIntake ? "比前一個月" : ""}
+
+                  {twoMonthsHasIntake ?
+                    <StatArrow
+                      type={averageIntake > 0 ? "increase" : "decrease"} /> :
+
+                    lastMonthHasIntake ? "" : "上一個月沒有紀錄"}
+
+                  {averageIntakeRate === 0 ? "" : `${averageIntakeRate}%`}
+
                 </StatHelpText>
               </Stat>
             </StatGroup>
@@ -214,12 +528,21 @@ export default function UserMain() {
                 <StatLabel>
                   <Text>本日運動消耗量📈</Text>
                 </StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+
+                <StatNumber>{calories > 0 ? `${calories}Kcal` : "今天還沒有運動"}</StatNumber>
+
                 <StatHelpText>
-                  比前一日
-                  <StatArrow type="increase" />
-                  23.36%
+                  {twoDaysHasExercise ? "比前一日" : ""}
+
+                  {twoDaysHasExercise ?
+                    <StatArrow
+                      type={rate > 0 ? "increase" : "decrease"} /> :
+
+                    yesterdayHasExercise ? "" : "昨天沒有運動"}
+
+                  {rate === 0 ? "" : `${rate}%`}
                 </StatHelpText>
+
               </Stat>
               <Stat textAlign={"center"}>
                 <StatLabel justifyContent={"center"} display={"flex"}>
@@ -229,12 +552,19 @@ export default function UserMain() {
                     src="https://4.bp.blogspot.com/-MeaPmMfyFEU/ViipeRRGWxI/AAAAAAAAz5Q/ZJ78UMjZfuQ/s450/shibou_nensyou.png"
                   />
                 </StatLabel>
-                <StatLabel>平均每日運動消耗量📈</StatLabel>
-                <StatNumber>345,670kcal</StatNumber>
+                <StatLabel>平均每月每日運動消耗量📈</StatLabel>
+                <StatNumber>{averageCalories > 0 ? `${averageCalories}Kcal` : "今個月還沒有運動"}</StatNumber>
                 <StatHelpText>
-                  比本日
-                  <StatArrow type="increase" />
-                  23.36%
+                  {twoMonthsHasExercises ? "比前一個月" : ""}
+
+                  {twoMonthsHasExercises ?
+                    <StatArrow
+                      type={monthRate > 0 ? "increase" : "decrease"} /> :
+
+                    lastMonthHasExercise ? "" : "上一個月沒有運動"}
+
+                  {monthRate === 0 ? "" : `${monthRate}%`}
+
                 </StatHelpText>
               </Stat>
             </StatGroup>
@@ -261,17 +591,67 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Image
+          <Image onClick={breakfastOnOpen}
             boxSize={isSmallerThan600 ? 8 : 20}
             src="/images/breakfast.png"
           />
+
+          <Modal isOpen={breakfastOpen} onClose={breakfastOnClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader textAlign='center'>早餐</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Accordion>
+
+                  {hasBreakfast ?
+                    breakfastList.map((food) =>
+                    (
+                      <AccordionItem key={food.id}>
+                        <h2>
+                          <AccordionButton>
+                            <Box flex='1' textAlign='left'>
+                              {food.name}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={5}>
+                          種類: {food.food_group}<br></br>
+                          分量: {food.food_amount}g<br></br>
+                          每一百克卡路里： {food.food_calories}<br></br>
+                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          碳水化合物: {food.carbohydrates}g<br></br>
+                          糖分: {food.sugars}g<br></br>
+                          脂肪: {food.fat}g<br></br>
+                          蛋白質: {food.protein}g<br></br>
+                          膳食纖維: {food.fiber}g<br></br>
+                          鈉: {food.sodium}ng<br></br>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    )
+                    )
+                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                  }
+                </Accordion>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={breakfastOnClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>早餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {hasBreakfast ? `${breakfast}kcal` : "無紀錄"}</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
           </Button>
         </Box>
+
         <Box
           rounded={"3xl"}
           display={"flex"}
@@ -285,14 +665,63 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
+          <Image onClick={lunchOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
+
+          <Modal isOpen={lunchOpen} onClose={lunchOnClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader textAlign='center'>午餐</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Accordion>
+                  {hasLunch ?
+                    lunchList.map((food) =>
+                    (
+                      <AccordionItem key={food.id}>
+                        <h2>
+                          <AccordionButton>
+                            <Box flex='1' textAlign='left'>
+                              {food.name}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={5}>
+                          種類: {food.food_group}<br></br>
+                          分量: {food.food_amount}g<br></br>
+                          每一百克卡路里： {food.food_calories}<br></br>
+                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          碳水化合物: {food.carbohydrates}g<br></br>
+                          糖分: {food.sugars}g<br></br>
+                          脂肪: {food.fat}g<br></br>
+                          蛋白質: {food.protein}g<br></br>
+                          膳食纖維: {food.fiber}g<br></br>
+                          鈉: {food.sodium}ng<br></br>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    )
+                    )
+                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                  }
+                </Accordion>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={lunchOnClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>午餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {hasLunch ? `${lunch}kcal` : "無紀錄"}</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
           </Button>
         </Box>
+
         <Box
           rounded={"3xl"}
           display={"flex"}
@@ -306,14 +735,62 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
+          <Image onClick={dinnerOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
+
+          <Modal isOpen={dinnerOpen} onClose={dinnerOnClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader textAlign='center'>晚餐</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Accordion>
+                  {hasDinner ?
+                    dinnerList.map((food) => (
+                      <AccordionItem key={food.id}>
+                        <h2>
+                          <AccordionButton>
+                            <Box flex='1' textAlign='left'>
+                              {food.name}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={5}>
+                          種類: {food.food_group}<br></br>
+                          分量: {food.food_amount}g<br></br>
+                          每一百克卡路里： {food.food_calories}<br></br>
+                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          碳水化合物: {food.carbohydrates}g<br></br>
+                          糖分: {food.sugars}g<br></br>
+                          脂肪: {food.fat}g<br></br>
+                          蛋白質: {food.protein}g<br></br>
+                          膳食纖維: {food.fiber}g<br></br>
+                          鈉: {food.sodium}ng<br></br>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    )
+                    )
+                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                  }
+                </Accordion>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={dinnerOnClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>晚餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {hasDinner ? `${dinner}kcal` : "無紀錄"}</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
           </Button>
         </Box>
+
         <Box
           display={"flex"}
           rounded={"3xl"}
@@ -327,9 +804,58 @@ export default function UserMain() {
           bg={"gray.500"}
           flexDir={"column"}
         >
-          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
+          <Image onClick={snackOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
+
+
+          <Modal isOpen={snackOpen} onClose={snackOnClose}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader textAlign='center'>小食</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Accordion>
+                  {hasSnack ?
+                    snackList.map((food) =>
+                    (
+                      <AccordionItem key={food.id}>
+                        <h2>
+                          <AccordionButton>
+                            <Box flex='1' textAlign='left'>
+                              {food.name}
+                            </Box>
+                            <AccordionIcon />
+                          </AccordionButton>
+                        </h2>
+                        <AccordionPanel pb={5}>
+                          種類: {food.food_group}<br></br>
+                          分量: {food.food_amount}g<br></br>
+                          每一百克卡路里： {food.food_calories}<br></br>
+                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          碳水化合物: {food.carbohydrates}g<br></br>
+                          糖分: {food.sugars}g<br></br>
+                          脂肪: {food.fat}g<br></br>
+                          蛋白質: {food.protein}g<br></br>
+                          膳食纖維: {food.fiber}g<br></br>
+                          鈉: {food.sodium}ng<br></br>
+                        </AccordionPanel>
+                      </AccordionItem>
+                    )
+                    )
+                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                  }
+                </Accordion>
+              </ModalBody>
+              <ModalFooter>
+                <Button colorScheme='blue' mr={3} onClick={snackOnClose}>
+                  Close
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>小食</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>500kcal</Text>
+          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {hasSnack ? `${snack}kcal` : "無紀錄"}</Text>
           <Button my={2} gap={1}>
             <AddIcon />
             <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
