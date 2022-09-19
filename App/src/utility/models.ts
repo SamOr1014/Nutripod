@@ -80,20 +80,22 @@ export interface token {
 }
 
 export interface diet {
-  id: number,
-  name: string,
-  food_group: string,
-  food_amount : number
-  food_calories: number,
-  food_intake : number,
-  carbohydrates: number,
-  protein : number,
-  fat : number,
-  sodium : number,
-  sugars : number,
-  fiber : number,
+  id: number;
+  name: string;
+  food_group: string;
+  food_amount: number;
+  food_calories: number;
+  food_intake: number;
+  carbohydrates: number;
+  protein: number;
+  fat: number;
+  sodium: number;
+  sugars: number;
+  fiber: number;
 }
 
 export interface dietList {
-  food: Array<diet>
+  food: Array<diet>;
 }
+
+export interface DietitianCurrentDateBooking {}

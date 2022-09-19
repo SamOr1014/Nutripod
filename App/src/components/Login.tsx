@@ -58,57 +58,55 @@ export function Login() {
   const checkTokenLogin = async() => {
     const payload: token = jwt_decode(checkToken as string)
 
-    const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`,
-      {
-        data: {
-          id: payload.id,
-          username: payload.username
-        }
-      })
-      if (result.data.result.is_user) {
-        const userinfo = result.data.result
-        const userData: userSavedInfo = {
-          id: userinfo.id,
-          username: userinfo.username,
-          first_name: userinfo.first_name,
-          last_name: userinfo.last_name,
-          email: userinfo.email,
-          birthday: userinfo.birthday,
-          height: userinfo.height,
-          weight: userinfo.weight,
-          gender: userinfo.gender,
-          phone: userinfo.phone,
-          address: userinfo.address,
-          profession: userinfo.profession,
-          HKID: userinfo.hkid,
-          chronic_condition: userinfo.chronic_condition,
-          education: userinfo.education,
-          is_deleted: userinfo.is_deleted,
-          is_user: userinfo.is_user,
-          saveToken: true,
-        };
-        dispatch(userLogin(userData));
-        navigate("/dashboard");
-      }else if (!result.data.result.is_user) {
-        const dietitianInfo = result.data.result
-        const dietitianData: dietitianSavedInfo = {
-          id: dietitianInfo.id,
-          username: dietitianInfo.username,
-          first_name: dietitianInfo.first_name,
-          last_name: dietitianInfo.last_name,
-          email: dietitianInfo.email,
-          is_user: dietitianInfo.is_user,
-          is_deleted: dietitianInfo.is_deleted,
-          saveToken: true,
-        };
-        dispatch(dietitianLogin(dietitianData));
-        navigate("/dietitian");
-      }
-  }
-  
+    const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`, {
+      data: {
+        id: payload.id,
+        username: payload.username,
+      },
+    });
+    if (result.data.result.is_user) {
+      const userinfo = result.data.result;
+      const userData: userSavedInfo = {
+        id: userinfo.id,
+        username: userinfo.username,
+        first_name: userinfo.first_name,
+        last_name: userinfo.last_name,
+        email: userinfo.email,
+        birthday: userinfo.birthday,
+        height: userinfo.height,
+        weight: userinfo.weight,
+        gender: userinfo.gender,
+        phone: userinfo.phone,
+        address: userinfo.address,
+        profession: userinfo.profession,
+        HKID: userinfo.hkid,
+        chronic_condition: userinfo.chronic_condition,
+        education: userinfo.education,
+        is_deleted: userinfo.is_deleted,
+        is_user: userinfo.is_user,
+        saveToken: true,
+      };
+      dispatch(userLogin(userData));
+      navigate("/dashboard");
+    } else if (!result.data.result.is_user) {
+      const dietitianInfo = result.data.result;
+      const dietitianData: dietitianSavedInfo = {
+        id: dietitianInfo.id,
+        username: dietitianInfo.username,
+        first_name: dietitianInfo.first_name,
+        last_name: dietitianInfo.last_name,
+        email: dietitianInfo.email,
+        is_user: dietitianInfo.is_user,
+        is_deleted: dietitianInfo.is_deleted,
+        saveToken: true,
+      };
+      dispatch(dietitianLogin(dietitianData));
+      navigate("/dietitian");
+    }
+  };
 
   if (checkToken != null) {
-    checkTokenLogin()
+    checkTokenLogin();
   }
 
   const LoginSubmit = async () => {
@@ -233,7 +231,7 @@ export function Login() {
             }
           }}
         >
-          <Box bg="gray.500" padding="50px" border="1px">
+          <Box bg="blue.300" padding="50px" rounded="md">
             <FormLabel>用戶名稱</FormLabel>
             <FormControl
               variant="floating"
@@ -281,7 +279,7 @@ export function Login() {
               <Button
                 width="80%"
                 mt="6"
-                bg="messenger.300"
+                bg="messenger.500"
                 colorScheme="blackAlpha"
                 type="submit"
               >
@@ -356,7 +354,7 @@ export function Login() {
           mt="5"
         >
           {" "}
-          想使用 NutriPOD?
+          想加入NutriPOD?
         </FormLabel>
 
         <Stack

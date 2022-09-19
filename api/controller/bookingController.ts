@@ -54,6 +54,7 @@ export class BookingController {
 					uid,
 					formattedDate
 				)
+			console.log(checkRebookInSameDay)
 			if (checkRebookInSameDay.length > 0) {
 				res.status(403).json({
 					success: false,
@@ -107,7 +108,7 @@ export class BookingController {
 			res.json(result)
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: e.message })
+			res.json({ success: false, message: 'Internal Server Error' })
 			return
 		}
 	}
