@@ -428,13 +428,8 @@ export class DietRecordController {
 				let yesterdayIntakeCalories = 0
 				let difference = 0
 				for (let intake of todayIntake) {
-<<<<<<< HEAD
 					todayIntakeCalories +=
 						intake.food_calories * intake.food_amount
-=======
-					console.log(intake)
-					todayIntakeCalories += intake.food_calories * intake.food_amount
->>>>>>> bfce4b259639a1741a553eb3d84b66a0aa2131be
 				}
 				if (yesterdayIntake.length > 0) {
 					for (let intake of yesterdayIntake) {
