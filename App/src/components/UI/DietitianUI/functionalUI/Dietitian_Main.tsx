@@ -16,9 +16,15 @@ import {
   Box,
   Stack,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
+import { useSelector } from "react-redux";
+import { IRootState } from "../../../../redux/store";
 import { PatientDetailOfTodayBooking } from "../../../../utility/models";
+import locateToken from "../../../../utility/Token";
+
+const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianMain() {
   let date = new Date();
@@ -27,6 +33,13 @@ export default function DietitianMain() {
     new Date()
   );
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  //redux states
+  const currentDietitian = useSelector(
+    (state: IRootState) => state.dietitian[0]
+  );
+  const timeslot = useSelector((state: IRootState) => state.timeslot);
+  //local state
+  const [allBooking, setAllBookings] = useState<Array<any>>([]);
 
   const css = `
 .my-selected:not([disabled]) { 
@@ -43,7 +56,26 @@ export default function DietitianMain() {
   color: red;
 }
 `;
-
+  //API Functions
+  async function fetchSelectedDateBooking() {
+    axios
+      .get(
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${
+          currentDietitian.id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      )
+      .then(({ data }) => {
+        console.log(data);
+      });
+  }
+  useEffect(() => {
+    fetchSelectedDateBooking();
+  }, [selectedDate]);
   function BookingDetailToday(patient: PatientDetailOfTodayBooking) {
     return (
       <AccordionItem>
@@ -182,8 +214,7 @@ export default function DietitianMain() {
                 src="https://4.bp.blogspot.com/-yFu3rScjhnA/VPQT-JtUE0I/AAAAAAAAsFE/FxQfBOPTMKU/s450/medical_eiyoushi.png"
               />
               <Text textAlign={"center"} fontSize={"md"}>
-                Dietitian Name
-                {/* Dietitian Name */}
+                {currentDietitian.first_name + " " + currentDietitian.last_name}
               </Text>
             </Flex>
 

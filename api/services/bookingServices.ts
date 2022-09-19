@@ -8,6 +8,7 @@ export class BookingServices {
 			.select('*')
 			.where('user_id', uid)
 			.andWhere('date', date)
+			.andWhere('is_deleted', false)
 		return result
 	}
 
