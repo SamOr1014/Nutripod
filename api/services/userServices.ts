@@ -63,6 +63,34 @@ export class UserServices {
 			.andWhere('is_deleted', false)
 		return user
 	}
+
+	async changeUsername(id: string | number, username: string) {
+		const result = await this.knex('users')
+			.update('username', username)
+			.where('id', id)
+			.returning('id')
+
+		return result
+	}
+
+	async changePhone(id: string | number, phone: string) {
+		const result = await this.knex('users')
+			.update('phone', phone)
+			.where('id', id)
+			.returning('id')
+
+		return result
+	}
+
+	async changeAddress(id: string | number, address: string) {
+		const result = await this.knex('users')
+			.update('address', address)
+			.where('id', id)
+			.returning('id')
+
+		return result
+	}
+
 	async changeEmail(id: string | number, email: string) {
 		const result = await this.knex('users')
 			.update('email', email)

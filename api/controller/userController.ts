@@ -103,7 +103,64 @@ export class UserController {
 		}
 	}
 
-	changeInformation = async (req: Request, res: Response) => {
+	changeUsername = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const username = req.body.username
+
+			const result = await this.userService.changeUsername(uid, username)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changePhone = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const phone = req.body.phone
+
+			const result = await this.userService.changePhone(uid, phone)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeAddress = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const address = req.body.address
+
+			const result = await this.userService.changeAddress(uid, address)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeEmail = async (req: Request, res: Response) => {
 		try {
 			const uid = req.body.id
 			const email = req.body.email
