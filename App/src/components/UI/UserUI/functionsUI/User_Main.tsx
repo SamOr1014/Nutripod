@@ -34,6 +34,10 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  FormLabel,
+  Select,
+  Input,
+  FormControl
 } from "@chakra-ui/react";
 
 import { MdToday } from "react-icons/md";
@@ -46,7 +50,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import locateToken from "../../../../utility/Token";
-import { diet} from "../../../../utility/models"
+import { diet, exercise } from "../../../../utility/models"
+import { Formik, Field, Form } from 'formik';
 
 const { REACT_APP_API_SERVER } = process.env;
 const css = `
@@ -72,6 +77,8 @@ export default function UserMain() {
   const { isOpen: lunchOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure()
   const { isOpen: dinnerOpen, onOpen: dinnerOnOpen, onClose: dinnerOnClose } = useDisclosure()
   const { isOpen: snackOpen, onOpen: snackOnOpen, onClose: snackOnClose } = useDisclosure()
+  const { isOpen: exerciseOpen, onOpen: exercisesOnOpen, onClose: exerciseOnClose } = useDisclosure()
+  const { isOpen: exerciseFormOpen, onOpen: exerciseFormOnOpen, onClose: exerciseFormOnClose } = useDisclosure()
 
   const [calories, setCalories] = useState(0)
   const [twoDaysHasExercise, setTwoDaysHasExercises] = useState(false)
@@ -101,6 +108,9 @@ export default function UserMain() {
   const [hasDinner, setHasDinner] = useState(false)
   const [snackList, setSnackList] = useState(Array<diet>)
   const [hasSnack, setHasSnack] = useState(false)
+
+  const [exerciseList, setExerciseList] = useState(Array<exercise>)
+  const [hasExercise, setHasExercise] = useState(false)
 
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -133,6 +143,18 @@ export default function UserMain() {
 
         if (data.hasExercises) {
           setCalories(data.todayCalories)
+          setHasExercise(true)
+          for (let exercise of data.exercise) {
+            let exerciseInfo: exercise = {
+              id: exercise.id,
+              name: exercise.ex_type,
+              duration: parseInt(exercise.duration, 10),
+              ex_calories: parseInt(exercise.ex_calories, 10),
+              burn_calories: Math.round(parseInt(exercise.duration, 10) * parseInt(exercise.ex_calories, 10) / 60)
+            }
+            setExerciseList((previousList) => [...previousList, exerciseInfo])
+          }
+
           if (data.rate) {
             setYesterdayExercise(true)
             setTwoDaysHasExercises(true)
@@ -347,7 +369,17 @@ export default function UserMain() {
       })
   }
 
+  async function foodForm() {
+
+  }
+
+  async function exercisesForm() {
+
+  }
+
   useEffect(() => {
+    setExerciseList([])
+    setHasExercise(false)
     setBreakfastList([])
     setHasBreakfast(false)
     setLunchList([])
@@ -370,7 +402,7 @@ export default function UserMain() {
   lunchList.map((food) => lunch += food.food_intake)
   dinnerList.map((food) => dinner += food.food_intake)
   snackList.map((food) => snack += food.food_intake)
-  
+
   //Insert later
   // const today = new Date();
   // disabled={selectedDate && { after: today }}
@@ -450,7 +482,7 @@ export default function UserMain() {
                 <StatLabel>本日攝取量📈</StatLabel>
 
                 <StatNumber>
-                  {inTake > 0 ? `${inTake}kcal` : '還沒有紀錄'}
+                  {inTake > 0 ? `${inTake}kcal` : '還沒有記錄'}
                 </StatNumber>
 
                 <StatHelpText>
@@ -460,7 +492,7 @@ export default function UserMain() {
                     <StatArrow
                       type={intakeRate > 0 ? "increase" : "decrease"} /> :
 
-                    yesterdayHasIntake ? "" : "昨天沒有紀錄"
+                    yesterdayHasIntake ? "" : "昨天沒有記錄"
                   }
 
                   {intakeRate === 0 ? "" : `${intakeRate}%`}
@@ -476,7 +508,7 @@ export default function UserMain() {
                   />
                 </StatLabel>
                 <StatLabel>本月平均攝取量📈</StatLabel>
-                <StatNumber>{averageIntake > 0 ? `${averageIntake}kcal` : "沒有紀錄"}</StatNumber>
+                <StatNumber>{averageIntake > 0 ? `${averageIntake}kcal` : "沒有記錄"}</StatNumber>
                 <StatHelpText>
                   {twoMonthsHasIntake ? "比前一個月" : ""}
 
@@ -484,7 +516,7 @@ export default function UserMain() {
                     <StatArrow
                       type={averageIntake > 0 ? "increase" : "decrease"} /> :
 
-                    lastMonthHasIntake ? "" : "上一個月沒有紀錄"}
+                    lastMonthHasIntake ? "" : "上一個月沒有記錄"}
 
                   {averageIntakeRate === 0 ? "" : `${averageIntakeRate}%`}
 
@@ -509,10 +541,159 @@ export default function UserMain() {
             >
               運動統計🏃🏻‍♀️
             </Heading>
-            <Button gap={1}>
-              <AddIcon />
-              <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+
+            <Button onClick={exercisesOnOpen} gap={1}>
+              <Text fontSize={"lg"}>記錄</Text>
             </Button>
+
+            <Modal isOpen={exerciseOpen} onClose={exerciseOnClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <Button
+                  position='absolute'
+                  h='8'
+                  left='2'
+                  top='2'
+                  colorScheme='blue'
+                  onClick={exerciseFormOnOpen}>
+                  <AddIcon />
+                </Button>
+
+                {exerciseFormOpen ?
+                  <Modal isOpen={exerciseFormOpen} onClose={exerciseFormOnClose} blockScrollOnMount={false}>
+                    <ModalOverlay />
+                    <ModalContent>
+                      <ModalHeader textAlign={"center"}>請在此輸入今日的運動</ModalHeader>
+                      <ModalCloseButton />
+                      <ModalBody>
+
+                        <Formik
+                          initialValues={{
+                            exercise: '',
+                            duration: 0
+                          }}
+                          onSubmit={async (values) => {
+                            axios.post(`${REACT_APP_API_SERVER}/diet/exercises/${userInfo.id}/${selectedDate?.toISOString()}`, {
+                              values
+                            },
+                              {
+                                headers: {
+                                  'Authorization': `Bearer ${locateToken()}`
+                                }
+                              }).then(({ data }) => {
+                                if (data.success) {
+                                  Swal.fire({
+                                    icon: "success",
+                                    title: "成功"
+                                  })
+                                  fetchExercisesFromServer()
+                                }
+                              }).catch(() => {
+                                Swal.fire({
+                                  icon: "error",
+                                  title: "發生錯誤，請稍後再試"
+                                })
+                              })
+                          }}
+                        >
+                          {({ handleSubmit, errors, touched }) => (
+                            <Form onSubmit={handleSubmit}>
+                              <FormLabel>運動</FormLabel>
+                              <Field
+                                as={Select}
+                                name="exercise"
+                                isRequired={true}
+                                default="慢跑">
+                                <option value="慢跑">慢跑</option>
+                                <option value="快跑">快跑</option>
+                                <option value="足球">足球</option>
+                                <option value="籃球">籃球</option>
+                                <option value='游泳'>游泳</option>
+                                <option value='行山'>行山</option>
+                                <option value='自由搏擊'>自由搏擊</option>
+                                <option value='健身'>健身</option>
+                                <option value='踩單車'>踩單車</option>
+                                <option value='獨木舟'>獨木舟</option>
+                                <option value='乒乓球'>乒乓球</option>
+                                <option value='網球'>網球</option>
+                              </Field>
+
+                              <FormLabel mt='2'>時間(分鐘)</FormLabel>
+
+                              <Field
+                                as={Input}
+                                name='duration'
+                                type='number'
+                                min={1}
+                                required>
+                              </Field>
+
+                              <Center
+                                justifyContent="space-around"
+                                mt={3}>
+                                <Button
+                                  colorScheme='blue' mr={3} type="submit" onClick={exerciseOnClose}>
+                                  提交
+                                </Button>
+                                <Button
+                                  colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                                  Close
+                                </Button>
+                              </Center>
+                            </Form>
+                          )}
+                        </Formik>
+                      </ModalBody>
+                    </ModalContent>
+                  </Modal>
+                  :
+                  <></>}
+
+
+                <ModalHeader mt='6' textAlign='center'>運動列表</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Accordion>
+
+                    {hasExercise ?
+                      exerciseList.map((exercise) =>
+                      (
+                        <AccordionItem key={exercise.id}>
+                          <h2>
+                            <AccordionButton>
+                              <Box flex='1' textAlign='left'>
+                                {exercise.name}
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel pb={5}>
+                            分鐘:{exercise.duration} <br></br>
+                            每60分鐘所消耗的卡路里: {exercise.ex_calories}kcal <br></br>
+                            總共消耗的卡路里: {exercise.burn_calories}kcal
+                          </AccordionPanel>
+                        </AccordionItem>
+                      )
+                      )
+                      : <ModalHeader textAlign='center'>無記錄</ModalHeader>
+                    }
+                  </Accordion>
+                </ModalBody>
+                <ModalFooter
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Button
+                    ml='2.5'
+                    colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+
           </Flex>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
@@ -599,7 +780,15 @@ export default function UserMain() {
           <Modal isOpen={breakfastOpen} onClose={breakfastOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader textAlign='center'>早餐</ModalHeader>
+              <Button
+                position='absolute'
+                h='8'
+                left='2'
+                top='2'
+                colorScheme='blue'>
+                <AddIcon />
+              </Button>
+              <ModalHeader mt='6' textAlign='center'>早餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -619,7 +808,7 @@ export default function UserMain() {
                         <AccordionPanel pb={5}>
                           種類: {food.food_group}<br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}<br></br>
+                          每一百克卡路里： {food.food_calories}kcal<br></br>
                           攝入卡路里：{food.food_intake}kcal<br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
@@ -631,12 +820,18 @@ export default function UserMain() {
                       </AccordionItem>
                     )
                     )
-                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                    : <ModalHeader textAlign='center'>無記錄</ModalHeader>
                   }
                 </Accordion>
               </ModalBody>
-              <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={breakfastOnClose}>
+              <ModalFooter
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Button
+                  ml='2.5'
+                  colorScheme='blue' mr={3} onClick={breakfastOnClose}>
                   Close
                 </Button>
               </ModalFooter>
@@ -644,11 +839,10 @@ export default function UserMain() {
           </Modal>
 
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>早餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
-            {hasBreakfast ? `${breakfast}kcal` : "無紀錄"}</Text>
-          <Button my={2} gap={1}>
-            <AddIcon />
-            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          <Text fontWeight="bold" fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {breakfast} kcal</Text>
+          <Button onClick={breakfastOnOpen} my={2} gap={1}>
+            <Text fontSize="lg">記錄</Text>
           </Button>
         </Box>
 
@@ -670,7 +864,15 @@ export default function UserMain() {
           <Modal isOpen={lunchOpen} onClose={lunchOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader textAlign='center'>午餐</ModalHeader>
+              <Button
+                position='absolute'
+                h='8'
+                left='2'
+                top='2'
+                colorScheme='blue'>
+                <AddIcon />
+              </Button>
+              <ModalHeader mt='6' textAlign='center'>午餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -689,7 +891,7 @@ export default function UserMain() {
                         <AccordionPanel pb={5}>
                           種類: {food.food_group}<br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}<br></br>
+                          每一百克卡路里： {food.food_calories}kcal<br></br>
                           攝入卡路里：{food.food_intake}kcal<br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
@@ -701,12 +903,18 @@ export default function UserMain() {
                       </AccordionItem>
                     )
                     )
-                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                    : <ModalHeader textAlign='center'>無記錄</ModalHeader>
                   }
                 </Accordion>
               </ModalBody>
-              <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={lunchOnClose}>
+              <ModalFooter
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Button
+                  ml='2.5'
+                  colorScheme='blue' mr={3} onClick={lunchOnClose}>
                   Close
                 </Button>
               </ModalFooter>
@@ -714,11 +922,10 @@ export default function UserMain() {
           </Modal>
 
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>午餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
-            {hasLunch ? `${lunch}kcal` : "無紀錄"}</Text>
-          <Button my={2} gap={1}>
-            <AddIcon />
-            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          <Text fontWeight="bold" fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {lunch} kcal</Text>
+          <Button onClick={lunchOnOpen} my={2} gap={1}>
+            <Text fontSize="lg">記錄</Text>
           </Button>
         </Box>
 
@@ -740,7 +947,15 @@ export default function UserMain() {
           <Modal isOpen={dinnerOpen} onClose={dinnerOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader textAlign='center'>晚餐</ModalHeader>
+              <Button
+                position='absolute'
+                h='8'
+                left='2'
+                top='2'
+                colorScheme='blue'>
+                <AddIcon />
+              </Button>
+              <ModalHeader mt='6' textAlign='center'>晚餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -758,7 +973,7 @@ export default function UserMain() {
                         <AccordionPanel pb={5}>
                           種類: {food.food_group}<br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}<br></br>
+                          每一百克卡路里： {food.food_calories}kcal<br></br>
                           攝入卡路里：{food.food_intake}kcal<br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
@@ -770,12 +985,18 @@ export default function UserMain() {
                       </AccordionItem>
                     )
                     )
-                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                    : <ModalHeader textAlign='center'>無記錄</ModalHeader>
                   }
                 </Accordion>
               </ModalBody>
-              <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={dinnerOnClose}>
+              <ModalFooter
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Button
+                  ml='2.5'
+                  colorScheme='blue' mr={3} onClick={dinnerOnClose}>
                   Close
                 </Button>
               </ModalFooter>
@@ -783,11 +1004,10 @@ export default function UserMain() {
           </Modal>
 
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>晚餐</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
-            {hasDinner ? `${dinner}kcal` : "無紀錄"}</Text>
-          <Button my={2} gap={1}>
-            <AddIcon />
-            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          <Text fontWeight="bold" fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {dinner} kcal</Text>
+          <Button onClick={dinnerOnOpen} my={2} gap={1}>
+            <Text fontSize="lg">記錄</Text>
           </Button>
         </Box>
 
@@ -810,7 +1030,15 @@ export default function UserMain() {
           <Modal isOpen={snackOpen} onClose={snackOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <ModalHeader textAlign='center'>小食</ModalHeader>
+              <Button
+                position='absolute'
+                h='8'
+                left='2'
+                top='2'
+                colorScheme='blue'>
+                <AddIcon />
+              </Button>
+              <ModalHeader mt='6' textAlign='center'>小食</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -829,7 +1057,7 @@ export default function UserMain() {
                         <AccordionPanel pb={5}>
                           種類: {food.food_group}<br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}<br></br>
+                          每一百克卡路里： {food.food_calories}kcal<br></br>
                           攝入卡路里：{food.food_intake}kcal<br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
@@ -841,12 +1069,18 @@ export default function UserMain() {
                       </AccordionItem>
                     )
                     )
-                    : <ModalHeader textAlign='center'>無紀錄</ModalHeader>
+                    : <ModalHeader textAlign='center'>無記錄</ModalHeader>
                   }
                 </Accordion>
               </ModalBody>
-              <ModalFooter>
-                <Button colorScheme='blue' mr={3} onClick={snackOnClose}>
+              <ModalFooter
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+              >
+                <Button
+                  ml='2.5'
+                  colorScheme='blue' mr={3} onClick={snackOnClose}>
                   Close
                 </Button>
               </ModalFooter>
@@ -854,11 +1088,10 @@ export default function UserMain() {
           </Modal>
 
           <Heading fontSize={isSmallerThan600 ? "md" : "xl"}>小食</Heading>
-          <Text fontSize={isSmallerThan600 ? "md" : "xl"}>
-            {hasSnack ? `${snack}kcal` : "無紀錄"}</Text>
-          <Button my={2} gap={1}>
-            <AddIcon />
-            <Text fontSize={"lg"}>{isSmallerThan600 ? "" : "記錄"}</Text>
+          <Text fontWeight="bold" fontSize={isSmallerThan600 ? "md" : "xl"}>
+            {snack} kcal</Text>
+          <Button onClick={snackOnOpen} my={2} gap={1}>
+            <Text fontSize="lg">記錄</Text>
           </Button>
         </Box>
       </Flex>

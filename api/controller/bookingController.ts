@@ -24,7 +24,7 @@ export class BookingController {
 			res.json({ success: true, data: results })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false })
+			res.json({ success: false, message: 'Internal server error' })
 			return
 		}
 	}
@@ -107,7 +107,98 @@ export class BookingController {
 			res.json(result)
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: e.message })
+			res.json({ success: false, message: 'Internal Server Error' })
+			return
+		}
+	}
+
+	getFollowUpBooking = async (req: Request, res: Response) => {
+		try {
+			let bid = req.params.bid
+			console.log(bid)
+			res.status(200).json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.json({ success: false, message: 'Internal Server Error' })
+			return
+		}
+	}
+
+	postFollowUpBooking = async (req: Request, res: Response) => {
+		try {
+			//check if 5 params are collected
+			if (Object.keys(req.body).length !== 5) {
+				res.status(400).json({
+					success: false,
+					rebook: false,
+					message: 'Invalid information provided'
+				})
+				return
+			}
+			console.log(req.body)
+			const { timeid, dateString, currentBooking, uid, did } = req.body
+
+			let formattedDate = formatDate(dateString)
+			//Prevent rebooking in the same date
+			const checkRebookInSameDay =
+				await this.bookingService.checkIfSameDayHasBooking(
+					uid,
+					formattedDate
+				)
+			if (checkRebookInSameDay.length > 0) {
+				res.status(403).json({
+					success: false,
+					rebook: true,
+					message: 'Cannot Rebook in the same day'
+				})
+				return
+			}
+			await this.bookingService.postFollowUpBooking(
+				timeid,
+				dateString,
+				currentBooking,
+				uid,
+				did
+			)
+			res.status(200).json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.json({ success: false, message: 'Internal Server Error' })
+			return
+		}
+	}
+
+	attendance = async (req: Request, res: Response) => {
+		try {
+			const booking = req.body
+			if (Object.keys(booking).length !== 2) {
+				res.status(400).json({ success: false })
+				return
+			}
+
+			await this.bookingService.attendance(
+				booking.attendance,
+				booking.booking
+			)
+			res.json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.json({ success: false, message: 'Internal Server Error' })
+			return
+		}
+	}
+	dismiss = async (req: Request, res: Response) => {
+		try {
+			const { bid } = req.body
+			if (!bid) {
+				res.status(400).json({ success: false })
+				return
+			}
+			await this.bookingService.dismiss(bid)
+			res.json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.json({ success: false, message: 'Internal Server Error' })
 			return
 		}
 	}

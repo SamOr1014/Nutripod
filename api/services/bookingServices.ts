@@ -1,4 +1,5 @@
 import { Knex } from 'knex'
+import { UserPlusIndividualBooking } from '../utilities/modal'
 
 export class BookingServices {
 	constructor(private knex: Knex) {}
@@ -8,6 +9,7 @@ export class BookingServices {
 			.select('*')
 			.where('user_id', uid)
 			.andWhere('date', date)
+			.andWhere('is_deleted', false)
 		return result
 	}
 
@@ -69,11 +71,86 @@ export class BookingServices {
 		date: string,
 		dietitianID: string | number
 	) {
-		const bookingByDate = await this.knex('booking')
-			.select('*')
+		const bookingByDate = await this.knex<UserPlusIndividualBooking>(
+			'booking'
+		)
+			.select(
+				'booking.id as bid',
+				'date',
+				'time',
+				'is_attended',
+				'follow_up',
+				'previous_booking_id',
+				'user_id',
+				'dietitian_id',
+				'first_name',
+				'last_name',
+				'email',
+				'birthday',
+				'height',
+				'weight',
+				'gender',
+				'phone',
+				'hkid',
+				'chronic_condition',
+				'disease'
+			)
 			.where('date', date)
-			.andWhere('is_deleted', false)
+			.andWhere('booking.is_deleted', false)
 			.andWhere('dietitian_id', dietitianID)
+			.innerJoin('users', 'booking.user_id', 'users.id')
+			.innerJoin(
+				'chronic_condition',
+				'users.chronic_condition',
+				'chronic_condition.id'
+			)
 		return bookingByDate
+	}
+
+	async getFollowUpBooking(bid: number | string) {
+		const followUp = await this.knex('booking')
+			.select('*')
+			.where('previous_booking_id', bid)
+			.andWhere('is_deleted', false)
+		return followUp
+	}
+
+	async postFollowUpBooking(
+		timeid: number | string,
+		dateString: string,
+		currentBooking: number | string,
+		uid: number | string,
+		dietitian_id: number | string
+	) {
+		await this.knex('booking')
+			.update({ follow_up: 'true' })
+			.where('id', currentBooking)
+			.andWhere('is_deleted', false)
+		const result = await this.knex('booking')
+			.insert([
+				{
+					date: dateString,
+					time: timeid,
+					user_id: uid,
+					dietitian_id: dietitian_id,
+					previous_booking_id: currentBooking
+				}
+			])
+			.returning('id')
+		return result
+	}
+
+	async attendance(bool: string, bid: string | number) {
+		await this.knex('booking')
+			.update({ is_attended: bool })
+			.where('id', bid)
+			.andWhere('is_deleted', false)
+	}
+
+	async dismiss(bid: string | number) {
+		await this.knex('booking')
+			.update({ follow_up: 'false' })
+			.where('id', bid)
+			.andWhere('is_deleted', false)
 	}
 }

@@ -18,6 +18,7 @@ import { fetchDietitianDetail } from "./redux/Slice/dietitianSlice";
 import { fetchTimeSlotToRedux } from "./redux/Slice/timeslotSlice";
 import UserPrivate from "./components/userPrivate";
 import DietitianPrivate from "./components/dietitianPrivate";
+import Register from "./components/UI/DietitianUI/functionalUI/Register";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -46,7 +47,7 @@ function App() {
           <Route index element={<DietitianMain />} />
           <Route path="patients" element={<PatientSearchPanel />} />
           <Route path="posts" element={<UserPost />} />
-          <Route path="register" element={"register"} />
+          <Route path="register" element={<Register />} />
           <Route path="account" element={<p>Diet ac</p>} />
         </Route>
       </Route>

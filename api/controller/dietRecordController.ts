@@ -241,11 +241,15 @@ export class DietRecordController {
 
 					res.status(200).json({
 						hasExercises: true, message: "had exercises",
-						rate: Math.round(difference), todayCalories: floorTodayTotalCalories
+						rate: Math.round(difference), todayCalories: floorTodayTotalCalories,
+						exercise: todayExercises
 					})
 					return
 				}
-				res.status(200).json({ hasExercises: true, message: "had exercises", todayCalories: Math.floor(todayTotalCalories) })
+				res.status(200).json({
+					hasExercises: true, message: "had exercises"
+					, todayCalories: Math.floor(todayTotalCalories), exercise: todayExercises
+				})
 			}
 
 		} catch (e) {
@@ -444,17 +448,53 @@ export class DietRecordController {
 					let lastMonthAverage = lastMonthFoodIntake / numbersOfDay
 					difference = ((thisMonthAverage - lastMonthAverage) / lastMonthAverage) * 100
 
-					res.status(200).json({inTake:true, message: "Have intake in both months",
-					rate: Math.round(difference), thisMonthIntake: Math.round(thisMonthAverage/100/today)})
+					res.status(200).json({
+						inTake: true, message: "Have intake in both months",
+						rate: Math.round(difference), thisMonthIntake: Math.round(thisMonthAverage / 100 / today)
+					})
 				}
-				res.status(200).json({inTake:true, message: "intake for this month only",
-				thisMonthIntake: Math.round(thisMonthFoodIntake/100/today)})
+				res.status(200).json({
+					inTake: true, message: "intake for this month only",
+					thisMonthIntake: Math.round(thisMonthFoodIntake / 100 / today)
+				})
 			}
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
 			return
 		}
+	}
+
+	addExercise = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+			let exercise = req.body.values.exercise
+			let duration = req.body.values.duration
+			if (!uid || isNaN(parseInt(uid)) || !date || !exercise || !duration) {
+				res.status(400).json({
+					success: false,
+					message: 'Lack of information provided'
+				})
+				return
+			}
+
+			let formattedDate = formatDate(date)
+
+			const result = await this.dietRecordService.addExercise(uid,formattedDate,exercise,duration)
+
+			if(result) {
+				res.status(200).json({success:true})
+				return
+			}
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+
 	}
 }
 

@@ -100,24 +100,18 @@ export async function seed(knex: Knex) {
 
 	const exercises_typesID = await knex(exercisesTypesTableName)
 		.insert([
-			{ ex_type: 'walk/run, moderate', ex_calories: 290 },
-			{ ex_type: 'walk/run, vigorous', ex_calories: 363 },
-			{ ex_type: 'Football', ex_calories: 508 },
-			{ ex_type: 'Basketball', ex_calories: 581 },
-			{ ex_type: 'Swimming, vigorous', ex_calories: 726 },
-			{ ex_type: 'Swimming, moderate', ex_calories: 290 },
-			{ ex_type: 'Climbing hills', ex_calories: 545 },
-			{ ex_type: 'Martial arts, kick boxing', ex_calories: 726 },
-			{ ex_type: 'Weight lifting', ex_calories: 217 },
-			{ ex_type: 'Cycling, moderate', ex_calories: 581 },
-			{ ex_type: 'Cycling, vigorous', ex_calories: 726 },
-			{ ex_type: 'Cycling, leisure', ex_calories: 290 },
-			{
-				ex_type: 'Whitewater rafting, kayaking, canoeing',
-				ex_calories: 363
-			},
-			{ ex_type: 'Table tennis', ex_calories: 290 },
-			{ ex_type: 'Tennis', ex_calories: 508 }
+			{ ex_type: '慢跑', ex_calories: 290 },
+			{ ex_type: '快跑', ex_calories: 363 },
+			{ ex_type: '足球', ex_calories: 508 },
+			{ ex_type: '籃球', ex_calories: 581 },
+			{ ex_type: '游泳', ex_calories: 726 },
+			{ ex_type: '行山', ex_calories: 545 },
+			{ ex_type: '自由搏擊', ex_calories: 726 },
+			{ ex_type: '健身', ex_calories: 217 },
+			{ ex_type: '踩單車', ex_calories: 581 },
+			{ex_type: '獨木舟',ex_calories: 363},
+			{ ex_type: '乒乓球', ex_calories: 294 },
+			{ ex_type: '網球', ex_calories: 508 }
 		])
 		.returning('id')
 

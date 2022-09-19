@@ -18,10 +18,9 @@ dietRecordRoutes.delete('/bp/:rid', isUserLoggedIn, dietRecordController.deleteB
 dietRecordRoutes.delete('/bg/:rid', isUserLoggedIn, dietRecordController.deleteBGRecord)
 
 // Exercise Routes
-dietRecordRoutes.get('/exercises/:uid/:date',isUserLoggedIn,dietRecordController.getExercisesByID)
-
+dietRecordRoutes.get("/exercises/:uid/:date",isUserLoggedIn,dietRecordController.getExercisesByID)
 dietRecordRoutes.get("/monthlyExercises/:uid/:date",isUserLoggedIn,dietRecordController.getMonthlyExercises)
-
+dietRecordRoutes.post("/exercises/:uid/:date", isUserLoggedIn, dietRecordController.addExercise)
 
 
 

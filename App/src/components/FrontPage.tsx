@@ -35,7 +35,6 @@ export default function FrontPage() {
         <Flex p={8} flex={1} align={"center"} justify={"center"}>
           <Stack spacing={6} w={"full"} maxW={"lg"}>
             <Heading fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}>
-              {" "}
               <Image src="/logo.png" boxSize={"3xs"} />
               <Text
                 as={"span"}
@@ -60,10 +59,10 @@ export default function FrontPage() {
               </Text>{" "}
             </Heading>
             <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
-              我們提供專業的營養治療及專業的系統去助你起立好的飲食及運動習慣，歡迎加入我們。
+              我們提供專業的營養治療及專業的系統去助你建立好的飲食及運動習慣，歡迎加入我們。
             </Text>
             <Stack direction={{ base: "column", md: "row" }} spacing={4}>
-              <Link as={ReactLink} to="/login">
+              <Link as={ReactLink} to="/login" w={"min-content"}>
                 <Button
                   rounded={"full"}
                   bg={"blue.400"}
@@ -75,9 +74,11 @@ export default function FrontPage() {
                   登入
                 </Button>
               </Link>
-              <Popover placement="right">
+              <Popover placement="top">
                 <PopoverTrigger>
-                  <Button rounded={"full"}>聯絡我們</Button>
+                  <Button rounded={"full"} w={"min-content"}>
+                    聯絡我們
+                  </Button>
                 </PopoverTrigger>
                 <PopoverContent
                   w={"min-content"}
