@@ -60,7 +60,7 @@ export default function FrontPage() {
               </Text>{" "}
             </Heading>
             <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
-              我們提供專業的營養治療及專業的系統去助你起立好的飲食及運動習慣，歡迎加入我們。
+              我們提供專業的營養治療及專業的系統去助你建立好的飲食及運動習慣，歡迎加入我們。
             </Text>
             <Stack direction={{ base: "column", md: "row" }} spacing={4}>
               <Link as={ReactLink} to="/login">
