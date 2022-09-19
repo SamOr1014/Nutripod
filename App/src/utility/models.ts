@@ -94,8 +94,18 @@ export interface diet {
   fiber: number;
 }
 
-export interface dietList {
-  food: Array<diet>;
-}
 
 export interface DietitianCurrentDateBooking {}
+
+
+
+
+
+
+export interface exercise {
+  id : number,
+  name : string,
+  duration : number,
+  ex_calories : number,
+  burn_calories : number 
+}

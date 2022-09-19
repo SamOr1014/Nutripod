@@ -46,7 +46,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import locateToken from "../../../../utility/Token";
-import { diet } from "../../../../utility/models"
+import { diet, exercise } from "../../../../utility/models"
 
 const { REACT_APP_API_SERVER } = process.env;
 const css = `
@@ -66,12 +66,13 @@ const css = `
 `;
 
 export default function UserMain() {
-  
+
   const userInfo = useSelector((state: IRootState) => state.user.user[0])
   const { isOpen: breakfastOpen, onOpen: breakfastOnOpen, onClose: breakfastOnClose } = useDisclosure()
   const { isOpen: lunchOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure()
   const { isOpen: dinnerOpen, onOpen: dinnerOnOpen, onClose: dinnerOnClose } = useDisclosure()
   const { isOpen: snackOpen, onOpen: snackOnOpen, onClose: snackOnClose } = useDisclosure()
+  const { isOpen: exerciseOpen, onOpen: exercisesOnOpen, onClose: exerciseOnClose } = useDisclosure()
 
   const [calories, setCalories] = useState(0)
   const [twoDaysHasExercise, setTwoDaysHasExercises] = useState(false)
@@ -101,6 +102,9 @@ export default function UserMain() {
   const [hasDinner, setHasDinner] = useState(false)
   const [snackList, setSnackList] = useState(Array<diet>)
   const [hasSnack, setHasSnack] = useState(false)
+
+  const [exerciseList, setExerciseList] = useState(Array<exercise>)
+  const [hasExercise, setHasExercise] = useState(false)
 
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -133,6 +137,18 @@ export default function UserMain() {
 
         if (data.hasExercises) {
           setCalories(data.todayCalories)
+          setHasExercise(true)
+          for (let exercise of data.exercise) {
+            let exerciseInfo: exercise = {
+              id: exercise.id,
+              name: exercise.ex_type,
+              duration: parseInt(exercise.duration, 10),
+              ex_calories: parseInt(exercise.ex_calories, 10),
+              burn_calories: Math.round(parseInt(exercise.duration, 10) * parseInt(exercise.ex_calories, 10) / 60)
+            }
+            setExerciseList((previousList) => [...previousList, exerciseInfo])
+          }
+
           if (data.rate) {
             setYesterdayExercise(true)
             setTwoDaysHasExercises(true)
@@ -347,7 +363,17 @@ export default function UserMain() {
       })
   }
 
+  async function foodForm() {
+
+  }
+
+  async function exercisesForm() {
+
+  }
+
   useEffect(() => {
+    setExerciseList([])
+    setHasExercise(false)
     setBreakfastList([])
     setHasBreakfast(false)
     setLunchList([])
@@ -509,9 +535,66 @@ export default function UserMain() {
             >
               運動統計🏃🏻‍♀️
             </Heading>
-            <Button gap={1}>
+
+            <Button onClick={exercisesOnOpen} gap={1}>
               <Text fontSize={"lg"}>記錄</Text>
             </Button>
+
+            <Modal isOpen={exerciseOpen} onClose={exerciseOnClose}>
+              <ModalOverlay />
+              <ModalContent>
+                <Button
+                  position='absolute'
+                  h='8'
+                  left='2'
+                  top='2'
+                  colorScheme='blue'>
+                  <AddIcon />
+                </Button>
+                <ModalHeader mt='6' textAlign='center'>運動列表</ModalHeader>
+                <ModalCloseButton />
+                <ModalBody>
+                  <Accordion>
+
+                    {hasExercise ?
+                      exerciseList.map((exercise) =>
+                      (
+                        <AccordionItem key={exercise.id}>
+                          <h2>
+                            <AccordionButton>
+                              <Box flex='1' textAlign='left'>
+                                {exercise.name}
+                              </Box>
+                              <AccordionIcon />
+                            </AccordionButton>
+                          </h2>
+                          <AccordionPanel pb={5}>
+                            分鐘:{exercise.duration} <br></br>
+                            每60分鐘所消耗的卡路里: {exercise.ex_calories}kcal <br></br>
+                            總共消耗的卡路里: {exercise.burn_calories}kcal
+                          </AccordionPanel>
+                        </AccordionItem>
+                      )
+                      )
+                      : <ModalHeader textAlign='center'>無記錄</ModalHeader>
+                    }
+                  </Accordion>
+                </ModalBody>
+                <ModalFooter
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Button
+                    ml='2.5'
+                    colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                    Close
+                  </Button>
+                </ModalFooter>
+              </ModalContent>
+            </Modal>
+
+
           </Flex>
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
@@ -598,13 +681,13 @@ export default function UserMain() {
           <Modal isOpen={breakfastOpen} onClose={breakfastOnClose}>
             <ModalOverlay />
             <ModalContent>
-            <Button
+              <Button
                 position='absolute'
                 h='8'
                 left='2'
                 top='2'
                 colorScheme='blue'>
-                <AddIcon/>
+                <AddIcon />
               </Button>
               <ModalHeader mt='6' textAlign='center'>早餐</ModalHeader>
               <ModalCloseButton />
@@ -688,7 +771,7 @@ export default function UserMain() {
                 left='2'
                 top='2'
                 colorScheme='blue'>
-                <AddIcon/>
+                <AddIcon />
               </Button>
               <ModalHeader mt='6' textAlign='center'>午餐</ModalHeader>
               <ModalCloseButton />
@@ -765,13 +848,13 @@ export default function UserMain() {
           <Modal isOpen={dinnerOpen} onClose={dinnerOnClose}>
             <ModalOverlay />
             <ModalContent>
-            <Button
+              <Button
                 position='absolute'
                 h='8'
                 left='2'
                 top='2'
                 colorScheme='blue'>
-                <AddIcon/>
+                <AddIcon />
               </Button>
               <ModalHeader mt='6' textAlign='center'>晚餐</ModalHeader>
               <ModalCloseButton />
@@ -848,13 +931,13 @@ export default function UserMain() {
           <Modal isOpen={snackOpen} onClose={snackOnClose}>
             <ModalOverlay />
             <ModalContent>
-            <Button
+              <Button
                 position='absolute'
                 h='8'
                 left='2'
                 top='2'
                 colorScheme='blue'>
-                <AddIcon/>
+                <AddIcon />
               </Button>
               <ModalHeader mt='6' textAlign='center'>小食</ModalHeader>
               <ModalCloseButton />

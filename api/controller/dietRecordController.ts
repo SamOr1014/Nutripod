@@ -241,11 +241,15 @@ export class DietRecordController {
 
 					res.status(200).json({
 						hasExercises: true, message: "had exercises",
-						rate: Math.round(difference), todayCalories: floorTodayTotalCalories
+						rate: Math.round(difference), todayCalories: floorTodayTotalCalories,
+						exercise: todayExercises
 					})
 					return
 				}
-				res.status(200).json({ hasExercises: true, message: "had exercises", todayCalories: Math.floor(todayTotalCalories) })
+				res.status(200).json({
+					hasExercises: true, message: "had exercises"
+					, todayCalories: Math.floor(todayTotalCalories), exercise: todayExercises
+				})
 			}
 
 		} catch (e) {
@@ -444,11 +448,15 @@ export class DietRecordController {
 					let lastMonthAverage = lastMonthFoodIntake / numbersOfDay
 					difference = ((thisMonthAverage - lastMonthAverage) / lastMonthAverage) * 100
 
-					res.status(200).json({inTake:true, message: "Have intake in both months",
-					rate: Math.round(difference), thisMonthIntake: Math.round(thisMonthAverage/100/today)})
+					res.status(200).json({
+						inTake: true, message: "Have intake in both months",
+						rate: Math.round(difference), thisMonthIntake: Math.round(thisMonthAverage / 100 / today)
+					})
 				}
-				res.status(200).json({inTake:true, message: "intake for this month only",
-				thisMonthIntake: Math.round(thisMonthFoodIntake/100/today)})
+				res.status(200).json({
+					inTake: true, message: "intake for this month only",
+					thisMonthIntake: Math.round(thisMonthFoodIntake / 100 / today)
+				})
 			}
 		} catch (e) {
 			logger.error(e.message)
