@@ -9,8 +9,10 @@ export interface PatientDetailOfTodayBooking {
   phone: string;
   birthday: any;
   time: string;
+  is_attended: boolean | null;
+  follow_up: boolean | null;
+  bid: number;
 }
-
 export interface DietitianPatientPanel {
   id: number;
   first_name: string;
@@ -98,4 +100,24 @@ export interface dietList {
   food: Array<diet>;
 }
 
-export interface DietitianCurrentDateBooking {}
+export interface UserPlusIndividualBooking {
+  bid: number;
+  date: string;
+  time: number;
+  is_attended: boolean | null;
+  follow_up: boolean | null;
+  previous_booking_id: number | null;
+  user_id: number;
+  dietitian_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  birthday: string;
+  height: number;
+  weight: number;
+  gender: number;
+  phone: string;
+  hkid: string;
+  chronic_condition: number;
+  disease: string;
+}
