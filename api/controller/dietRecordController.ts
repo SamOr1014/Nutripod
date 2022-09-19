@@ -464,6 +464,38 @@ export class DietRecordController {
 			return
 		}
 	}
+
+	addExercise = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+			let exercise = req.body.values.exercise
+			let duration = req.body.values.duration
+			if (!uid || isNaN(parseInt(uid)) || !date || !exercise || !duration) {
+				res.status(400).json({
+					success: false,
+					message: 'Lack of information provided'
+				})
+				return
+			}
+
+			let formattedDate = formatDate(date)
+
+			const result = await this.dietRecordService.addExercise(uid,formattedDate,exercise,duration)
+
+			if(result) {
+				res.status(200).json({success:true})
+				return
+			}
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+
+	}
 }
 
 
