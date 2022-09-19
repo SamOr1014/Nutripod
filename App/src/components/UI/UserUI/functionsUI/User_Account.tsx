@@ -19,6 +19,9 @@ export default function UserAccount() {
   const userEmail = useSelector(
     (state: IRootState) => state.user.user[0].email
   );
+  const userName = useSelector(
+    (state: IRootState) => state.user.user[0].username
+  );
   const userFirstName = useSelector(
     (state: IRootState) => state.user.user[0].first_name
   );
@@ -28,6 +31,7 @@ export default function UserAccount() {
   const userGender = useSelector(
     (state: IRootState) => state.user.user[0].gender
   );
+
   const userPhone = useSelector(
     (state: IRootState) => state.user.user[0].phone
   );
@@ -41,15 +45,40 @@ export default function UserAccount() {
   const saveToken = useSelector((state: IRootState) => state.user.saveToken);
 
   async function changeName() {
-    const { value: name } = await Swal.fire({
-      title: "請輸入你的姓名",
+    await Swal.fire({
+      title: "請輸入新的用戶名",
       input: "text",
+      showCloseButton: true,
+      showCancelButton: true,
+      // inputAttributes: {
+      //   minlength: "1",
+      // },
+      // inputValidator: () => {
+      //   return "請輸入新的用戶名";
+      // },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(result.value);
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/info/username`,
+          {
+            id: userID,
+            username: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        console.log(results);
+        if (results.data.success) {
+          Swal.fire(`你的用戶名已更改為:${result.value}`);
+        }
+      }
     });
-
-    if (name) {
-      Swal.fire(`你的姓名已更改為 ${name}`);
-    }
   }
+
   async function changeGender() {
     const { value: gender } = await Swal.fire({
       title: "Select color",
@@ -61,6 +90,7 @@ export default function UserAccount() {
       Swal.fire({ html: `你的性別已更改為 ${gender}` });
     }
   }
+
   async function changeBirthday() {
     const { value: birthday } = await Swal.fire({
       title: "請輸入你的出生日期",
@@ -73,30 +103,97 @@ export default function UserAccount() {
       Swal.fire(`你的出生日期已更改為: ${birthday}`);
     }
   }
-  async function changeMobile() {
-    const { value: mobile } = await Swal.fire({
+
+  async function changePhone() {
+    await Swal.fire({
       title: "請輸入你的電話號碼",
       input: "text",
       inputLabel: "+852",
+      inputPlaceholder: "98765432",
+      showCloseButton: true,
+      showCancelButton: true,
+      inputAttributes: {
+        minlength: "8",
+        maxlength: "8",
+        isInteger: "true",
+      },
+    }).then(async (result) => {
+      console.log(result);
+      if (result.isConfirmed && result.value.length === 8) {
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/info/phone`,
+          {
+            id: userID,
+            phone: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        console.log(results);
+        if (results.data.success) {
+          Swal.fire(`你的電話號碼已更改為: +852 ${result.value}`);
+        }
+      } else if (result.isConfirmed && result.value.length != 8) {
+        Swal.fire({
+          icon: "error",
+          title: "請輸入正確的電話號碼",
+        });
+      }
     });
+  }
 
-    if (mobile) {
-      Swal.fire(`你的電話號碼已更改為: ${mobile}`);
-    }
+  async function changeAddress() {
+    await Swal.fire({
+      title: "請輸入你的地址",
+      input: "text",
+      inputLabel: "請提供完整的住址",
+      inputPlaceholder: "荃灣祈德尊新村A座25A",
+      showCloseButton: true,
+      showCancelButton: true,
+      inputAttributes: {
+        minlength: "8",
+      },
+      // inputValidator: () => {
+      //   return "請輸入完整的住址";
+      // },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(result.value);
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/info/address`,
+          {
+            id: userID,
+            address: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        if (results.data.success) {
+          Swal.fire(`你的地址已更改為:${result.value}`);
+        }
+      }
+    });
   }
 
   async function changeEmail() {
-    const email = await Swal.fire({
+    await Swal.fire({
       title: "請輸入你的電郵",
       input: "email",
       inputLabel: "Your email address",
-      inputPlaceholder: "Enter your email address",
+      inputPlaceholder: "abc@example.com",
+      showCloseButton: true,
+      showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log("ok");
         console.log(result.value);
         const results = await axios.put(
-          `${REACT_APP_API_SERVER}/user/info`,
+          `${REACT_APP_API_SERVER}/user/info/email`,
           {
             id: userID,
             email: result.value,
@@ -108,35 +205,18 @@ export default function UserAccount() {
           }
         );
         if (results.data.success) {
-          Swal.fire("Success");
-          navigate("/dashboard/account");
-        } else {
-          Swal.fire("Fail");
+          Swal.fire(`你的電郵已更改為: ${result.value}`);
+          // navigate("/dashboard/account");
         }
-      } else if (result.isDenied) {
-        Swal.fire("Fail");
+        //   } else {
+        //     Swal.fire("Fail");
+        //   }
+        // } else if (result.isDenied) {
+        //   Swal.fire("Fail");
+        // }
       }
     });
-
-    // if (email) {
-    //   Swal.fire(`你的電郵已更改為: ${email}`);
-    // }
   }
-
-  async function fetchUserInfo() {
-    const { data } = await axios.get(
-      `${REACT_APP_API_SERVER}/user/login/${user[0].id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-    console.log(data);
-  }
-  useEffect(() => {
-    fetchUserInfo();
-  });
 
   return (
     <>
@@ -168,12 +248,12 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">姓名</Text>
-          <Text size="md">{userFirstName + userLastName!}</Text>
+          <Text size="md">{userName}</Text>
 
           <Button
             colorScheme="red"
             onClick={async () => {
-              await changeName();
+              changeName();
             }}
           >
             更改
@@ -187,7 +267,11 @@ export default function UserAccount() {
           justifyContent="space-between"
         >
           <Text size="md">性別</Text>
-          <Text size="md">{userGender}</Text>
+          {userGender === 1 ? (
+            <Text size="md">男性</Text>
+          ) : (
+            <Text size="md">女性</Text>
+          )}
 
           <Button
             colorScheme="red"
@@ -232,8 +316,8 @@ export default function UserAccount() {
 
           <Button
             colorScheme="red"
-            onClick={() => {
-              changeMobile();
+            onClick={async () => {
+              changePhone();
             }}
           >
             更改
@@ -249,7 +333,14 @@ export default function UserAccount() {
           <Text size="md">地址</Text>
           <Text size="md">{userAddress}</Text>
 
-          <Button colorScheme="red">更改</Button>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changeAddress();
+            }}
+          >
+            更改
+          </Button>
         </Flex>
         <Flex
           minWidth="max-content"

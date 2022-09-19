@@ -3,10 +3,11 @@ import { logger } from '../configs/winston'
 import { UserServices } from '../services/userServices'
 import jwtSimple from 'jwt-simple'
 import jwt from '../jwt'
-import { checkPassword } from '../utilities/hash'
+import { hashPassword, checkPassword } from '../utilities/hash'
+import {generateP} from "../utilities/generater"
 
 export class UserController {
-	constructor(private userService: UserServices) {}
+	constructor(private userService: UserServices) { }
 
 	checkUserByToken = async (req: Request, res: Response) => {
 		try {
@@ -103,7 +104,64 @@ export class UserController {
 		}
 	}
 
-	changeInformation = async (req: Request, res: Response) => {
+	changeUsername = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const username = req.body.username
+
+			const result = await this.userService.changeUsername(uid, username)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changePhone = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const phone = req.body.phone
+
+			const result = await this.userService.changePhone(uid, phone)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeAddress = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const address = req.body.address
+
+			const result = await this.userService.changeAddress(uid, address)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeEmail = async (req: Request, res: Response) => {
 		try {
 			const uid = req.body.id
 			const email = req.body.email
@@ -121,4 +179,48 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+
+	register = async (req: Request, res: Response) => {
+		try {
+			const { firstName, lastName, username, email, birthday, height, weight, 
+			phone, address, hkid, gender, profession, chronic_condition, education } = req.body.values
+
+			if (!firstName || !lastName || !username || !email || !birthday || !height || !weight || !phone
+				|| !address || !hkid || !gender || !profession || !chronic_condition || !education) {
+				res.status(400).json({ success: false })
+				return
+			}
+
+			const password = generateP()
+			const hashedPassword = await hashPassword(password)
+
+
+			const result = await this.userService.register(firstName,
+				lastName,
+				username,
+				hashedPassword,
+				email,
+				birthday,
+				height,
+				weight,
+				phone,
+				address,
+				hkid,
+				gender,
+				profession,
+				chronic_condition,
+				education)
+			
+			if (result.length === 0) {
+				res.status(400).json({success:false})
+				return
+			}
+			res.status(200).json({success:true, password:password})
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
 }

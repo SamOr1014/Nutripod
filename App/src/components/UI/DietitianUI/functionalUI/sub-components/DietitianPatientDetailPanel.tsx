@@ -85,7 +85,7 @@ export default function DietitianPatientDetailPanel(
   //################
   //API Functions
   //################
-  async function fetchPaitentsRecords() {
+  async function fetchPatientsRecords() {
     const patientBooking = axios.get(
       `${REACT_APP_API_SERVER}/booking/user/${patient.id}`,
       {
@@ -180,7 +180,7 @@ export default function DietitianPatientDetailPanel(
   //Fetch when patient id changes and patient id is not undefined/null
   useEffect(() => {
     if (patient.id) {
-      fetchPaitentsRecords();
+      fetchPatientsRecords();
       fetchUserBodyState();
     }
   }, [patient.id]);
