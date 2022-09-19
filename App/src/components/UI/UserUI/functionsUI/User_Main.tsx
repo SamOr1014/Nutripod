@@ -37,7 +37,8 @@ import {
   FormLabel,
   Select,
   Input,
-  FormControl
+  FormControl,
+  FormErrorMessage
 } from "@chakra-ui/react";
 
 import { MdToday } from "react-icons/md";
@@ -373,9 +374,6 @@ export default function UserMain() {
 
   }
 
-  async function exercisesForm() {
-
-  }
 
   useEffect(() => {
     setExerciseList([])
@@ -467,7 +465,13 @@ export default function UserMain() {
           minW={isLargerThan1700 ? "48%" : isSmallerThan600 ? "100%" : "46%"}
           minH={isLargerThan1700 ? "300px" : "250px"}
         >
-          <Heading textAlign={"center"}>攝取統計📊</Heading>
+          <Flex >
+            <Heading flex={1} textAlign={"center"}>攝取統計📊</Heading>
+            <Button gap={1}>
+              <AddIcon />
+            </Button>
+          </Flex>
+
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
             <StatGroup flex={"1 1 0%"}>
@@ -582,6 +586,8 @@ export default function UserMain() {
                                 }
                               }).then(({ data }) => {
                                 if (data.success) {
+                                  exerciseFormOnClose()
+                                  exerciseOnClose()
                                   Swal.fire({
                                     icon: "success",
                                     title: "成功"
@@ -596,50 +602,62 @@ export default function UserMain() {
                               })
                           }}
                         >
-                          {({ handleSubmit, errors, touched }) => (
+                          {({ handleSubmit, errors, touched}) => (
                             <Form onSubmit={handleSubmit}>
-                              <FormLabel>運動</FormLabel>
-                              <Field
-                                as={Select}
-                                name="exercise"
-                                isRequired={true}
-                                default="慢跑">
-                                <option value="慢跑">慢跑</option>
-                                <option value="快跑">快跑</option>
-                                <option value="足球">足球</option>
-                                <option value="籃球">籃球</option>
-                                <option value='游泳'>游泳</option>
-                                <option value='行山'>行山</option>
-                                <option value='自由搏擊'>自由搏擊</option>
-                                <option value='健身'>健身</option>
-                                <option value='踩單車'>踩單車</option>
-                                <option value='獨木舟'>獨木舟</option>
-                                <option value='乒乓球'>乒乓球</option>
-                                <option value='網球'>網球</option>
-                              </Field>
 
-                              <FormLabel mt='2'>時間(分鐘)</FormLabel>
+                                <FormLabel>運動</FormLabel>
+                                <Field
+                                  as={Select}
+                                  name="exercise"
+                                  isRequired={true}
+                                  default="慢跑">
+                                  <option value="慢跑">慢跑</option>
+                                  <option value="快跑">快跑</option>
+                                  <option value="足球">足球</option>
+                                  <option value="籃球">籃球</option>
+                                  <option value='游泳'>游泳</option>
+                                  <option value='行山'>行山</option>
+                                  <option value='自由搏擊'>自由搏擊</option>
+                                  <option value='健身'>健身</option>
+                                  <option value='踩單車'>踩單車</option>
+                                  <option value='獨木舟'>獨木舟</option>
+                                  <option value='乒乓球'>乒乓球</option>
+                                  <option value='網球'>網球</option>
+                                </Field>
 
-                              <Field
-                                as={Input}
-                                name='duration'
-                                type='number'
-                                min={1}
-                                required>
-                              </Field>
+                               
+                                <FormControl
+                                isInvalid={!!errors.duration || touched.duration}>
+                                <FormLabel mt='2'>分鐘</FormLabel>
+                                <Field
+                                  as={Input}
+                                  name='duration'
+                                  type='number'
+                                  min={1}
+                                  isRequired={true}
+                                  validate={(value: number) => {
+                                    let error
+                                    if (value < 0) {
+                                      error = "請輸入運動時數"
+                                    }
+                                    return error
+                                  }}/>
+                                  <FormErrorMessage>{errors.duration}</FormErrorMessage>
+                                  </FormControl>
+                                
 
-                              <Center
-                                justifyContent="space-around"
-                                mt={3}>
-                                <Button
-                                  colorScheme='blue' mr={3} type="submit" onClick={exerciseOnClose}>
-                                  提交
-                                </Button>
-                                <Button
-                                  colorScheme='blue' mr={3} onClick={exerciseOnClose}>
-                                  Close
-                                </Button>
-                              </Center>
+                                <Center
+                                  justifyContent="space-around"
+                                  mt={3}>
+                                  <Button
+                                    colorScheme='blue' mr={3} type="submit">
+                                    提交
+                                  </Button>
+                                  <Button
+                                    colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                                    Close
+                                  </Button>
+                                </Center>
                             </Form>
                           )}
                         </Formik>
@@ -658,7 +676,7 @@ export default function UserMain() {
                     {hasExercise ?
                       exerciseList.map((exercise) =>
                       (
-                        <AccordionItem key={exercise.id}>
+                        <AccordionItem key={`exercise_${exercise.id}`}>
                           <h2>
                             <AccordionButton>
                               <Box flex='1' textAlign='left'>
@@ -771,8 +789,9 @@ export default function UserMain() {
           }}
           bg={"gray.500"}
           flexDir={"column"}
+          onClick={breakfastOnOpen}
         >
-          <Image onClick={breakfastOnOpen}
+          <Image
             boxSize={isSmallerThan600 ? 8 : 20}
             src="/images/breakfast.png"
           />
@@ -780,15 +799,7 @@ export default function UserMain() {
           <Modal isOpen={breakfastOpen} onClose={breakfastOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <Button
-                position='absolute'
-                h='8'
-                left='2'
-                top='2'
-                colorScheme='blue'>
-                <AddIcon />
-              </Button>
-              <ModalHeader mt='6' textAlign='center'>早餐</ModalHeader>
+              <ModalHeader mt='2' textAlign='center'>早餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -858,21 +869,14 @@ export default function UserMain() {
           }}
           bg={"gray.500"}
           flexDir={"column"}
+          onClick={lunchOnOpen}
         >
-          <Image onClick={lunchOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/lunch.png" />
 
           <Modal isOpen={lunchOpen} onClose={lunchOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <Button
-                position='absolute'
-                h='8'
-                left='2'
-                top='2'
-                colorScheme='blue'>
-                <AddIcon />
-              </Button>
-              <ModalHeader mt='6' textAlign='center'>午餐</ModalHeader>
+              <ModalHeader mt='2' textAlign='center'>午餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -941,21 +945,14 @@ export default function UserMain() {
           }}
           bg={"gray.500"}
           flexDir={"column"}
+          onClick={dinnerOnOpen}
         >
-          <Image onClick={dinnerOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/dinner.png" />
 
           <Modal isOpen={dinnerOpen} onClose={dinnerOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <Button
-                position='absolute'
-                h='8'
-                left='2'
-                top='2'
-                colorScheme='blue'>
-                <AddIcon />
-              </Button>
-              <ModalHeader mt='6' textAlign='center'>晚餐</ModalHeader>
+              <ModalHeader mt='2' textAlign='center'>晚餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
@@ -1023,22 +1020,15 @@ export default function UserMain() {
           }}
           bg={"gray.500"}
           flexDir={"column"}
+          onClick={snackOnOpen}
         >
-          <Image onClick={snackOnOpen} boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
+          <Image boxSize={isSmallerThan600 ? 8 : 20} src="/images/snack.png" />
 
 
           <Modal isOpen={snackOpen} onClose={snackOnClose}>
             <ModalOverlay />
             <ModalContent>
-              <Button
-                position='absolute'
-                h='8'
-                left='2'
-                top='2'
-                colorScheme='blue'>
-                <AddIcon />
-              </Button>
-              <ModalHeader mt='6' textAlign='center'>小食</ModalHeader>
+              <ModalHeader mt='2' textAlign='center'>小食</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 <Accordion>
