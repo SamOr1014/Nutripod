@@ -19,11 +19,11 @@ import {
   Stack,
   Center,
   useColorMode,
-  Text,
+  Text
 } from "@chakra-ui/react";
 import { MdDarkMode } from "react-icons/md";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, IRootState } from "../redux/store";
 import {
@@ -38,8 +38,7 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { token } from "../utility/models"
-import jwt from "../jwt"
-import jwt_decode, { JwtPayload } from "jwt-decode"
+import jwt_decode from "jwt-decode"
 import axios from "axios";
 
 export function Login() {
@@ -54,7 +53,6 @@ export function Login() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
   const { REACT_APP_API_SERVER } = process.env;
-
   const checkToken = window.localStorage.getItem("userLocalToken")
 
   const checkTokenLogin = async() => {
