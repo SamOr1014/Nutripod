@@ -180,4 +180,21 @@ export class DietRecordServices {
 	
 		return result
 	}
+
+	async addExercise (uid: string|number, date:string,exercise:string,duration:number) {
+
+		const exerciseID = await this.knex('exercises_types').select('id')
+		.where('ex_type', exercise).returning('id')
+
+		const result = await this.knex('users_exercises')
+		
+		.insert({
+			date:date,
+			exercise:exerciseID[0].id,
+			duration:duration,
+			user_id:uid
+		}).returning("id")
+
+		return result
+	}
 }

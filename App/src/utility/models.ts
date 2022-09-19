@@ -96,10 +96,6 @@ export interface diet {
   fiber: number;
 }
 
-export interface dietList {
-  food: Array<diet>;
-}
-
 export interface UserPlusIndividualBooking {
   bid: number;
   date: string;
@@ -120,4 +116,40 @@ export interface UserPlusIndividualBooking {
   hkid: string;
   chronic_condition: number;
   disease: string;
+}
+
+export interface exercise {
+  id: number;
+  name: string;
+  duration: number;
+  ex_calories: number;
+  burn_calories: number;
+}
+export interface UserPlusIndividualBooking {
+  bid: number;
+  date: string;
+  time: number;
+  is_attended: boolean | null;
+  follow_up: boolean | null;
+  previous_booking_id: number | null;
+  user_id: number;
+  dietitian_id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  birthday: string;
+  height: number;
+  weight: number;
+  gender: number;
+  phone: string;
+  hkid: string;
+  chronic_condition: number;
+  disease: string;
+}
+export interface exercise {
+  id: number;
+  name: string;
+  duration: number;
+  ex_calories: number;
+  burn_calories: number;
 }

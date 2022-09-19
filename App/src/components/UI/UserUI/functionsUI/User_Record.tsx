@@ -126,7 +126,7 @@ export default function UserBPBGRecord() {
         },
         {
           headers: {
-            Authorization: `Bearer ${locateToken()}`,
+            'Authorization': `Bearer ${locateToken()}`,
           },
         }
       )
