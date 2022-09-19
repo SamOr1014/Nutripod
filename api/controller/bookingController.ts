@@ -11,7 +11,10 @@ export class BookingController {
 			res.json(await this.bookingService.getTimeslot())
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal server error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal server error'
+			})
 		}
 	}
 
@@ -24,7 +27,10 @@ export class BookingController {
 			res.json({ success: true, data: results })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal server error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal server error'
+			})
 			return
 		}
 	}
@@ -119,7 +125,10 @@ export class BookingController {
 			res.status(200).json({ success: true })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal Server Error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
 			return
 		}
 	}
@@ -163,7 +172,10 @@ export class BookingController {
 			res.status(200).json({ success: true })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal Server Error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
 			return
 		}
 	}
@@ -183,7 +195,10 @@ export class BookingController {
 			res.json({ success: true })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal Server Error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
 			return
 		}
 	}
@@ -198,7 +213,10 @@ export class BookingController {
 			res.json({ success: true })
 		} catch (e) {
 			logger.error(e.message)
-			res.json({ success: false, message: 'Internal Server Error' })
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
 			return
 		}
 	}
