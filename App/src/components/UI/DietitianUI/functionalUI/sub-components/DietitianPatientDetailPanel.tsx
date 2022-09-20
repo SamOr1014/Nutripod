@@ -425,7 +425,9 @@ export default function DietitianPatientDetailPanel(
                           : "其他"}
                       </Text>
                       <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
-                      <Text fontWeight={"bold"}>體重： {rec.weight} kg</Text>
+                      <Text fontWeight={"bold"}>
+                        起初體重： {rec.weight} kg
+                      </Text>
                       <Text fontWeight={"bold"}>
                         BMI：{" "}
                         {(rec.weight / (rec.height / 100) ** 2)
@@ -433,7 +435,7 @@ export default function DietitianPatientDetailPanel(
                           .slice(0, 5)}{" "}
                       </Text>
                       <Text fontWeight={"bold"}>
-                        血壓： {rec.bp}/{rec.bp} mmHG
+                        血壓： {rec.bp}/{rec.dbp} mmHG
                       </Text>
                       <Text fontWeight={"bold"}>血糖：{rec.bg} mmol/L</Text>
                       <Text fontWeight={"bold"}>慢性疾病：{rec.disease} </Text>
