@@ -807,7 +807,7 @@ export default function UserMain() {
                   {hasBreakfast ?
                     breakfastList.map((food) =>
                     (
-                      <AccordionItem key={food.id}>
+                      <AccordionItem key={`breakfast_${food.id}`}>
                         <h2>
                           <AccordionButton>
                             <Box flex='1' textAlign='left'>
@@ -883,7 +883,7 @@ export default function UserMain() {
                   {hasLunch ?
                     lunchList.map((food) =>
                     (
-                      <AccordionItem key={food.id}>
+                      <AccordionItem key={`lunch_${food.id}`}>
                         <h2>
                           <AccordionButton>
                             <Box flex='1' textAlign='left'>
@@ -958,7 +958,7 @@ export default function UserMain() {
                 <Accordion>
                   {hasDinner ?
                     dinnerList.map((food) => (
-                      <AccordionItem key={food.id}>
+                      <AccordionItem key={`dinner_${food.id}`}>
                         <h2>
                           <AccordionButton>
                             <Box flex='1' textAlign='left'>
@@ -1035,7 +1035,7 @@ export default function UserMain() {
                   {hasSnack ?
                     snackList.map((food) =>
                     (
-                      <AccordionItem key={food.id}>
+                      <AccordionItem key={`snack_${food.id}`}>
                         <h2>
                           <AccordionButton>
                             <Box flex='1' textAlign='left'>
