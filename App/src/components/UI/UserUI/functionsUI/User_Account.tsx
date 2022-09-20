@@ -80,15 +80,30 @@ export default function UserAccount() {
   }
 
   async function changeGender() {
-    const { value: gender } = await Swal.fire({
+    await Swal.fire({
       title: "Select color",
       input: "radio",
-      inputOptions: { 男性: "男性", 女性: "女性", 其他: "其他" },
+      inputOptions: { 1: "男性", 2: "女性", 3: "其他" },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(result.value);
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/info/gender`,
+          {
+            id: userID,
+            gender: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        if (results.data.success) {
+          Swal.fire(`你的性別已更改為: ${result.value}`);
+        }
+      }
     });
-
-    if (gender) {
-      Swal.fire({ html: `你的性別已更改為 ${gender}` });
-    }
   }
 
   async function changeBirthday() {

@@ -145,6 +145,15 @@ export class UserServices {
 		return result
 	}
 
+	async changeGender(id: string | number, gender: string) {
+		const result = await this.knex('users')
+			.update('gender', gender)
+			.where('id', id)
+			.returning('id')
+
+		return result
+	}
+
 	async changePhone(id: string | number, phone: string) {
 		const result = await this.knex('users')
 			.update('phone', phone)

@@ -25,8 +25,13 @@ import {
   ModalOverlay,
   useDisclosure,
   Input,
+  FormLabel,
+  HStack,
+  VStack,
+  Textarea,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { useSelector } from "react-redux";
@@ -52,6 +57,11 @@ export default function DietitianMain() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   //open follow up booking modal
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isMedRecOpen,
+    onOpen: onMedRecOpen,
+    onClose: onMedRecClose,
+  } = useDisclosure();
   //redux states
   const currentDietitian = useSelector(
     (state: IRootState) => state.dietitian[0]
@@ -94,12 +104,6 @@ export default function DietitianMain() {
       .then(({ data }) => {
         setAllBookings(data);
       });
-  }
-
-  async function fetchFollowUpBookingByCurrentBookingID(bid: number) {
-    axios.get(`${REACT_APP_API_SERVER}/booking/bid`).then(({ data }) => {
-      return data;
-    });
   }
 
   useEffect(() => {
@@ -357,6 +361,9 @@ export default function DietitianMain() {
                   </Tag>
                 </>
               )}
+              <Button colorScheme="cyan" size={"sm"} onClick={onMedRecOpen}>
+                報告
+              </Button>
             </Stack>
           </AccordionPanel>
         </AccordionItem>
@@ -413,6 +420,120 @@ export default function DietitianMain() {
           </ModalContent>
         </Modal>
         {/*  */}
+        {/* medRec form modal */}
+        <Modal isOpen={isMedRecOpen} onClose={onMedRecClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>診症記錄</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Formik
+                initialValues={{
+                  height: "",
+                  weight: "",
+                  sys: "",
+                  dia: "",
+                  bg: "",
+                  content: "",
+                }}
+                onSubmit={(values) => {
+                  axios
+                    .post(
+                      `${REACT_APP_API_SERVER}/medical`,
+                      {
+                        bid: patient.bid,
+                        content: values.content,
+                        height: values.height,
+                        weight: values.weight,
+                        sys: values.sys,
+                        dia: values.dia,
+                        bg: values.bg,
+                      },
+                      {
+                        headers: {
+                          Authorization: `Bearer ${locateToken()}`,
+                        },
+                      }
+                    )
+                    .then(() => {
+                      Swal.fire({
+                        icon: "success",
+                        title: "成功提交報告",
+                      });
+                      onMedRecClose();
+                    });
+                }}
+              >
+                {({ handleSubmit, errors, touched }) => (
+                  <Form onSubmit={handleSubmit}>
+                    <VStack gap={3}>
+                      <HStack gap={2}>
+                        <Flex flexDir={"column"}>
+                          <FormLabel>身高:</FormLabel>
+                          <Field
+                            as={Input}
+                            isRequired={true}
+                            name="height"
+                            type={"number"}
+                            step="0.01"
+                          />
+                        </Flex>
+                        <Flex flexDir={"column"}>
+                          <FormLabel>體重:</FormLabel>
+                          <Field
+                            as={Input}
+                            isRequired={true}
+                            name="weight"
+                            type={"number"}
+                            step="0.01"
+                          />
+                        </Flex>
+                      </HStack>
+                      <HStack gap={2}>
+                        <Flex flexDir={"column"}>
+                          <FormLabel>上壓:</FormLabel>
+                          <Field
+                            as={Input}
+                            isRequired={true}
+                            name="sys"
+                            type={"number"}
+                            step="0.01"
+                          />
+                        </Flex>
+                        <Flex flexDir={"column"}>
+                          <FormLabel>下壓:</FormLabel>
+                          <Field
+                            as={Input}
+                            isRequired={true}
+                            name="dia"
+                            type={"number"}
+                            step="0.01"
+                          />
+                        </Flex>
+                        <Flex flexDir={"column"}>
+                          <FormLabel>血糖:</FormLabel>
+                          <Field
+                            as={Input}
+                            isRequired={true}
+                            name="bg"
+                            type={"number"}
+                            step="0.01"
+                          />
+                        </Flex>
+                      </HStack>
+                      <FormLabel>評語:</FormLabel>
+                      <Field as={Textarea} isRequired={true} name="content" />
+                      <ModalFooter>
+                        <Button type={"submit"}>提交</Button>
+                      </ModalFooter>
+                    </VStack>
+                  </Form>
+                )}
+              </Formik>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+        {/* end */}
       </>
     );
   }

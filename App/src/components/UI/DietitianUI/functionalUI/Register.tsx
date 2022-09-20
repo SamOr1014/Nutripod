@@ -1,18 +1,13 @@
 import {
   Flex,
-  Box,
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
   HStack,
-  InputRightElement,
   Stack,
   Button,
   Heading,
-  Text,
   useColorModeValue,
-  Link,
   Select,
   FormErrorMessage,
 } from "@chakra-ui/react";
@@ -63,7 +58,8 @@ export default function Register() {
                 headers: {
                   'Authorization': `Bearer ${locateToken()}`
                 }
-              }).then(({ data }) => {
+              )
+              .then(({ data }) => {
                 if (data.success) {
                   Swal.fire({
                     icon: "success",
@@ -393,7 +389,7 @@ export default function Register() {
                       bg: "blue.500",
                     }}
                   >
-                    Sign up
+                    登記
                   </Button>
                 </Stack>
               </Form>
