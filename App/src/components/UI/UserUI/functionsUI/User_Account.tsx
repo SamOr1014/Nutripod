@@ -1,4 +1,22 @@
-import { Box, Flex, Heading, Button, Text, Divider } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Divider,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+  useColorModeValue,
+  HStack,
+  Avatar,
+  AvatarBadge,
+  IconButton,
+  Center,
+} from "@chakra-ui/react";
+import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
@@ -15,6 +33,8 @@ export default function UserAccount() {
   const user = useSelector((state: IRootState) => state.user.user);
 
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
+
+  const userHKID = useSelector((state: IRootState) => state.user.user[0].HKID);
 
   const userEmail = useSelector(
     (state: IRootState) => state.user.user[0].email
@@ -44,44 +64,11 @@ export default function UserAccount() {
 
   const saveToken = useSelector((state: IRootState) => state.user.saveToken);
 
-  async function changeName() {
-    await Swal.fire({
-      title: "請輸入新的用戶名",
-      input: "text",
-      showCloseButton: true,
-      showCancelButton: true,
-      // inputAttributes: {
-      //   minlength: "1",
-      // },
-      // inputValidator: () => {
-      //   return "請輸入新的用戶名";
-      // },
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        console.log(result.value);
-        const results = await axios.put(
-          `${REACT_APP_API_SERVER}/user/info/username`,
-          {
-            id: userID,
-            username: result.value,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${locateToken()}`,
-            },
-          }
-        );
-        console.log(results);
-        if (results.data.success) {
-          Swal.fire(`你的用戶名已更改為:${result.value}`);
-        }
-      }
-    });
-  }
+  const [noInput, setNoInput] = useState<string>("");
 
   async function changeGender() {
     await Swal.fire({
-      title: "Select color",
+      title: "請選擇",
       input: "radio",
       inputOptions: { 1: "男性", 2: "女性", 3: "其他" },
     }).then(async (result) => {
@@ -104,19 +91,6 @@ export default function UserAccount() {
         }
       }
     });
-  }
-
-  async function changeBirthday() {
-    const { value: birthday } = await Swal.fire({
-      title: "請輸入你的出生日期",
-      input: "text",
-      inputLabel: "你的出生日期",
-      inputPlaceholder: "年/月/日",
-    });
-
-    if (birthday) {
-      Swal.fire(`你的出生日期已更改為: ${birthday}`);
-    }
   }
 
   async function changePhone() {
@@ -152,6 +126,11 @@ export default function UserAccount() {
           Swal.fire(`你的電話號碼已更改為: +852 ${result.value}`);
         }
       } else if (result.isConfirmed && result.value.length != 8) {
+        Swal.fire({
+          icon: "error",
+          title: "請輸入正確的電話號碼",
+        });
+      } else if (result.isConfirmed && result.value === isNaN) {
         Swal.fire({
           icon: "error",
           title: "請輸入正確的電話號碼",
@@ -223,162 +202,181 @@ export default function UserAccount() {
           Swal.fire(`你的電郵已更改為: ${result.value}`);
           // navigate("/dashboard/account");
         }
-        //   } else {
-        //     Swal.fire("Fail");
-        //   }
-        // } else if (result.isDenied) {
-        //   Swal.fire("Fail");
-        // }
       }
     });
   }
+  // useEffect(() => {
+  //   if (user[0].id) {
+  //     changePhone();
+  //   }
+  // }, [user]);
 
   return (
     <>
       <Flex
         display={"flex"}
         flexDir={"column"}
-        bg={"gray.500"}
         width="100%"
         h="100%"
         borderRadius={10}
       >
         <Flex
-          minWidth="max-content"
-          alignItems="center"
-          m={3}
-          justifyContent={"center"}
+          minH={"100vh"}
+          align={"center"}
+          justify={"center"}
+          bg={useColorModeValue("gray.50", "gray.800")}
         >
-          <Box p="2" textAlign={"center"}>
-            <Heading size="xl">你的帳戶資料</Heading>
-            <Divider mb={5} />
-            <Text size="md">如你發現你的個人資料有錯誤,請即更改至最新狀況</Text>
-          </Box>
-        </Flex>
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
-        >
-          <Text size="md">姓名</Text>
-          <Text size="md">{userName}</Text>
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changeName();
-            }}
+          <Stack
+            spacing={4}
+            w={"full"}
+            maxW={"md"}
+            bg={useColorModeValue("white", "gray.700")}
+            rounded={"xl"}
+            boxShadow={"lg"}
+            p={6}
+            my={12}
           >
-            更改
-          </Button>
+            <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+              你的用戶資料
+              <Divider mb={2} />
+            </Heading>
+            <FormControl id="userIcon">
+              <Stack direction={["column", "row"]} spacing={6}>
+                <Center>
+                  <Avatar size="xl" src="https://bit.ly/sage-adebayo">
+                    <AvatarBadge
+                      as={IconButton}
+                      size="sm"
+                      rounded="full"
+                      top="-10px"
+                      colorScheme="red"
+                      aria-label="remove Image"
+                      icon={<SmallCloseIcon />}
+                    />
+                  </Avatar>
+                </Center>
+                <Center w="full">
+                  <Button w="full">更換頭像</Button>
+                </Center>
+              </Stack>
+            </FormControl>
+            <FormControl id="userName">
+              <Heading fontSize="lg">用戶名稱</Heading>
+              <Text fontSize="xl" my="1">
+                {userName}
+              </Text>
+            </FormControl>
+            <FormControl id="gender">
+              <Heading fontSize="lg">性別</Heading>
+              <Text fontSize="xl" my="1">
+                {userGender === 1 ? (
+                  <Text size="md">男性</Text>
+                ) : (
+                  <Text size="md">女性</Text>
+                )}
+              </Text>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  changeGender();
+                }}
+              >
+                更改
+              </Button>
+            </FormControl>
+            <FormControl id="phone">
+              <Heading fontSize="lg">電話號碼</Heading>
+              <Text fontSize="xl" my="1">
+                +852 {userPhone}
+              </Text>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  changePhone();
+                }}
+              >
+                更改
+              </Button>
+            </FormControl>
+            <FormControl id="email">
+              <Heading fontSize="lg">電郵</Heading>
+              <Text fontSize="xl" my="1">
+                {userEmail}
+              </Text>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  changeEmail();
+                }}
+              >
+                更改
+              </Button>
+            </FormControl>
+            <FormControl id="address">
+              <Heading fontSize="lg">地址</Heading>
+              <Text fontSize="xl" my="1">
+                {userAddress}
+              </Text>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  changeAddress();
+                }}
+              >
+                更改
+              </Button>
+            </FormControl>
+            <Button colorScheme="red" maxWidth={20} m={3}>
+              更改密碼?
+            </Button>
+          </Stack>
         </Flex>
+
         <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
+          minH={"100vh"}
+          align={"center"}
+          justify={"center"}
+          bg={useColorModeValue("gray.50", "gray.800")}
         >
-          <Text size="md">性別</Text>
-          {userGender === 1 ? (
-            <Text size="md">男性</Text>
-          ) : (
-            <Text size="md">女性</Text>
-          )}
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changeGender();
-            }}
+          <Stack
+            spacing={4}
+            w={"full"}
+            maxW={"md"}
+            bg={useColorModeValue("white", "gray.700")}
+            rounded={"xl"}
+            boxShadow={"lg"}
+            p={6}
+            my={12}
           >
-            更改
-          </Button>
-        </Flex>
+            <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+              基本個人資料
+              <Divider mb={2} />
+            </Heading>
+            <Text fontSize="md">如你發現你的個人資料有錯誤,請立即通知我們</Text>
 
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
-        >
-          <Text size="md">出生日期</Text>
-          <Text size="md">
-            {userBirthday ? new Date(userBirthday).toLocaleDateString() : ""}
-          </Text>
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changeBirthday();
-            }}
-          >
-            更改
-          </Button>
+            <FormControl id="userRealName">
+              <Heading fontSize="lg">姓名</Heading>
+              <Text fontSize="xl" my="1">
+                {userFirstName + userLastName!}
+              </Text>
+            </FormControl>
+            <FormControl id="hkid">
+              <Heading fontSize="lg">身份證號碼</Heading>
+              <Text fontSize="xl" my="1">
+                {userHKID?.slice(0, 7) + "("}
+                {userHKID?.slice(-1) + ")"}
+              </Text>
+            </FormControl>
+            <FormControl id="birthday">
+              <Heading fontSize="lg">出生日期</Heading>
+              <Text fontSize="xl" my="1">
+                {userBirthday
+                  ? new Date(userBirthday).toLocaleDateString()
+                  : ""}
+              </Text>
+            </FormControl>
+          </Stack>
         </Flex>
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
-        >
-          <Text size="md">電話號碼</Text>
-          <Text size="md">+852 {userPhone}</Text>
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changePhone();
-            }}
-          >
-            更改
-          </Button>
-        </Flex>
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
-        >
-          <Text size="md">地址</Text>
-          <Text size="md">{userAddress}</Text>
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changeAddress();
-            }}
-          >
-            更改
-          </Button>
-        </Flex>
-        <Flex
-          minWidth="max-content"
-          alignItems="center"
-          bg={"green"}
-          m={3}
-          justifyContent="space-between"
-        >
-          <Text size="md">電郵</Text>
-          <Text size="md">{userEmail}</Text>
-
-          <Button
-            colorScheme="red"
-            onClick={async () => {
-              changeEmail();
-            }}
-          >
-            更改
-          </Button>
-        </Flex>
-        <Button colorScheme="red" maxWidth={20} m={3}>
-          更改密碼?
-        </Button>
       </Flex>
     </>
   );

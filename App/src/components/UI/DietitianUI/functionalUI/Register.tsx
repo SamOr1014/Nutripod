@@ -40,7 +40,6 @@ export default function Register() {
             birthday: "",
             height: "",
             weight: "",
-
             phone: "",
             address: "",
             hkid: "",
