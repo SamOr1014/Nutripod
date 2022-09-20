@@ -362,7 +362,7 @@ export default function DietitianMain() {
                 </>
               )}
               <Button colorScheme="cyan" size={"sm"} onClick={onMedRecOpen}>
-                報告
+                營養師撰要
               </Button>
             </Stack>
           </AccordionPanel>
@@ -476,6 +476,7 @@ export default function DietitianMain() {
                             name="height"
                             type={"number"}
                             step="0.01"
+                            placeholder={"cm"}
                           />
                         </Flex>
                         <Flex flexDir={"column"}>
@@ -486,6 +487,7 @@ export default function DietitianMain() {
                             name="weight"
                             type={"number"}
                             step="0.01"
+                            placeholder={"kg"}
                           />
                         </Flex>
                       </HStack>
@@ -498,6 +500,7 @@ export default function DietitianMain() {
                             name="sys"
                             type={"number"}
                             step="0.01"
+                            placeholder={"mmHg"}
                           />
                         </Flex>
                         <Flex flexDir={"column"}>
@@ -508,6 +511,7 @@ export default function DietitianMain() {
                             name="dia"
                             type={"number"}
                             step="0.01"
+                            placeholder={"mmHg"}
                           />
                         </Flex>
                         <Flex flexDir={"column"}>
@@ -518,6 +522,7 @@ export default function DietitianMain() {
                             name="bg"
                             type={"number"}
                             step="0.01"
+                            placeholder={"mmol/L"}
                           />
                         </Flex>
                       </HStack>
