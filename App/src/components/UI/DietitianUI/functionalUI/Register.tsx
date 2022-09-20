@@ -58,7 +58,7 @@ export default function Register() {
                 headers: {
                   'Authorization': `Bearer ${locateToken()}`
                 }
-              )
+              })
               .then(({ data }) => {
                 if (data.success) {
                   Swal.fire({
