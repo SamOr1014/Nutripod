@@ -181,3 +181,7 @@ export interface FullSinglePost {
   first_name: string;
   last_name: string;
 }
+
+export interface searchFood {
+  name : string
+}

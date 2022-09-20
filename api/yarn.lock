@@ -980,6 +980,11 @@ binary-extensions@^2.0.0:
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
+bluebird@^3.1.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
+  integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
+
 blueimp-canvas-to-blob@^3.29.0:
   version "3.29.0"
   resolved "https://registry.npmjs.org/blueimp-canvas-to-blob/-/blueimp-canvas-to-blob-3.29.0.tgz"
@@ -2253,6 +2258,13 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.npmjs.org/kleur/-/kleur-3.0.3.tgz"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
+
+knex-seed-file@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/knex-seed-file/-/knex-seed-file-1.0.2.tgz#a28b3bcc7f8425ed560f95528ee8eeb67d683df1"
+  integrity sha512-yvH5A3rBPkRMn/iHR4sU2O27IUWpk9TUjl/zV59PvdAFoQiHLnB0FuLcT108Y+dePkWSl2A0lP7aG06/SpAFWA==
+  dependencies:
+    bluebird "^3.1.2"
 
 knex@^2.3.0:
   version "2.3.0"

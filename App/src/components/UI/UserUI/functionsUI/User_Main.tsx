@@ -39,20 +39,20 @@ import {
   Input,
   FormControl,
   FormErrorMessage,
-  Radio, RadioGroup, Stack
+  InputRightElement, InputGroup, useToast
 } from "@chakra-ui/react";
 
 import { MdToday } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { AddIcon } from "@chakra-ui/icons";
+import { AddIcon, Search2Icon } from "@chakra-ui/icons";
 import Swal from "sweetalert2";
 import "react-day-picker/dist/style.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { IRootState } from "../../../../redux/store";
 import locateToken from "../../../../utility/Token";
-import { diet, exercise } from "../../../../utility/models"
+import { diet, exercise, searchFood } from "../../../../utility/models"
 import { Formik, Field, Form } from 'formik';
 
 const { REACT_APP_API_SERVER } = process.env;
@@ -73,7 +73,7 @@ const css = `
 `;
 
 export default function UserMain() {
-
+  const toast = useToast()
   const userInfo = useSelector((state: IRootState) => state.user.user[0])
   const { isOpen: breakfastOpen, onOpen: breakfastOnOpen, onClose: breakfastOnClose } = useDisclosure()
   const { isOpen: lunchOpen, onOpen: lunchOnOpen, onClose: lunchOnClose } = useDisclosure()
@@ -82,6 +82,9 @@ export default function UserMain() {
   const { isOpen: exerciseOpen, onOpen: exercisesOnOpen, onClose: exerciseOnClose } = useDisclosure()
   const { isOpen: exerciseFormOpen, onOpen: exerciseFormOnOpen, onClose: exerciseFormOnClose } = useDisclosure()
   const { isOpen: foodFormOpen, onOpen: foodFormOnOpen, onClose: foodFormOnClose } = useDisclosure()
+
+  const [hasSearchResult, setHasSearchResult] = useState(false)
+  const [resultList, setResultFoodList] = useState(Array<searchFood>)
 
   const [calories, setCalories] = useState(0)
   const [twoDaysHasExercise, setTwoDaysHasExercises] = useState(false)
@@ -372,11 +375,6 @@ export default function UserMain() {
       })
   }
 
-  async function foodForm() {
-
-  }
-
-
   useEffect(() => {
     setExerciseList([])
     setHasExercise(false)
@@ -479,71 +477,72 @@ export default function UserMain() {
               <Modal isOpen={foodFormOpen} onClose={foodFormOnClose}>
                 <ModalOverlay />
                 <ModalContent>
-                  <ModalHeader textAlign={"center"}>請在此輸入今日的膳食</ModalHeader>
+                  <ModalHeader textAlign={"center"}>請在此輸入膳食</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody>
 
                     <Formik
                       initialValues={{
                         food: "",
-                        group: "",
-                        dietType: '',
-                        amount: 0
                       }}
                       onSubmit={async (values) => {
-                        console.log(values)
+                        axios.get(`${REACT_APP_API_SERVER}/diet/search/${values.food}`
+                          , {
+                            headers: {
+                              'Authorization': `Bearer ${locateToken()}`
+                            }
+                          }).then(({ data }) => {
+                            setResultFoodList([])
+                            setHasSearchResult(true)
+                            for (let searchResult of data.list) {
+                              let food: searchFood = {
+                                name: searchResult.food_name
+                              }
+                              setResultFoodList((previousList) => [...previousList, food])
+                            }
+                          }).catch((error) => {
+                            toast({
+                              position: 'top',
+                              title: `${error.response.data.message}`,
+                              duration: 3000,
+                              isClosable: true,
+                            })
+                          })
                       }}
                     >
-                      {({ values, setFieldValue, handleSubmit, handleChange, errors, touched }) => (
+                      {({ handleSubmit,errors, touched }) => (
 
                         <Form onSubmit={handleSubmit}>
 
-                          
-                          <FormLabel mt='2'>類型</FormLabel>
-                            <Field
-                              as={Select}
-                              name='dietType'
-                            >
-                              <option value="1">早餐</option>
-                              <option value="2">午餐</option>
-                              <option value="3">晚餐</option>
-                              <option value="4">小食</option>
-                            </Field>
-
-                            <FormLabel mt='2'>食物種類</FormLabel>
-                            <Field
-                              as={Select}
-                              name='group'
-                            >
-                              <option value="1">早餐</option>
-                              <option value="2">午餐</option>
-                              <option value="3">晚餐</option>
-                              <option value="4">小食</option>
-                            </Field>
-
-                          <FormControl
-                            isInvalid={!!errors.amount || touched.amount}>
-                            <FormLabel mt='2'>分量</FormLabel>
-                            <Field
-                              as={Input}
-                              name='amount'
-                              type='number'
-                              min={1}
-                              placeholder="克"
-                              isRequired={true}
-                              validate={(value: number) => {
-                                let err
-                                if (value < 0) {
-                                  err = '請輸入正確的分量'
-                                }
-                                return err
-                              }} />
-                            <FormErrorMessage>{errors.amount}</FormErrorMessage>
+                          <FormControl isInvalid={!!errors.food && touched.food}>
+                            <InputGroup size="md">
+                              <Field
+                                as={Input}
+                                placeholder={"請輸入食物名稱"}
+                                name="food"
+                                validate={(name: string) => {
+                                  let error;
+                                  if (!name) {
+                                    error = "請輸入食物名稱"
+                                  }
+                                  return error;
+                                }}
+                              />
+                              <InputRightElement
+                                pointerEvents="none"
+                                color="gray.300"
+                                children={<Search2Icon />}
+                              />
+                            </InputGroup>
+                            <FormErrorMessage mt={3}>
+                              {errors.food}
+                            </FormErrorMessage>
                           </FormControl>
 
                           <Center
                             justifyContent="space-around"
-                            mt={3}>
+                            mt={10}
+                            hidden={hasSearchResult ? true : false}>
                             <Button
                               colorScheme='blue' mr={3} type="submit">
                               提交
@@ -553,11 +552,108 @@ export default function UserMain() {
                               Close
                             </Button>
                           </Center>
-
                         </Form>
                       )}
                     </Formik>
 
+                    {hasSearchResult ?
+
+                      <Formik
+                        initialValues={{
+                          food: resultList[0].name,
+                          dietType: "breakfast",
+                          amount: 0,
+                          date: selectedDate,
+                          userID: userInfo.id
+                        }}
+                        onSubmit={async (values, { resetForm }) => {
+                          axios.post(`${REACT_APP_API_SERVER}/diet/foodIntake`
+                            , {
+                              values
+                            },
+                            {
+                              headers: {
+                                'Authorization': `Bearer ${locateToken()}`
+                              }
+                            }).then(({ data }) => {
+                              if (data.success) {
+                                resetForm()
+                                setHasSearchResult(false)
+                                foodFormOnClose()
+                                fetchIntakeFromServer()
+                                fetchMonthlyIntakeFromServer()
+                                Swal.fire({
+                                  icon: "success",
+                                  title: `成立增加膳食資料`
+                                })
+                              }
+                            }).catch((error) => {
+                              resetForm()
+                              setHasSearchResult(false)
+                              foodFormOnClose()
+                              Swal.fire({
+                                icon: "error",
+                                title: "發生錯誤，請稍後再試"
+                              })
+                            })
+                        }}
+                      >
+                        {({ values, setFieldValue, handleSubmit, handleChange, errors, touched }) => (
+                          <Form onSubmit={handleSubmit}>
+
+                            <FormLabel mt={5}>搜查結果</FormLabel>
+                            <Field
+                              as={Select}
+                              name='food'>
+                              {resultList.map((result) => <option key={`foodResult_${result.name}`} value={result.name}>{result.name}</option>)}
+                            </Field>
+
+                            <FormLabel mt={2}>類型</FormLabel>
+                            <Field
+                              as={Select}
+                              name='dietType'>
+                              <option value="breakfast">早餐</option>
+                              <option value="lunch">午餐</option>
+                              <option value="dinner">晚餐</option>
+                              <option value="snack">小食</option>
+                            </Field>
+
+                            <FormControl
+                              isInvalid={!!errors.amount || touched.amount}>
+                              <FormLabel mt={2}>分量(克)</FormLabel>
+                              <Field
+                                as={Input}
+                                name='amount'
+                                type='number'
+                                min={1}
+                                isRequired={true}
+                                validate={(value: number) => {
+                                  let error
+                                  if (value < 0) {
+                                    error = '請輸入正確的分量'
+                                  }
+                                  return error
+                                }} />
+                              <FormErrorMessage>{errors.amount}</FormErrorMessage>
+                            </FormControl>
+
+                            <Center
+                              justifyContent="space-around"
+                              mt={10}
+                            >
+                              <Button
+                                colorScheme='blue' mr={3} type="submit">
+                                提交
+                              </Button>
+                              <Button
+                                colorScheme='blue' mr={3} onClick={() => {foodFormOnClose(); setHasSearchResult(false)}}>
+                                Close
+                              </Button>
+                            </Center>
+                          </Form>
+                        )}
+                      </Formik>
+                      : <></>}
                   </ModalBody>
                 </ModalContent>
               </Modal>
@@ -666,10 +762,10 @@ export default function UserMain() {
 
                         <Formik
                           initialValues={{
-                            exercise: '',
+                            exercise: "慢跑",
                             duration: 0
                           }}
-                          onSubmit={async (values) => {
+                          onSubmit={async (values,) => {
                             axios.post(`${REACT_APP_API_SERVER}/diet/exercises/${userInfo.id}/${selectedDate?.toISOString()}`, {
                               values
                             },
@@ -706,8 +802,7 @@ export default function UserMain() {
                               <Field
                                 as={Select}
                                 name="exercise"
-                                isRequired={true}
-                                default="慢跑">
+                                isRequired={true}>
                                 <option value="慢跑">慢跑</option>
                                 <option value="快跑">快跑</option>
                                 <option value="足球">足球</option>
@@ -751,7 +846,7 @@ export default function UserMain() {
                                   提交
                                 </Button>
                                 <Button
-                                  colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                                  colorScheme='blue' mr={3} onClick={() => {exerciseFormOnClose(); }}>
                                   Close
                                 </Button>
                               </Center>
@@ -1185,3 +1280,7 @@ export default function UserMain() {
     </>
   );
 }
+function toast(arg0: { position: string; title: string; duration: number; isClosable: boolean; }) {
+  throw new Error("Function not implemented.");
+}
+

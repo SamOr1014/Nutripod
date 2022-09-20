@@ -22,8 +22,8 @@ dietRecordRoutes.get("/exercises/:uid/:date",isUserLoggedIn,dietRecordController
 dietRecordRoutes.get("/monthlyExercises/:uid/:date",isUserLoggedIn,dietRecordController.getMonthlyExercises)
 dietRecordRoutes.post("/exercises/:uid/:date", isUserLoggedIn, dietRecordController.addExercise)
 
-
-
+dietRecordRoutes.get("/search/:food",isUserLoggedIn,dietRecordController.searchFood)
+dietRecordRoutes.post("/foodIntake",isUserLoggedIn,dietRecordController.postFood)
 dietRecordRoutes.get("/dailyDiet/:uid/:date",isUserLoggedIn,dietRecordController.getDailyInTakeByID)
 dietRecordRoutes.get("/monthlyDiet/:uid/:date",isUserLoggedIn,dietRecordController.getMonthlyInTakeByID)
 

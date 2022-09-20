@@ -10,7 +10,7 @@ import {
 } from '../utilities/formatDate'
 
 export class DietRecordController {
-	constructor(private dietRecordService: DietRecordServices) {}
+	constructor(private dietRecordService: DietRecordServices) { }
 
 	//##############Weight BP BG Record Controller#############################
 
@@ -562,10 +562,10 @@ export class DietRecordController {
 
 	addExercise = async (req: Request, res: Response) => {
 		try {
-			let uid = req.params.uid
-			let date = req.params.date
-			let exercise = req.body.values.exercise
-			let duration = req.body.values.duration
+			const uid = req.params.uid
+			const date = req.params.date
+			const exercise = req.body.values.exercise
+			const duration = req.body.values.duration
 			if (
 				!uid ||
 				isNaN(parseInt(uid)) ||
@@ -594,6 +594,61 @@ export class DietRecordController {
 				return
 			}
 		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	searchFood = async (req: Request, res: Response) => {
+
+		try {
+			const food = req.params.food
+
+			if (!food) {
+				res.status(400).json({
+					success:false,message:"Information not provided"
+				})
+				return
+			}
+			const result = await this.dietRecordService.search(food)
+
+			if (result.length === 0 ) {
+				res.status(400).json({success:false, message:"沒有此食物,請更改字眼"})
+				return
+			}
+			res.status(200).json({success:true, list:result})
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	postFood = async (req:Request, res: Response) => {
+
+		try {
+			const{food,dietType,amount,date,userID} = req.body.values
+
+			if (!food || !date ||!amount ||!userID || !dietType) {
+				res.status(400).json({
+					success:false, message:"Information not provided"
+				})
+				return
+			}
+
+			const formattedDate = formatDate(date)
+			const result = await this.dietRecordService.postFood(userID,food,formattedDate,amount,dietType)
+
+			if (result.length === 0) {
+				res.status(400).json({success:false})
+				return
+			}
+
+			res.status(200).json({success:true})
+
+		}catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
 			return
