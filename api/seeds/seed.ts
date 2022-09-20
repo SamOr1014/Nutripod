@@ -109,7 +109,7 @@ export async function seed(knex: Knex) {
 			{ ex_type: '自由搏擊', ex_calories: 726 },
 			{ ex_type: '健身', ex_calories: 217 },
 			{ ex_type: '踩單車', ex_calories: 581 },
-			{ex_type: '獨木舟',ex_calories: 363},
+			{ ex_type: '獨木舟', ex_calories: 363 },
 			{ ex_type: '乒乓球', ex_calories: 294 },
 			{ ex_type: '網球', ex_calories: 508 }
 		])
@@ -297,6 +297,22 @@ export async function seed(knex: Knex) {
 
 	await knex(bookingTableName).insert([
 		{
+			date: '2022-09-16',
+			time: timeSlotID[0].id,
+			user_id: userID[0].id,
+			dietitian_id: dietitianID[0].id,
+			follow_up: false,
+			is_attended: true
+		},
+		{
+			date: '2022-09-17',
+			time: timeSlotID[0].id,
+			user_id: userID[1].id,
+			dietitian_id: dietitianID[0].id,
+			follow_up: true,
+			is_attended: true
+		},
+		{
 			date: '2022-10-01',
 			time: timeSlotID[0].id,
 			user_id: userID[0].id,
@@ -437,26 +453,24 @@ export async function seed(knex: Knex) {
 
 	await knex(dietitianReportTableName).insert([
 		{
-			date: '2022-09-17',
+			booking_id: 1,
 			content: 'stay healthy',
 			height: 172,
 			weight: 70,
-			blood_pressure: 95,
+			sys_blood_pressure: 95,
+			dia_blood_pressure: 60,
 			blood_glucose: 2,
-			follow_up: follow_upID[1].id,
-			user_id: userID[0].id,
-			dietitian_id: dietitianID[0].id
+			follow_up_status: follow_upID[1].id
 		},
 		{
-			date: '2022-09-18',
+			booking_id: 2,
 			content: 'sleep more',
 			height: 200,
 			weight: 100,
-			blood_pressure: 100,
+			sys_blood_pressure: 100,
+			dia_blood_pressure: 70,
 			blood_glucose: 3,
-			follow_up: follow_upID[0].id,
-			user_id: userID[1].id,
-			dietitian_id: dietitianID[2].id
+			follow_up_status: follow_upID[0].id
 		}
 	])
 

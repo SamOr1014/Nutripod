@@ -1,6 +1,6 @@
 import express from 'express'
 import { medicalRecordController } from '../server'
-import { isUserLoggedIn } from "../utilities/guards"
+import { isUserLoggedIn } from '../utilities/guards'
 
 export const medicalRecordRoutes = express.Router()
 
@@ -8,4 +8,10 @@ medicalRecordRoutes.get(
 	'/user/:uid',
 	isUserLoggedIn,
 	medicalRecordController.getUserMedRecByUserID
+)
+
+medicalRecordRoutes.post(
+	'/',
+	isUserLoggedIn,
+	medicalRecordController.postUserMedRecRefCurrentBooking
 )

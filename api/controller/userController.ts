@@ -222,6 +222,18 @@ export class UserController {
 			const password = generateP()
 			const hashedPassword = await hashPassword(password)
 
+			const checkUser = await this.userService.checkIfExist(
+				username,
+				email,
+				phone,
+				hkid
+			)
+
+			if (checkUser.length > 0) {
+				res.status(400).json({ success: false, message: '重複用戶' })
+				return
+			}
+
 			const result = await this.userService.register(
 				firstName,
 				lastName,
@@ -241,10 +253,14 @@ export class UserController {
 			)
 
 			if (result.length === 0) {
-				res.status(400).json({ success: false })
+				res.status(400).json({ success: false, message: '註冊失敗' })
 				return
 			}
-			res.status(200).json({ success: true, password: password })
+			res.status(200).json({
+				success: true,
+				username: username,
+				password: password
+			})
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false, message: e.message })
