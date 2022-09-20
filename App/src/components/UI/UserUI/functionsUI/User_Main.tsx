@@ -38,7 +38,8 @@ import {
   Select,
   Input,
   FormControl,
-  FormErrorMessage
+  FormErrorMessage,
+  Radio, RadioGroup, Stack
 } from "@chakra-ui/react";
 
 import { MdToday } from "react-icons/md";
@@ -80,6 +81,7 @@ export default function UserMain() {
   const { isOpen: snackOpen, onOpen: snackOnOpen, onClose: snackOnClose } = useDisclosure()
   const { isOpen: exerciseOpen, onOpen: exercisesOnOpen, onClose: exerciseOnClose } = useDisclosure()
   const { isOpen: exerciseFormOpen, onOpen: exerciseFormOnOpen, onClose: exerciseFormOnClose } = useDisclosure()
+  const { isOpen: foodFormOpen, onOpen: foodFormOnOpen, onClose: foodFormOnClose } = useDisclosure()
 
   const [calories, setCalories] = useState(0)
   const [twoDaysHasExercise, setTwoDaysHasExercises] = useState(false)
@@ -467,10 +469,101 @@ export default function UserMain() {
         >
           <Flex >
             <Heading flex={1} textAlign={"center"}>攝取統計📊</Heading>
-            <Button gap={1}>
+            <Button gap={1} onClick={foodFormOnOpen}>
               <AddIcon />
             </Button>
           </Flex>
+
+          {foodFormOpen ?
+            <Center>
+              <Modal isOpen={foodFormOpen} onClose={foodFormOnClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader textAlign={"center"}>請在此輸入今日的膳食</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+
+                    <Formik
+                      initialValues={{
+                        food: "",
+                        group: "",
+                        dietType: '',
+                        amount: 0
+                      }}
+                      onSubmit={async (values) => {
+                        console.log(values)
+                      }}
+                    >
+                      {({ values, setFieldValue, handleSubmit, handleChange, errors, touched }) => (
+
+                        <Form onSubmit={handleSubmit}>
+
+                          
+                          <FormLabel mt='2'>類型</FormLabel>
+                            <Field
+                              as={Select}
+                              name='dietType'
+                            >
+                              <option value="1">早餐</option>
+                              <option value="2">午餐</option>
+                              <option value="3">晚餐</option>
+                              <option value="4">小食</option>
+                            </Field>
+
+                            <FormLabel mt='2'>食物種類</FormLabel>
+                            <Field
+                              as={Select}
+                              name='group'
+                            >
+                              <option value="1">早餐</option>
+                              <option value="2">午餐</option>
+                              <option value="3">晚餐</option>
+                              <option value="4">小食</option>
+                            </Field>
+
+                          <FormControl
+                            isInvalid={!!errors.amount || touched.amount}>
+                            <FormLabel mt='2'>分量</FormLabel>
+                            <Field
+                              as={Input}
+                              name='amount'
+                              type='number'
+                              min={1}
+                              placeholder="克"
+                              isRequired={true}
+                              validate={(value: number) => {
+                                let err
+                                if (value < 0) {
+                                  err = '請輸入正確的分量'
+                                }
+                                return err
+                              }} />
+                            <FormErrorMessage>{errors.amount}</FormErrorMessage>
+                          </FormControl>
+
+                          <Center
+                            justifyContent="space-around"
+                            mt={3}>
+                            <Button
+                              colorScheme='blue' mr={3} type="submit">
+                              提交
+                            </Button>
+                            <Button
+                              colorScheme='blue' mr={3} onClick={foodFormOnClose}>
+                              Close
+                            </Button>
+                          </Center>
+
+                        </Form>
+                      )}
+                    </Formik>
+
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            </Center>
+            : <></>
+          }
 
           <Divider my={3} />
           <Center flex={1} justifyContent={"center"}>
@@ -592,9 +685,13 @@ export default function UserMain() {
                                     icon: "success",
                                     title: "成功"
                                   })
+                                  setExerciseList([])
                                   fetchExercisesFromServer()
+                                  fetchMonthlyExercisesFromServer()
                                 }
                               }).catch(() => {
+                                exerciseFormOnClose()
+                                exerciseOnClose()
                                 Swal.fire({
                                   icon: "error",
                                   title: "發生錯誤，請稍後再試"
@@ -602,31 +699,31 @@ export default function UserMain() {
                               })
                           }}
                         >
-                          {({ handleSubmit, errors, touched}) => (
+                          {({ handleSubmit, errors, touched }) => (
                             <Form onSubmit={handleSubmit}>
 
-                                <FormLabel>運動</FormLabel>
-                                <Field
-                                  as={Select}
-                                  name="exercise"
-                                  isRequired={true}
-                                  default="慢跑">
-                                  <option value="慢跑">慢跑</option>
-                                  <option value="快跑">快跑</option>
-                                  <option value="足球">足球</option>
-                                  <option value="籃球">籃球</option>
-                                  <option value='游泳'>游泳</option>
-                                  <option value='行山'>行山</option>
-                                  <option value='自由搏擊'>自由搏擊</option>
-                                  <option value='健身'>健身</option>
-                                  <option value='踩單車'>踩單車</option>
-                                  <option value='獨木舟'>獨木舟</option>
-                                  <option value='乒乓球'>乒乓球</option>
-                                  <option value='網球'>網球</option>
-                                </Field>
+                              <FormLabel>運動</FormLabel>
+                              <Field
+                                as={Select}
+                                name="exercise"
+                                isRequired={true}
+                                default="慢跑">
+                                <option value="慢跑">慢跑</option>
+                                <option value="快跑">快跑</option>
+                                <option value="足球">足球</option>
+                                <option value="籃球">籃球</option>
+                                <option value='游泳'>游泳</option>
+                                <option value='行山'>行山</option>
+                                <option value='自由搏擊'>自由搏擊</option>
+                                <option value='健身'>健身</option>
+                                <option value='踩單車'>踩單車</option>
+                                <option value='獨木舟'>獨木舟</option>
+                                <option value='乒乓球'>乒乓球</option>
+                                <option value='網球'>網球</option>
+                              </Field>
 
-                               
-                                <FormControl
+
+                              <FormControl
                                 isInvalid={!!errors.duration || touched.duration}>
                                 <FormLabel mt='2'>分鐘</FormLabel>
                                 <Field
@@ -641,23 +738,23 @@ export default function UserMain() {
                                       error = "請輸入運動時數"
                                     }
                                     return error
-                                  }}/>
-                                  <FormErrorMessage>{errors.duration}</FormErrorMessage>
-                                  </FormControl>
-                                
+                                  }} />
+                                <FormErrorMessage>{errors.duration}</FormErrorMessage>
+                              </FormControl>
 
-                                <Center
-                                  justifyContent="space-around"
-                                  mt={3}>
-                                  <Button
-                                    colorScheme='blue' mr={3} type="submit">
-                                    提交
-                                  </Button>
-                                  <Button
-                                    colorScheme='blue' mr={3} onClick={exerciseOnClose}>
-                                    Close
-                                  </Button>
-                                </Center>
+
+                              <Center
+                                justifyContent="space-around"
+                                mt={3}>
+                                <Button
+                                  colorScheme='blue' mr={3} type="submit">
+                                  提交
+                                </Button>
+                                <Button
+                                  colorScheme='blue' mr={3} onClick={exerciseOnClose}>
+                                  Close
+                                </Button>
+                              </Center>
                             </Form>
                           )}
                         </Formik>
@@ -671,7 +768,7 @@ export default function UserMain() {
                 <ModalHeader mt='6' textAlign='center'>運動列表</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Accordion>
+                  <Accordion allowMultiple>
 
                     {hasExercise ?
                       exerciseList.map((exercise) =>
@@ -686,7 +783,7 @@ export default function UserMain() {
                             </AccordionButton>
                           </h2>
                           <AccordionPanel pb={5}>
-                            分鐘:{exercise.duration} <br></br>
+                            {exercise.duration}分鐘 <br></br>
                             每60分鐘所消耗的卡路里: {exercise.ex_calories}kcal <br></br>
                             總共消耗的卡路里: {exercise.burn_calories}kcal
                           </AccordionPanel>
@@ -802,7 +899,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>早餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion>
+                <Accordion allowMultiple>
 
                   {hasBreakfast ?
                     breakfastList.map((food) =>
@@ -879,7 +976,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>午餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion>
+                <Accordion allowMultiple>
                   {hasLunch ?
                     lunchList.map((food) =>
                     (
@@ -955,7 +1052,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>晚餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion>
+                <Accordion allowMultiple>
                   {hasDinner ?
                     dinnerList.map((food) => (
                       <AccordionItem key={`dinner_${food.id}`}>
@@ -1031,7 +1128,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>小食</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion>
+                <Accordion allowMultiple>
                   {hasSnack ?
                     snackList.map((food) =>
                     (

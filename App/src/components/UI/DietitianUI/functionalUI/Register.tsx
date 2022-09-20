@@ -48,34 +48,33 @@ export default function Register() {
             chronic_condition: "",
             education: "",
           }}
-          onSubmit={(values) => {
-            axios
-              .post(
-                `${REACT_APP_API_SERVER}/user/register`,
-                {
-                  values,
-                },
-                {
-                  headers: {
-                    Authorization: `Bearer ${locateToken()}`,
-                  },
+          onSubmit={(values, {resetForm}) => {
+            axios.post(`${REACT_APP_API_SERVER}/user/register`,
+              {
+                values
+              },
+              {
+                headers: {
+                  'Authorization': `Bearer ${locateToken()}`
                 }
-              )
+              })
               .then(({ data }) => {
                 if (data.success) {
                   Swal.fire({
                     icon: "success",
-                    title: "成功",
-                    titleText: `密碼: ${data.password}`,
-                  });
+                    title: "註冊成功",
+                    titleText:
+                   `用戶名: ${data.username}
+                    密碼: ${data.password}`
+                  })
+                  resetForm()
                 }
-              })
-              .catch(() => {
+              }).catch((error) => {
                 Swal.fire({
                   icon: "error",
-                  title: "發生錯誤，請稍後再試",
-                });
-              });
+                  title: `${error.response.data.message}`
+                })
+              })
           }}
         >
           {({ handleSubmit, errors, touched }) => (

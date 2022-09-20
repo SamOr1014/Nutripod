@@ -116,7 +116,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.date('date').notNullable()
 		table.integer('exercise').unsigned().notNullable()
 		table.foreign('exercise').references('exercises_types.id')
-		table.decimal('duration', 4, 2).notNullable()
+		table.integer('duration').notNullable()
 		table.timestamps(false, true)
 		table.boolean('is_deleted').defaultTo(false)
 		table.integer('user_id').unsigned().notNullable()
