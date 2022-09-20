@@ -41,6 +41,17 @@ export class UserServices {
 		return result
 	}
 
+	async checkIfExist(username:string, email:string,phone:string,hkid:string) {
+
+		const result = await this.knex('users').select('*')
+		.where('username' ,username)
+		.orWhere('email' , email)
+		.orWhere('phone',phone)
+		.orWhere('hkid',hkid)
+
+		return result
+
+	}
 
 	async checkToken(id: number, username: string) {
 		const userResult = await this.knex('users')

@@ -4,7 +4,7 @@ import { UserServices } from '../services/userServices'
 import jwtSimple from 'jwt-simple'
 import jwt from '../jwt'
 import { hashPassword, checkPassword } from '../utilities/hash'
-import {generateP} from "../utilities/generater"
+import { generateP } from "../utilities/generater"
 
 export class UserController {
 	constructor(private userService: UserServices) { }
@@ -182,8 +182,8 @@ export class UserController {
 
 	register = async (req: Request, res: Response) => {
 		try {
-			const { firstName, lastName, username, email, birthday, height, weight, 
-			phone, address, hkid, gender, profession, chronic_condition, education } = req.body.values
+			const { firstName, lastName, username, email, birthday, height, weight,
+				phone, address, hkid, gender, profession, chronic_condition, education } = req.body.values
 
 			if (!firstName || !lastName || !username || !email || !birthday || !height || !weight || !phone
 				|| !address || !hkid || !gender || !profession || !chronic_condition || !education) {
@@ -193,6 +193,13 @@ export class UserController {
 
 			const password = generateP()
 			const hashedPassword = await hashPassword(password)
+
+			const checkUser = await this.userService.checkIfExist(username,email,phone,hkid)
+
+			if (checkUser.length > 0) {
+				res.status(400).json({success:false, message:"重複用戶"})
+				return
+			}
 
 
 			const result = await this.userService.register(firstName,
@@ -210,12 +217,12 @@ export class UserController {
 				profession,
 				chronic_condition,
 				education)
-			
+
 			if (result.length === 0) {
-				res.status(400).json({success:false})
+				res.status(400).json({ success: false, message:"註冊失敗"})
 				return
 			}
-			res.status(200).json({success:true, password:password})
+			res.status(200).json({ success: true, username: username, password: password })
 
 		} catch (e) {
 			logger.error(e.message)
