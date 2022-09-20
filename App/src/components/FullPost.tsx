@@ -6,6 +6,8 @@ import {
   Stack,
   useMediaQuery,
   Text,
+  Divider,
+  Box,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -50,7 +52,7 @@ export default function FullPost() {
                 key={`post_id_${post.id}`}
                 overflow={"auto"}
               >
-                <Stack gap={6}>
+                <Stack gap={4}>
                   <Heading fontStyle={"3xl"}>{post.title}</Heading>
                   <HStack fontSize={"lg"}>
                     <Avatar
@@ -60,7 +62,10 @@ export default function FullPost() {
                     <Text>{post.first_name + " " + post.last_name}</Text>
                     <Text>- {new Date(post.date).toLocaleDateString()}</Text>
                   </HStack>
-                  <Text fontSize={"2xl"}>{post.content}</Text>
+                  <Divider />
+                  <Box overflow={"auto"} w={"100%"}>
+                    <Text fontSize={"2xl"}>{post.content}</Text>
+                  </Box>
                 </Stack>
               </Flex>
             );

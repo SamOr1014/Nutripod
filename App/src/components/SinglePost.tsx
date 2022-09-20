@@ -22,7 +22,18 @@ const { REACT_APP_API_SERVER } = process.env;
 export default function SinglePosts(props: PostTemplate) {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const dietitianInfo = useSelector((state: IRootState) => state.dietitian[0]);
-  const urlRoute = dietitianInfo.id !== null ? "/dietitian" : "/dashboard";
+
+  const isLoggedInByUser = useSelector(
+    (state: IRootState) => state.user.user[0].is_user
+  );
+  const isDietitian = useSelector(
+    (state: IRootState) => state.user.dietitian[0].is_user
+  );
+
+  const urlRoute =
+    isLoggedInByUser === null && isDietitian === false
+      ? "/dietitian"
+      : "/dashboard";
 
   //API function
   async function deleteOnePost(pid: number) {
@@ -55,7 +66,7 @@ export default function SinglePosts(props: PostTemplate) {
         >
           <Text flex={1}>{props.author}</Text>
 
-          {dietitianInfo.id !== null ? (
+          {isLoggedInByUser === null && isDietitian === false ? (
             <CloseButton
               size={"sm"}
               onClick={() => {

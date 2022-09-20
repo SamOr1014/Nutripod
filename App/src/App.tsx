@@ -39,7 +39,6 @@ function App() {
           <Route path="reports" element={<UserMed></UserMed>} />
           <Route path="posts" element={<UserPost />} />
           <Route path="posts/:id" element={<FullPost />} />
-          <Route path="posts/:id" element={"12312"} />
           <Route path="account" element={<UserAccount />} />
         </Route>
       </Route>
