@@ -153,7 +153,6 @@ export class DietRecordController {
 			let date = new Date(dateString).toISOString()
 			let formattedDate = formatDate(date)
 			let formattedTime = new Date(dateString).toLocaleTimeString()
-			console.log(bg, formattedDate, formattedTime, uid)
 			const result = await this.dietRecordService.postBG(
 				bg,
 				formattedDate,
@@ -366,7 +365,6 @@ export class DietRecordController {
 				let yesterdayIntakeCalories = 0
 				let difference = 0
 				for (let intake of todayIntake) {
-					console.log(intake)
 					todayIntakeCalories += intake.food_calories * intake.food_amount
 				}
 				if (yesterdayIntake.length > 0) {
