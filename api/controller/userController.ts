@@ -3,10 +3,11 @@ import { logger } from '../configs/winston'
 import { UserServices } from '../services/userServices'
 import jwtSimple from 'jwt-simple'
 import jwt from '../jwt'
-import { checkPassword } from '../utilities/hash'
+import { hashPassword, checkPassword } from '../utilities/hash'
+import {generateP} from "../utilities/generater"
 
 export class UserController {
-	constructor(private userService: UserServices) {}
+	constructor(private userService: UserServices) { }
 
 	checkUserByToken = async (req: Request, res: Response) => {
 		try {
@@ -197,4 +198,48 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+
+	register = async (req: Request, res: Response) => {
+		try {
+			const { firstName, lastName, username, email, birthday, height, weight, 
+			phone, address, hkid, gender, profession, chronic_condition, education } = req.body.values
+
+			if (!firstName || !lastName || !username || !email || !birthday || !height || !weight || !phone
+				|| !address || !hkid || !gender || !profession || !chronic_condition || !education) {
+				res.status(400).json({ success: false })
+				return
+			}
+
+			const password = generateP()
+			const hashedPassword = await hashPassword(password)
+
+
+			const result = await this.userService.register(firstName,
+				lastName,
+				username,
+				hashedPassword,
+				email,
+				birthday,
+				height,
+				weight,
+				phone,
+				address,
+				hkid,
+				gender,
+				profession,
+				chronic_condition,
+				education)
+			
+			if (result.length === 0) {
+				res.status(400).json({success:false})
+				return
+			}
+			res.status(200).json({success:true, password:password})
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
 }

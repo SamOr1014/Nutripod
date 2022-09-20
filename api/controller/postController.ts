@@ -1,17 +1,51 @@
 import { Request, Response } from 'express'
-import { PostServices } from "../services/postServices"
+import { logger } from '../configs/winston'
+import { PostServices } from '../services/postServices'
 
 export class PostController {
-    constructor(private postService:PostServices) {}
+	constructor(private postService: PostServices) {}
 
-    get = async (req: Request, res: Response) => {
-        const results = await this.postService.get()
-        if(results.length === 0 ) {
-            res.json({success:false,message:"Error in post"})
-            return
-        }
-        const result = res.json(results)
-        res.send(result)
-    }
+	getAllPost = async (req: Request, res: Response) => {
+		try {
+			const posts = await this.postService.getAllPost()
+			res.json({ success: true, posts: posts })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
+			return
+		}
+	}
 
+	getPostByID = async (req: Request, res: Response) => {
+		try {
+			let pid = req.params.pid
+			const post = await this.postService.getPostByID(pid)
+			res.json({ success: true, post: post })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
+			return
+		}
+	}
+
+	deletePostByID = async (req: Request, res: Response) => {
+		try {
+			let pid = req.params.pid
+			await this.postService.deletePostByID(pid)
+			res.json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
+			return
+		}
+	}
 }

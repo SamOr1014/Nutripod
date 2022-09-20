@@ -1,24 +1,21 @@
 import {
   Flex,
-  Box,
   FormControl,
   FormLabel,
   Input,
-  InputGroup,
   HStack,
-  InputRightElement,
   Stack,
   Button,
   Heading,
-  Text,
   useColorModeValue,
-  Link,
   Select,
   FormErrorMessage,
 } from "@chakra-ui/react";
-
+import axios from "axios";
+import locateToken from "../../../../utility/Token";
 import { Field, Form, Formik } from "formik";
-
+import Swal from "sweetalert2";
+const { REACT_APP_API_SERVER } = process.env;
 export default function Register() {
   return (
     <Flex
@@ -53,7 +50,33 @@ export default function Register() {
             education: "",
           }}
           onSubmit={(values) => {
-            console.log(values);
+            axios
+              .post(
+                `${REACT_APP_API_SERVER}/user/register`,
+                {
+                  values,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${locateToken()}`,
+                  },
+                }
+              )
+              .then(({ data }) => {
+                if (data.success) {
+                  Swal.fire({
+                    icon: "success",
+                    title: "成功",
+                    titleText: `密碼: ${data.password}`,
+                  });
+                }
+              })
+              .catch(() => {
+                Swal.fire({
+                  icon: "error",
+                  title: "發生錯誤，請稍後再試",
+                });
+              });
           }}
         >
           {({ handleSubmit, errors, touched }) => (
@@ -367,7 +390,7 @@ export default function Register() {
                       bg: "blue.500",
                     }}
                   >
-                    Sign up
+                    登記
                   </Button>
                 </Stack>
               </Form>

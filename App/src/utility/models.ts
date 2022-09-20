@@ -153,3 +153,31 @@ export interface exercise {
   ex_calories: number;
   burn_calories: number;
 }
+
+export interface Posts {
+  id: number;
+  content: string;
+  title: string;
+  date: string;
+  author_id: string;
+  first_name: string;
+  last_name: string;
+}
+
+export interface PostTemplate {
+  id: number;
+  title: string;
+  author: string | number;
+  time: string;
+  content: string;
+  refresh: () => void;
+}
+
+export interface FullSinglePost {
+  id: number;
+  content: string;
+  title: string;
+  date: string;
+  first_name: string;
+  last_name: string;
+}

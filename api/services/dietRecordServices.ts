@@ -109,7 +109,8 @@ export class DietRecordServices {
 
 	async getExerciseByID(uid: string | number, date: string) {
 		const result = await this.knex('users_exercises')
-			.select('*')
+			.select('users_exercises.id','users_exercises.duration',
+			'exercises_types.ex_type','exercises_types.ex_calories')
 			.where('user_id', uid)
 			.andWhere('date', date)
 			.andWhere('is_deleted', false)
@@ -123,22 +124,27 @@ export class DietRecordServices {
 
 	async getMonthlyExercisesByID(uid:string | number, startDate:string, endDate:string) {
 		const result = await this.knex('users_exercises')
-		.select('*')
+		.select('users_exercises.id','users_exercises.duration',
+		'exercises_types.ex_type','exercises_types.ex_calories')
 		.where('user_id', uid)
 		.andWhere('date' , ">=" ,startDate)
 		.andWhere('date', "<=", endDate)
 		.andWhere('is_deleted', false)
 		.innerJoin(
 			'exercises_types',
+			'users_exercises.exercise',
 			'exercises_types.id',
-			'users_exercises.exercise'
+			
 		)
 		return result
 	}
 
 	async getFoodIntakeByID(uid:string | number, date:string) {
 		const result = await this.knex('users_diets')
-		.select('*')
+		.select('users_diets.id','users_diets.food_amount'
+		,'diets_types.d_type','food.food_name','food.food_calories',
+		'food.carbohydrates','food.sugars','food.fat','food.protein',
+		'food.fiber','food.sodium','food_groups.food_group')
 		.where('user_id', uid)
 		.andWhere('date', date)
 		.innerJoin(
@@ -160,7 +166,10 @@ export class DietRecordServices {
 
 	async getFoodMonthlyIntakeByID(uid:string | number, startDate:string, endDate:string) {
 		const result = await this.knex('users_diets')
-		.select('*')
+		.select('users_diets.id','users_diets.food_amount'
+		,'diets_types.d_type','food.food_name','food.food_calories',
+		'food.carbohydrates','food.sugars','food.fat','food.protein',
+		'food.fiber','food.sodium','food_groups.food_group')
 		.where('user_id', uid)
 		.andWhere('date' , ">=" ,startDate)
 		.andWhere('date', "<=", endDate)

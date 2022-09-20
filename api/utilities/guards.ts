@@ -37,7 +37,33 @@ export async function isUserLoggedIn(
         }
         const payload = jwtSimple.decode(token, jwt.jwtSecret as string)
 
-        const user = await userServices.checkToken(payload.id, payload.username)
+        const user = await userServices.checkUserToken(payload.id, payload.username)
+        if (user) {
+            return next()
+        }
+
+    } catch (e) {
+        logger.error(e.message)
+        res.status(401).json({ msg: "Permission Denied" })
+        return
+    }
+}
+
+export async function isDietitianLoggedIn(
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+) {
+    try {
+        const token = permit.check(req)
+
+        if (token === "null") {
+            res.status(401).json({ msg: "Permission Denied" })
+            return
+        }
+        const payload = jwtSimple.decode(token, jwt.jwtSecret as string)
+
+        const user = await userServices.checkDietitianToken(payload.id, payload.username)
         if (user) {
             return next()
         }
