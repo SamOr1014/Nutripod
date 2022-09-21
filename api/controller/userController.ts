@@ -266,4 +266,26 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+
+	changeDietitianEmail = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const email = req.body.email
+
+			const result = await this.userService.changeDietitianEmail(
+				uid,
+				email
+			)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
 }

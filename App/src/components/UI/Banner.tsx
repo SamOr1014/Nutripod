@@ -42,10 +42,6 @@ export default function Banner() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
-  // If the role is dietitian render a different route for account
-  const accountDir = "/dashboard/account";
-  //   state.role === "dietitian" ? "/dietitian/account" : "/dashboard/account";
-
   const logout = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
@@ -143,7 +139,14 @@ export default function Banner() {
                 onChange={() => toggleColorMode()}
               />
             </MenuItem>
-            <Link as={ReactLink} to={accountDir}>
+            <Link
+              as={ReactLink}
+              to={
+                dietitian[0].id !== null
+                  ? "/dietitian/account"
+                  : "/dashboard/account"
+              }
+            >
               <MenuItem
                 fontWeight="bold"
                 fontSize={isLargerThan1700 ? "xl" : "md"}

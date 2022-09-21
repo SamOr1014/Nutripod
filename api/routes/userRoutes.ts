@@ -11,6 +11,7 @@ userRoutes.put('/info/gender', userController.changeGender)
 userRoutes.put('/info/phone', userController.changePhone)
 userRoutes.put('/info/address', userController.changeAddress)
 userRoutes.put('/info/email', userController.changeEmail)
+userRoutes.put('/info/dietitianEmail', userController.changeDietitianEmail)
 
 // userRoutes.put("/", userController.get)
 // userRoutes.delete("/", userController.get)

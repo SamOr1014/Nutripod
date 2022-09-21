@@ -1,13 +1,13 @@
 import { Knex } from 'knex'
 
 export class UserServices {
-	constructor(private knex: Knex) { }
+	constructor(private knex: Knex) {}
 
 	async register(
 		firstName: string,
 		lastName: string,
 		username: string,
-		password: string ,
+		password: string,
 		email: string,
 		birthday: Date,
 		height: number,
@@ -18,39 +18,45 @@ export class UserServices {
 		gender: number,
 		profession: number,
 		chronic_condition: number,
-		education: number) {
-
-		const result = await this.knex('users').insert({
-			username: username,
-			first_name: firstName,
-			last_name: lastName,
-			email: email,
-			password:password,
-			birthday: birthday,
-			height: height,
-			weight: weight,
-			phone: phone,
-			address: address,
-			hkid: hkid,
-			gender: gender,
-			profession: profession,
-			chronic_condition: chronic_condition,
-			education: education
-		}).returning("id")
+		education: number
+	) {
+		const result = await this.knex('users')
+			.insert({
+				username: username,
+				first_name: firstName,
+				last_name: lastName,
+				email: email,
+				password: password,
+				birthday: birthday,
+				height: height,
+				weight: weight,
+				phone: phone,
+				address: address,
+				hkid: hkid,
+				gender: gender,
+				profession: profession,
+				chronic_condition: chronic_condition,
+				education: education
+			})
+			.returning('id')
 
 		return result
 	}
 
-	async checkIfExist(username:string, email:string,phone:string,hkid:string) {
-
-		const result = await this.knex('users').select('*')
-		.where('username' ,username)
-		.orWhere('email' , email)
-		.orWhere('phone',phone)
-		.orWhere('hkid',hkid)
+	async checkIfExist(
+		username: string,
+		email: string,
+		phone: string,
+		hkid: string
+	) {
+		const result = await this.knex('users')
+			.select('*')
+			.where('username', username)
+			.orWhere('email', email)
+			.orWhere('phone', phone)
+			.orWhere('hkid', hkid)
 
 		return result
-
 	}
 
 	async checkToken(id: number, username: string) {
@@ -84,7 +90,6 @@ export class UserServices {
 	}
 
 	async checkDietitianToken(id: number, username: string) {
-
 		const dietitianResult = await this.knex('dietitian')
 			.select('*')
 			.where('id', id)
@@ -92,7 +97,6 @@ export class UserServices {
 			.andWhere('is_deleted', false)
 
 		return dietitianResult
-
 	}
 
 	async login(username: string) {
@@ -174,6 +178,15 @@ export class UserServices {
 
 	async changeEmail(id: string | number, email: string) {
 		const result = await this.knex('users')
+			.update('email', email)
+			.where('id', id)
+			.returning('id')
+
+		return result
+	}
+
+	async changeDietitianEmail(id: string | number, email: string) {
+		const result = await this.knex('dietitian')
 			.update('email', email)
 			.where('id', id)
 			.returning('id')
