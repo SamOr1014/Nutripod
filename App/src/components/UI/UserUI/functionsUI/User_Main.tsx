@@ -124,7 +124,24 @@ export default function UserMain() {
     new Date()
   );
 
+  async function clearFoodList() {
+    setBreakfastList([])
+    setHasBreakfast(false)
+    setLunchList([])
+    setHasLunch(false)
+    setDinnerList([])
+    setHasDinner(false)
+    setSnackList([])
+    setHasSnack(false)
+  }
+
+  async function clearExerciseList() {
+    setExerciseList([])
+    setHasExercise(false)
+  }
+
   async function fetchExercisesFromServer() {
+    await clearExerciseList()
     axios
       .get(
         `${REACT_APP_API_SERVER}/diet/exercises/${userInfo.id}/${selectedDate?.toISOString()}`
@@ -180,6 +197,7 @@ export default function UserMain() {
   }
 
   async function fetchMonthlyExercisesFromServer() {
+    await clearExerciseList()
     axios.get(`${REACT_APP_API_SERVER}/diet/monthlyExercises/${userInfo.id}/${selectedDate?.toISOString()}`
       , {
         headers: {
@@ -221,6 +239,7 @@ export default function UserMain() {
   }
 
   async function fetchIntakeFromServer() {
+    await clearFoodList()
     axios.get(`${REACT_APP_API_SERVER}/diet/dailyDiet/${userInfo.id}/${selectedDate?.toISOString()}`
       , {
         headers: {
@@ -337,6 +356,7 @@ export default function UserMain() {
   }
 
   async function fetchMonthlyIntakeFromServer() {
+    await clearFoodList()
     axios.get(`${REACT_APP_API_SERVER}/diet/monthlyDiet/${userInfo.id}/${selectedDate?.toISOString()}`
       , {
         headers: {
@@ -376,16 +396,6 @@ export default function UserMain() {
   }
 
   useEffect(() => {
-    setExerciseList([])
-    setHasExercise(false)
-    setBreakfastList([])
-    setHasBreakfast(false)
-    setLunchList([])
-    setHasLunch(false)
-    setDinnerList([])
-    setHasDinner(false)
-    setSnackList([])
-    setHasSnack(false)
     fetchExercisesFromServer()
     fetchMonthlyExercisesFromServer()
     fetchIntakeFromServer()
