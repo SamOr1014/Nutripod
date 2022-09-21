@@ -1,5 +1,7 @@
 import { Knex } from 'knex'
 import { hashPassword } from '../utilities/hash'
+const path = require('path')
+const seedFile = require('knex-seed-file')
 
 const userTableName = 'users'
 const dietitianTableName = 'dietitian'
@@ -295,7 +297,7 @@ export async function seed(knex: Knex) {
 		])
 		.returning('id')
 
-	await knex(bookingTableName).insert([
+	const bookIngID = await knex(bookingTableName).insert([
 		{
 			date: '2022-09-16',
 			time: timeSlotID[0].id,
@@ -342,7 +344,7 @@ export async function seed(knex: Knex) {
 			user_id: userID[0].id,
 			dietitian_id: dietitianID[3].id
 		}
-	])
+	]).returning('id')
 
 	await knex(userWeightTableName).insert([
 		{
@@ -453,7 +455,7 @@ export async function seed(knex: Knex) {
 
 	await knex(dietitianReportTableName).insert([
 		{
-			booking_id: 1,
+			booking_id: bookIngID[0].id,
 			content: 'stay healthy',
 			height: 172,
 			weight: 70,
@@ -463,7 +465,7 @@ export async function seed(knex: Knex) {
 			follow_up_status: follow_upID[1].id
 		},
 		{
-			booking_id: 2,
+			booking_id: bookIngID[1].id,
 			content: 'sleep more',
 			height: 200,
 			weight: 100,
@@ -707,7 +709,7 @@ export async function seed(knex: Knex) {
 		])
 		.returning('id')
 
-	const food_groupID = await knex(foodGroupsTableName)
+	await knex(foodGroupsTableName)
 		.insert([
 			{ food_group: '穀類' },
 			{ food_group: '豆類' },
@@ -728,226 +730,243 @@ export async function seed(knex: Knex) {
 		])
 		.returning('id')
 
-	const food_ID = await knex(foodTableName)
-		.insert([
-			{
-				food_name: 'A bowl of rice',
-				group_id: food_groupID[0].id,
-				food_calories: 280,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'bean',
-				group_id: food_groupID[1].id,
-				food_calories: 220,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'veg',
-				group_id: food_groupID[2].id,
-				food_calories: 220,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'fruit',
-				group_id: food_groupID[3].id,
-				food_calories: 230,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'nut',
-				group_id: food_groupID[4].id,
-				food_calories: 20,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'pork',
-				group_id: food_groupID[5].id,
-				food_calories: 190,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'chicken',
-				group_id: food_groupID[6].id,
-				food_calories: 120,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'egg',
-				group_id: food_groupID[7].id,
-				food_calories: 210,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'milk',
-				group_id: food_groupID[8].id,
-				food_calories: 57,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'ice-cream',
-				group_id: food_groupID[9].id,
-				food_calories: 150,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'fish',
-				group_id: food_groupID[10].id,
-				food_calories: 200,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'tea',
-				group_id: food_groupID[11].id,
-				food_calories: 190,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'Beer',
-				group_id: food_groupID[12].id,
-				food_calories: 126,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'soup',
-				group_id: food_groupID[13].id,
-				food_calories: 126,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'candy',
-				group_id: food_groupID[14].id,
-				food_calories: 6221,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			},
-			{
-				food_name: 'hotdog',
-				group_id: food_groupID[15].id,
-				food_calories: 212,
-				carbohydrates: 30,
-				sugars: 5,
-				fat: 5,
-				protein: 10,
-				fiber: 5,
-				sodium: 50
-			}
-		])
-		.returning('id')
+	// const food_ID = await knex(foodTableName)
+	// 	.insert([
+	// 		{
+	// 			food_name: 'A bowl of rice',
+	// 			group_id: food_groupID[0].id,
+	// 			food_calories: 280,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'bean',
+	// 			group_id: food_groupID[1].id,
+	// 			food_calories: 220,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'veg',
+	// 			group_id: food_groupID[2].id,
+	// 			food_calories: 220,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'fruit',
+	// 			group_id: food_groupID[3].id,
+	// 			food_calories: 230,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'nut',
+	// 			group_id: food_groupID[4].id,
+	// 			food_calories: 20,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'pork',
+	// 			group_id: food_groupID[5].id,
+	// 			food_calories: 190,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'chicken',
+	// 			group_id: food_groupID[6].id,
+	// 			food_calories: 120,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'egg',
+	// 			group_id: food_groupID[7].id,
+	// 			food_calories: 210,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'milk',
+	// 			group_id: food_groupID[8].id,
+	// 			food_calories: 57,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'ice-cream',
+	// 			group_id: food_groupID[9].id,
+	// 			food_calories: 150,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'fish',
+	// 			group_id: food_groupID[10].id,
+	// 			food_calories: 200,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'tea',
+	// 			group_id: food_groupID[11].id,
+	// 			food_calories: 190,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'Beer',
+	// 			group_id: food_groupID[12].id,
+	// 			food_calories: 126,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'soup',
+	// 			group_id: food_groupID[13].id,
+	// 			food_calories: 126,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'candy',
+	// 			group_id: food_groupID[14].id,
+	// 			food_calories: 6221,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		},
+	// 		{
+	// 			food_name: 'hotdog',
+	// 			group_id: food_groupID[15].id,
+	// 			food_calories: 212,
+	// 			carbohydrates: 30,
+	// 			sugars: 5,
+	// 			fat: 5,
+	// 			protein: 10,
+	// 			fiber: 5,
+	// 			sodium: 50
+	// 		}
+	// 	])
+	// 	.returning('id')
+
+	await seedFile(knex, path.resolve('./seeds/foodcsv.csv'), 'food',
+		{
+			columnSeparator: ';',
+			ignoreFirstLine: true,
+			mapTo:
+				['food_name',
+					'group_id',
+					'food_calories',
+					'carbohydrates',
+					'sugars',
+					'fat',
+					'protein',
+					'fiber',
+					'sodium'
+				]
+		})
 
 	await knex(usersDietTableName).insert([
 		{
 			diet_type: dietTypeID[0].id,
-			food: food_ID[0].id,
+			food: 1,
 			food_amount: 100,
 			date: '2022-09-18',
 			user_id: userID[0].id
 		},
 		{
 			diet_type: dietTypeID[1].id,
-			food: food_ID[1].id,
+			food: 2,
 			food_amount: 100,
 			date: '2022-09-20',
 			user_id: userID[0].id
 		},
 		{
 			diet_type: dietTypeID[2].id,
-			food: food_ID[2].id,
+			food: 3,
 			food_amount: 200,
 			date: '2022-09-20',
 			user_id: userID[0].id
 		},
 		{
 			diet_type: dietTypeID[3].id,
-			food: food_ID[3].id,
+			food: 4,
 			food_amount: 500,
 			date: '2022-09-21',
 			user_id: userID[0].id
 		},
 		{
 			diet_type: dietTypeID[0].id,
-			food: food_ID[4].id,
+			food: 5,
 			food_amount: 500,
 			date: '2022-09-22',
 			user_id: userID[0].id
 		},
 		{
 			diet_type: dietTypeID[1].id,
-			food: food_ID[5].id,
+			food: 6,
 			food_amount: 200,
 			date: '2022-09-25',
 			user_id: userID[0].id
