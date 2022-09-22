@@ -203,12 +203,10 @@ export class UserController {
 				!firstName ||
 				!lastName ||
 				!username ||
-				!email ||
 				!birthday ||
 				!height ||
 				!weight ||
 				!phone ||
-				!address ||
 				!hkid ||
 				!gender ||
 				!profession ||
@@ -217,6 +215,14 @@ export class UserController {
 			) {
 				res.status(400).json({ success: false })
 				return
+			}
+			let inputEmail = email
+			let inputAddress = address
+			if (!email) {
+				inputEmail = ''
+			}
+			if (!address) {
+				inputAddress = ''
 			}
 
 			const password = generateP()
@@ -239,12 +245,12 @@ export class UserController {
 				lastName,
 				username,
 				hashedPassword,
-				email,
+				inputEmail,
 				birthday,
 				height,
 				weight,
 				phone,
-				address,
+				inputAddress,
 				hkid,
 				gender,
 				profession,

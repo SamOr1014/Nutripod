@@ -607,17 +607,17 @@ export class DietRecordController {
 
 			if (!food) {
 				res.status(400).json({
-					success:false,message:"Information not provided"
+					success: false, message: "Information not provided"
 				})
 				return
 			}
 			const result = await this.dietRecordService.search(food)
 
-			if (result.length === 0 ) {
-				res.status(400).json({success:false, message:"沒有此食物,請更改字眼"})
+			if (result.length === 0) {
+				res.status(400).json({ success: false, message: "沒有此食物,請更改字眼" })
 				return
 			}
-			res.status(200).json({success:true, list:result})
+			res.status(200).json({ success: true, list: result })
 
 		} catch (e) {
 			logger.error(e.message)
@@ -626,29 +626,90 @@ export class DietRecordController {
 		}
 	}
 
-	postFood = async (req:Request, res: Response) => {
+	postFood = async (req: Request, res: Response) => {
 
 		try {
-			const{food,dietType,amount,date,userID} = req.body.values
+			const { food, dietType, amount, date, userID } = req.body.values
 
-			if (!food || !date ||!amount ||!userID || !dietType) {
+			if (!food || !date || !amount || !userID || !dietType) {
 				res.status(400).json({
-					success:false, message:"Information not provided"
+					success: false, message: "Information not provided"
 				})
 				return
 			}
 
 			const formattedDate = formatDate(date)
-			const result = await this.dietRecordService.postFood(userID,food,formattedDate,amount,dietType)
+			const result = await this.dietRecordService.postFood(userID, food, formattedDate, amount, dietType)
 
 			if (result.length === 0) {
-				res.status(400).json({success:false})
+				res.status(400).json({ success: false })
 				return
 			}
 
-			res.status(200).json({success:true})
+			res.status(200).json({ success: true })
 
-		}catch (e) {
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	getExercisesRecord = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: '日期或身份證沒有提供'
+				})
+				return
+			}
+
+			let formattedDate = formatDate(date)
+			const result = await this.dietRecordService.getExerciseByID(uid, formattedDate)
+
+			if (result.length === 0) {
+				res.json({ success: false, message: "沒有記錄" })
+				return
+			}
+
+			res.status(200).json({ success: true, list: result })
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false })
+			return
+		}
+	}
+
+	getFoodIntakeRecord = async (req: Request, res: Response) => {
+
+		try {
+			let uid = req.params.uid
+			let date = req.params.date
+
+			if (!uid || isNaN(parseInt(uid)) || !date) {
+				res.status(400).json({
+					success: false,
+					message: '日期或身份證沒有提供'
+				})
+				return
+			}
+
+			let formattedDate = formatDate(date)
+			const result = await this.dietRecordService.getFoodIntakeByID(uid, formattedDate)
+
+			if (result.length === 0) {
+				res.json({ success: false, message: "沒有記錄" })
+				return
+			}
+
+			res.status(200).json({ success: true, list: result })
+		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
 			return

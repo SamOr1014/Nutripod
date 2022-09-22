@@ -42,10 +42,13 @@ export default function Banner() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
+  const accountDir =
+    dietitian[0].id !== null ? "/dietitian/account" : "/dashboard/account";
+
   const logout = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
-    window.location.href = "http://localhost:3000";
+    window.location.href = "https://nutripod.xyz";
   };
 
   function MobileNav() {

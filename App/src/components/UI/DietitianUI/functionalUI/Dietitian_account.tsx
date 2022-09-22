@@ -44,8 +44,6 @@ export default function DietitianAccount() {
     (state: IRootState) => state.user.dietitian[0].last_name
   );
 
-  //   const [noInput, setNoInput] = useState<string>("");
-
   async function changeEmail() {
     await Swal.fire({
       title: "請輸入你的電郵",
@@ -74,12 +72,6 @@ export default function DietitianAccount() {
       }
     });
   }
-
-  // useEffect(() => {
-  //   if (user[0].id) {
-  //     changePhone();
-  //   }
-  // }, [user]);
 
   return (
     <>

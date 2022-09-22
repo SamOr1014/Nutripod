@@ -85,6 +85,7 @@ export interface diet {
   id: number;
   name: string;
   food_group: string;
+  food_type:string
   food_amount: number;
   food_calories: number;
   food_intake: number;
@@ -145,13 +146,6 @@ export interface UserPlusIndividualBooking {
   hkid: string;
   chronic_condition: number;
   disease: string;
-}
-export interface exercise {
-  id: number;
-  name: string;
-  duration: number;
-  ex_calories: number;
-  burn_calories: number;
 }
 
 export interface Posts {

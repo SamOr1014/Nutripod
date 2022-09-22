@@ -19,7 +19,7 @@ import {
   Stack,
   Center,
   useColorMode,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import { MdDarkMode } from "react-icons/md";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
@@ -37,8 +37,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
-import { token } from "../utility/models"
-import jwt_decode from "jwt-decode"
+import { token } from "../utility/models";
+import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 export function Login() {
@@ -53,10 +53,10 @@ export function Login() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
   const { REACT_APP_API_SERVER } = process.env;
-  const checkToken = window.localStorage.getItem("userLocalToken")
+  const checkToken = window.localStorage.getItem("userLocalToken");
 
-  const checkTokenLogin = async() => {
-    const payload: token = jwt_decode(checkToken as string)
+  const checkTokenLogin = async () => {
+    const payload: token = jwt_decode(checkToken as string);
 
     const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`, {
       data: {
@@ -120,27 +120,27 @@ export function Login() {
     if (result.payload.success) {
       const userInfo = result.payload.data;
       if (userInfo.is_user === true) {
-        const userData: userSavedInfo = {
-          id: userInfo.id,
-          username: userInfo.username,
-          first_name: userInfo.first_name,
-          last_name: userInfo.last_name,
-          email: userInfo.email,
-          birthday: userInfo.birthday,
-          height: userInfo.height,
-          weight: userInfo.weight,
-          gender: userInfo.gender,
-          phone: userInfo.phone,
-          address: userInfo.address,
-          profession: userInfo.profession,
-          HKID: userInfo.hkid,
-          chronic_condition: userInfo.chronic_condition,
-          education: userInfo.education,
-          is_deleted: userInfo.is_deleted,
-          is_user: userInfo.is_user,
-          saveToken: saveUser,
-        };
-        dispatch(userLogin(userData));
+        // const userData: userSavedInfo = {
+        //   id: userInfo.id,
+        //   username: userInfo.username,
+        //   first_name: userInfo.first_name,
+        //   last_name: userInfo.last_name,
+        //   email: userInfo.email,
+        //   birthday: userInfo.birthday,
+        //   height: userInfo.height,
+        //   weight: userInfo.weight,
+        //   gender: userInfo.gender,
+        //   phone: userInfo.phone,
+        //   address: userInfo.address,
+        //   profession: userInfo.profession,
+        //   HKID: userInfo.hkid,
+        //   chronic_condition: userInfo.chronic_condition,
+        //   education: userInfo.education,
+        //   is_deleted: userInfo.is_deleted,
+        //   is_user: userInfo.is_user,
+        //   saveToken: saveUser,
+        // };
+        // dispatch(userLogin(userData));
         navigate("/dashboard");
       } else if (userInfo.is_user === false) {
         const dietitianData: dietitianSavedInfo = {
