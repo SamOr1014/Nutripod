@@ -279,6 +279,7 @@ export default function UserMain() {
                 id: food.id,
                 name: food.food_name,
                 food_group: food.food_group,
+                food_type: food.d_type,
                 food_amount: parseInt(food.food_amount, 10),
                 food_calories: parseInt(food.food_calories, 10),
                 food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
@@ -297,6 +298,7 @@ export default function UserMain() {
                 id: food.id,
                 name: food.food_name,
                 food_group: food.food_group,
+                food_type: food.d_type,
                 food_amount: parseInt(food.food_amount, 10),
                 food_calories: parseInt(food.food_calories, 10),
                 food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
@@ -315,6 +317,7 @@ export default function UserMain() {
                 id: food.id,
                 name: food.food_name,
                 food_group: food.food_group,
+                food_type: food.d_type,
                 food_amount: parseInt(food.food_amount, 10),
                 food_calories: parseInt(food.food_calories, 10),
                 food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
@@ -333,6 +336,7 @@ export default function UserMain() {
                 id: food.id,
                 name: food.food_name,
                 food_group: food.food_group,
+                food_type: food.d_type,
                 food_amount: parseInt(food.food_amount, 10),
                 food_calories: parseInt(food.food_calories, 10),
                 food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
@@ -608,7 +612,7 @@ export default function UserMain() {
                             })
                         }}
                       >
-                        {({ values, setFieldValue, handleSubmit, handleChange, errors, touched }) => (
+                        {({ handleSubmit, errors, touched }) => (
                           <Form onSubmit={handleSubmit}>
 
                             <FormLabel mt={5}>搜查結果</FormLabel>
@@ -873,7 +877,7 @@ export default function UserMain() {
                 <ModalHeader mt='6' textAlign='center'>運動列表</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Accordion allowMultiple>
+                  <Accordion allowToggle>
 
                     {hasExercise ?
                       exerciseList.map((exercise) =>
@@ -1004,7 +1008,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>早餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion allowMultiple>
+                <Accordion allowToggle>
 
                   {hasBreakfast ?
                     breakfastList.map((food) =>
@@ -1081,7 +1085,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>午餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion allowMultiple>
+                <Accordion allowToggle>
                   {hasLunch ?
                     lunchList.map((food) =>
                     (
@@ -1157,7 +1161,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>晚餐</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion allowMultiple>
+                <Accordion allowToggle>
                   {hasDinner ?
                     dinnerList.map((food) => (
                       <AccordionItem key={`dinner_${food.id}`}>
@@ -1233,7 +1237,7 @@ export default function UserMain() {
               <ModalHeader mt='2' textAlign='center'>小食</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                <Accordion allowMultiple>
+                <Accordion allowToggle>
                   {hasSnack ?
                     snackList.map((food) =>
                     (

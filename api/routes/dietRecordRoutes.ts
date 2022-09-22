@@ -1,6 +1,6 @@
 import express from 'express'
 import { dietRecordController } from '../server'
-import { isUserLoggedIn } from "../utilities/guards"
+import { isUserLoggedIn, isDietitianLoggedIn} from "../utilities/guards"
 
 export const dietRecordRoutes = express.Router()
 
@@ -17,7 +17,7 @@ dietRecordRoutes.delete('/weight/:rid',isUserLoggedIn, dietRecordController.dele
 dietRecordRoutes.delete('/bp/:rid', isUserLoggedIn, dietRecordController.deleteBPRecord)
 dietRecordRoutes.delete('/bg/:rid', isUserLoggedIn, dietRecordController.deleteBGRecord)
 
-// Exercise Routes
+
 dietRecordRoutes.get("/exercises/:uid/:date",isUserLoggedIn,dietRecordController.getExercisesByID)
 dietRecordRoutes.get("/monthlyExercises/:uid/:date",isUserLoggedIn,dietRecordController.getMonthlyExercises)
 dietRecordRoutes.post("/exercises/:uid/:date", isUserLoggedIn, dietRecordController.addExercise)
@@ -27,4 +27,5 @@ dietRecordRoutes.post("/foodIntake",isUserLoggedIn,dietRecordController.postFood
 dietRecordRoutes.get("/dailyDiet/:uid/:date",isUserLoggedIn,dietRecordController.getDailyInTakeByID)
 dietRecordRoutes.get("/monthlyDiet/:uid/:date",isUserLoggedIn,dietRecordController.getMonthlyInTakeByID)
 
-
+dietRecordRoutes.get("/exercisesRecord/:uid/:date", isDietitianLoggedIn, dietRecordController.getExercisesRecord)
+dietRecordRoutes.get("/foodIntakeRecord/:uid/:date", isDietitianLoggedIn, dietRecordController.getFoodIntakeRecord)
