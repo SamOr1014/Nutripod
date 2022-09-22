@@ -1,7 +1,7 @@
 import { Knex } from 'knex'
 
 export class PostServices {
-	constructor(private knex: Knex) {}
+	constructor(private knex: Knex) { }
 
 	async getAllPost() {
 		const result = await this.knex('posts')
@@ -41,6 +41,17 @@ export class PostServices {
 			.update({ is_deleted: true })
 			.where('id', pid)
 			.returning('id')
+		return result
+	}
+
+	async postArticle(uid: number | string, title: string, content: string, date: string) {
+		const result = await this.knex('posts').insert({
+			content: content,
+			title: title,
+			date: date,
+			author_id: uid
+		}).returning("id")
+
 		return result
 	}
 }
