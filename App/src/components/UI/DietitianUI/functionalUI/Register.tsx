@@ -22,13 +22,14 @@ const {
   REACT_APP_SMS_API_KEY,
 } = process.env;
 export default function Register() {
+  const bg = useColorModeValue("gray.200", "gray.700");
   return (
     <Flex
       minH={"100%"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.500")}
-      rounded={"lg"}
+      bg={bg}
+      rounded={"3xl"}
     >
       <Stack spacing={2} mx={"auto"} maxW={"lg"} py={6} px={6}>
         <Stack align={"center"}>

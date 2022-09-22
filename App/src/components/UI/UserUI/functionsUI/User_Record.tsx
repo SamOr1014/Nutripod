@@ -22,6 +22,7 @@ import {
   useDisclosure,
   useMediaQuery,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -39,6 +40,7 @@ export default function UserBPBGRecord() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const bg = useColorModeValue("gray.200", "gray.700");
 
   //variables for weight, bp and bg submission
   const [weightRec, setWeightRec] = useState<Array<WeightDetail>>([]);
@@ -126,7 +128,7 @@ export default function UserBPBGRecord() {
         },
         {
           headers: {
-            'Authorization': `Bearer ${locateToken()}`,
+            Authorization: `Bearer ${locateToken()}`,
           },
         }
       )
@@ -231,7 +233,7 @@ export default function UserBPBGRecord() {
         {/* Weight part */}
         <Flex
           w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
-          bg={"gray.500"}
+          bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
           maxH={"720px"}
@@ -342,7 +344,7 @@ export default function UserBPBGRecord() {
         {/* BP */}
         <Flex
           w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
-          bg={"gray.500"}
+          bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
           maxH={"720px"}
@@ -470,7 +472,7 @@ export default function UserBPBGRecord() {
         {/* BG */}
         <Flex
           w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
-          bg={"gray.500"}
+          bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
           maxH={"720px"}

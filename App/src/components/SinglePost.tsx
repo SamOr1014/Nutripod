@@ -20,7 +20,9 @@ const { REACT_APP_API_SERVER } = process.env;
 
 export default function SinglePosts(props: PostTemplate) {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
-  const dietitianInfo = useSelector((state: IRootState) => state.dietitian[0]);
+  const dietitianInfo = useSelector(
+    (state: IRootState) => state.user.dietitian[0]
+  );
 
   const isLoggedInByUser = useSelector(
     (state: IRootState) => state.user.user[0].is_user
@@ -57,6 +59,7 @@ export default function SinglePosts(props: PostTemplate) {
         h={"150px"}
         flexDir={"column"}
         display={"flex"}
+        position={"relative"}
       >
         <Heading
           fontSize={isSmallerThan600 ? "sm" : "md"}
@@ -64,18 +67,6 @@ export default function SinglePosts(props: PostTemplate) {
           display={"flex"}
         >
           <Text flex={1}>{props.author}</Text>
-
-          {isLoggedInByUser === null && isDietitian === false ? (
-            <CloseButton
-              size={"sm"}
-              onClick={() => {
-                deleteOnePost(props.id);
-                props.refresh();
-              }}
-            />
-          ) : (
-            ""
-          )}
         </Heading>
 
         <Heading
@@ -98,6 +89,19 @@ export default function SinglePosts(props: PostTemplate) {
         >
           {props.content}
         </Text>
+        {dietitianInfo.id !== null ? (
+          ""
+        ) : (
+          <CloseButton
+            pos={"absolute"}
+            size={"sm"}
+            onClick={() => {
+              deleteOnePost(props.id);
+              props.refresh();
+            }}
+            right={2}
+          />
+        )}
         <Divider my={4} />
       </LinkBox>
     </>

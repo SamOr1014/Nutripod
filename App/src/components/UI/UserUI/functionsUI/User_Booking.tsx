@@ -9,6 +9,7 @@ import {
   useMediaQuery,
   Text,
   Select,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -28,6 +29,8 @@ const {
 } = process.env;
 
 export default function UserBooking() {
+  const bg = useColorModeValue("gray.200", "gray.700");
+
   const staticDietitianList = useSelector(
     (state: IRootState) => state.dietitian
   );
@@ -134,7 +137,7 @@ export default function UserBooking() {
         <Flex
           flex={1}
           flexDirection="column"
-          bg={"gray.500"}
+          bg={bg}
           p={4}
           borderRadius={"3xl"}
           w={"100%"}
@@ -216,7 +219,7 @@ export default function UserBooking() {
           maxW={"100%"}
           p={4}
           borderRadius={"3xl"}
-          bg={"gray.500"}
+          bg={bg}
         >
           <Heading p={3} textAlign={"center"}>
             {selectedDate ? selectedDate?.getFullYear() : ""}年
