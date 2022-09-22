@@ -9,7 +9,7 @@ node_modules
 coverage
 
 # production
-build
+buildz
 
 # misc
 .DS_Store
@@ -17,6 +17,7 @@ build
 .env.development.local
 .env.test.local
 .env.production.local
+.env.production
 .env
 
 npm-debug.log*
