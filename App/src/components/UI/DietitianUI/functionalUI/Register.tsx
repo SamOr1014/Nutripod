@@ -79,8 +79,7 @@ export default function Register() {
                       encoding: "AUTO",
                       track: "None",
                       destination: `${REACT_APP_PHONE_NUMBER}`,
-                      text: `你已成功在nutripod開戶！ 用戶名: ${data.username}
-                      密碼: ${data.password}`,
+                      text: `你已成功在nutripod開戶！用戶名: ${data.username}；密碼: ${data.password}`,
                     },
                     {
                       headers: {
