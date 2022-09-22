@@ -86,7 +86,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.integer('gender').unsigned().notNullable()
 		table.foreign('gender').references('gender.id')
 		table.string('phone', 8).unique().notNullable()
-		table.text('address').notNullable()
+		table.text('address').nullable()
 		table.integer('profession').unsigned().notNullable()
 		table.foreign('profession').references('profession_types.id')
 		table.string('hkid', 8).unique().notNullable()

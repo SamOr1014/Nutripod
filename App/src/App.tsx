@@ -12,6 +12,7 @@ import UserBPBGRecord from "./components/UI/UserUI/functionsUI/User_Record";
 import DashBoardDietitian from "./components/UI/DietitianUI/Dashboard_dietitian";
 import DietitianMain from "./components/UI/DietitianUI/functionalUI/Dietitian_Main";
 import PatientSearchPanel from "./components/UI/DietitianUI/functionalUI/Dietitian_patient_search";
+import DietitianAccount from "./components/UI/DietitianUI/functionalUI/Dietitian_account";
 import { useEffect } from "react";
 import { useAppDispatch } from "./redux/store";
 import { fetchDietitianDetail } from "./redux/Slice/dietitianSlice";
@@ -50,7 +51,7 @@ function App() {
           <Route path="posts" element={<UserPost />} />
           <Route path="posts/:id" element={<FullPost />} />
           <Route path="register" element={<Register />} />
-          <Route path="account" element={<p>Diet ac</p>} />
+          <Route path="account" element={<DietitianAccount />} />
         </Route>
       </Route>
 

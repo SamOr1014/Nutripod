@@ -24,6 +24,7 @@ import { IRootState } from "../../../../redux/store";
 import axios from "axios";
 import locateToken from "../../../../utility/Token";
 import { useNavigate } from "react-router";
+import { loginThunk } from "../../../../redux/Thunk/AuthThunk";
 
 const { REACT_APP_API_SERVER } = process.env;
 
@@ -62,8 +63,6 @@ export default function UserAccount() {
     (state: IRootState) => state.user.user[0].address
   );
 
-  const saveToken = useSelector((state: IRootState) => state.user.saveToken);
-
   const [noInput, setNoInput] = useState<string>("");
 
   async function changeGender() {
@@ -96,7 +95,7 @@ export default function UserAccount() {
   async function changePhone() {
     await Swal.fire({
       title: "請輸入你的電話號碼",
-      input: "text",
+      input: "number",
       inputLabel: "+852",
       inputPlaceholder: "98765432",
       showCloseButton: true,
@@ -107,8 +106,15 @@ export default function UserAccount() {
         isInteger: "true",
       },
     }).then(async (result) => {
-      console.log(result);
+      if (result.isConfirmed && result.value.length != 8) {
+        Swal.fire({
+          icon: "error",
+          title: "請輸入正確的電話號碼",
+        });
+      }
       if (result.isConfirmed && result.value.length === 8) {
+        // token validate thunk
+
         const results = await axios.put(
           `${REACT_APP_API_SERVER}/user/info/phone`,
           {
@@ -121,20 +127,12 @@ export default function UserAccount() {
             },
           }
         );
-        console.log(results);
+
+        //
         if (results.data.success) {
+          //
           Swal.fire(`你的電話號碼已更改為: +852 ${result.value}`);
         }
-      } else if (result.isConfirmed && result.value.length != 8) {
-        Swal.fire({
-          icon: "error",
-          title: "請輸入正確的電話號碼",
-        });
-      } else if (result.isConfirmed && result.value === isNaN) {
-        Swal.fire({
-          icon: "error",
-          title: "請輸入正確的電話號碼",
-        });
       }
     });
   }

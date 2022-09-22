@@ -26,7 +26,12 @@ import { IRootState } from "../../../../redux/store";
 import { UserBookingData } from "../../../../utility/models";
 import locateToken from "../../../../utility/Token";
 
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 
 export default function UserMed() {
   const user = useSelector((state: IRootState) => state.user.user);
@@ -85,7 +90,11 @@ export default function UserMed() {
       });
   }
   //delete
-  async function deleteBooking(bookingID: number | string) {
+  async function deleteBooking(
+    bookingID: number | string,
+    date: any,
+    time: any
+  ) {
     axios
       .delete(`${REACT_APP_API_SERVER}/booking/user/${uID}/${bookingID}`, {
         headers: {
@@ -96,6 +105,21 @@ export default function UserMed() {
         Swal.fire({
           icon: "success",
           title: "移除成功",
+        }).then(async () => {
+          await axios.post(
+            `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+            {
+              encoding: "AUTO",
+              track: "None",
+              destination: `${REACT_APP_PHONE_NUMBER}`,
+              text: `你已取消${date} ${time}的預約`,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+              },
+            }
+          );
         });
         fetchBooking();
       })
@@ -180,7 +204,11 @@ export default function UserMed() {
                             showCancelButton: true,
                           }).then(async (result) => {
                             if (result.isConfirmed) {
-                              await deleteBooking(detail.id);
+                              await deleteBooking(
+                                detail.id,
+                                new Date(detail.date).toLocaleDateString(),
+                                detail.time.slice(0, -3)
+                              );
                             }
                           });
                         }}

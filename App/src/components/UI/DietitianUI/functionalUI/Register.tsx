@@ -15,7 +15,12 @@ import axios from "axios";
 import locateToken from "../../../../utility/Token";
 import { Field, Form, Formik } from "formik";
 import Swal from "sweetalert2";
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 export default function Register() {
   return (
     <Flex
@@ -48,33 +53,49 @@ export default function Register() {
             chronic_condition: "",
             education: "",
           }}
-          onSubmit={(values, {resetForm}) => {
-            axios.post(`${REACT_APP_API_SERVER}/user/register`,
-              {
-                values
-              },
-              {
-                headers: {
-                  'Authorization': `Bearer ${locateToken()}`
+          onSubmit={(values, { resetForm }) => {
+            axios
+              .post(
+                `${REACT_APP_API_SERVER}/user/register`,
+                {
+                  values,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${locateToken()}`,
+                  },
                 }
-              })
-              .then(({ data }) => {
+              )
+              .then(async ({ data }) => {
                 if (data.success) {
                   Swal.fire({
                     icon: "success",
                     title: "註冊成功",
-                    titleText:
-                   `用戶名: ${data.username}
-                    密碼: ${data.password}`
-                  })
-                  resetForm()
+                    titleText: "稍後會有短訊通知用戶其登入資訊",
+                  });
+                  await axios.post(
+                    `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+                    {
+                      encoding: "AUTO",
+                      track: "None",
+                      destination: `${REACT_APP_PHONE_NUMBER}`,
+                      text: `你已成功在nutripod開戶！用戶名: ${data.username}；密碼: ${data.password}`,
+                    },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+                      },
+                    }
+                  );
+                  resetForm();
                 }
-              }).catch((error) => {
+              })
+              .catch((error) => {
                 Swal.fire({
                   icon: "error",
-                  title: `${error.response.data.message}`
-                })
-              })
+                  title: `${error.response.data.message}`,
+                });
+              });
           }}
         >
           {({ handleSubmit, errors, touched }) => (

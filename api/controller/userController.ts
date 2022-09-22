@@ -203,12 +203,10 @@ export class UserController {
 				!firstName ||
 				!lastName ||
 				!username ||
-				!email ||
 				!birthday ||
 				!height ||
 				!weight ||
 				!phone ||
-				!address ||
 				!hkid ||
 				!gender ||
 				!profession ||
@@ -217,6 +215,14 @@ export class UserController {
 			) {
 				res.status(400).json({ success: false })
 				return
+			}
+			let inputEmail = email
+			let inputAddress = address
+			if (!email) {
+				inputEmail = ''
+			}
+			if (!address) {
+				inputAddress = ''
 			}
 
 			const password = generateP()
@@ -239,12 +245,12 @@ export class UserController {
 				lastName,
 				username,
 				hashedPassword,
-				email,
+				inputEmail,
 				birthday,
 				height,
 				weight,
 				phone,
-				address,
+				inputAddress,
 				hkid,
 				gender,
 				profession,
@@ -261,6 +267,28 @@ export class UserController {
 				username: username,
 				password: password
 			})
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	changeDietitianEmail = async (req: Request, res: Response) => {
+		try {
+			const uid = req.body.id
+			const email = req.body.email
+
+			const result = await this.userService.changeDietitianEmail(
+				uid,
+				email
+			)
+
+			if (result) {
+				res.status(200).json({ success: true })
+				return
+			}
+			res.status(400).json({ success: false })
+			return
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false, message: e.message })

@@ -16,7 +16,7 @@ services:
         build:
             context: ./
             dockerfile: ./Dockerfile
-        image: "nutripod:latest"
+        image: "samor1014/nutripod:latest"
         ports:
             - "8080:8080"
     postgres:

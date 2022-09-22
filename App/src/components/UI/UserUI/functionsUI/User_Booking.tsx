@@ -20,14 +20,19 @@ import { IRootState } from "../../../../redux/store";
 import { UserBookingDetailByDateAndDietitian } from "../../../../utility/models";
 import locateToken from "../../../../utility/Token";
 
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 
 export default function UserBooking() {
   const staticDietitianList = useSelector(
     (state: IRootState) => state.dietitian
   );
   const staticTimeSlot = useSelector((state: IRootState) => state.timeslot);
-
+  const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const userInfo = useSelector((state: IRootState) => state.user.user);
 
   let date = new Date();
@@ -267,7 +272,35 @@ export default function UserBooking() {
                               title: `你已經預約${selectedDate.toLocaleDateString()}的${timeslotDetail.time.slice(
                                 0,
                                 -3
-                              )}`,
+                              )}，稍後會有短訊確定你的預約時間`,
+                            }).then(async () => {
+                              await axios.post(
+                                `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+                                {
+                                  encoding: "AUTO",
+                                  track: "None",
+                                  destination: `${REACT_APP_PHONE_NUMBER}`,
+                                  text: `你已經預約${selectedDate.toLocaleDateString()}的${timeslotDetail.time.slice(
+                                    0,
+                                    -3
+                                  )}。營養師為${
+                                    dietitianList.filter(
+                                      (dietitianInfo) =>
+                                        dietitianInfo.id === parseInt(dietitian)
+                                    )[0].first_name
+                                  } ${
+                                    dietitianList.filter(
+                                      (dietitianInfo) =>
+                                        dietitianInfo.id === parseInt(dietitian)
+                                    )[0].last_name
+                                  }，請記得準時到診`,
+                                },
+                                {
+                                  headers: {
+                                    Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+                                  },
+                                }
+                              );
                             });
                           }
                         });
