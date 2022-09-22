@@ -1,4 +1,4 @@
-import { Button, Center, Divider, Drawer, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, useDisclosure, useMediaQuery } from "@chakra-ui/react";
+import { Box, Button, Center, Divider, Drawer, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, FormLabel, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -27,17 +27,15 @@ declare module 'slate' {
 
 const date = new Date
 
-
-
-
 export default function UserPost() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [posts, setPosts] = useState<Array<Posts>>([]);
-  const [editor] = useState(() => withReact(createEditor()))
+  const [contentEditor] = useState(() => withReact(createEditor()))
+  const [titleEditor] = useState(() => withReact(createEditor()))
   const { isOpen, onOpen, onClose } = useDisclosure()
   const dietitianInfo = useSelector((state: IRootState) => state.user.dietitian[0])
 
-  const initialValue: Descendant[] = useMemo(
+  const initialContentValue: Descendant[] = useMemo(
     () =>
       JSON.parse(localStorage.getItem('content') as string) || [
         {
@@ -48,15 +46,34 @@ export default function UserPost() {
     []
   )
 
+  const initialTitleValue: Descendant[] = useMemo(
+    () =>
+      JSON.parse(localStorage.getItem('title') as string) || [
+        {
+          type: 'paragraph',
+          children: [{ text: 'Please input your title here.' }],
+        },
+      ],
+    []
+  )
+
   let content = ""
+  let title = ""
+
   let contentToken = localStorage.getItem('content')
   if (contentToken) {
     for (let par of JSON.parse(localStorage.getItem('content') as string)) {
       if (par.children[0].text === '') {
         content += "\n"
-        content += "\n"
       }
       content += par.children[0].text
+    }
+  }
+
+  let titleToken = localStorage.getItem('title')
+  if (titleToken) {
+    for (let par of JSON.parse(localStorage.getItem('title') as string)) {
+      title += par.children[0].text
     }
   }
 
@@ -75,10 +92,13 @@ export default function UserPost() {
 
   async function postArticle() {
     onClose()
+    console.log(content)
+    console.log(title)
     axios
       .post(`${REACT_APP_API_SERVER}/post/${dietitianInfo.id}/${date.toISOString()}`,
         {
-          content: content
+          content: content,
+          title: title
         }
         , {
           headers: {
@@ -88,11 +108,12 @@ export default function UserPost() {
       .then(({ data }) => {
         if (data.success) {
           window.localStorage.removeItem('content')
-
+          window.localStorage.removeItem('title')
           Swal.fire({
             icon: "success",
-            title: "成立發文"
+            title: "成功發文"
           })
+          fetchAllPost()
         }
       }).catch(() => {
         Swal.fire({
@@ -101,10 +122,9 @@ export default function UserPost() {
         })
       });
   }
-
   useEffect(() => {
     fetchAllPost();
-  }, [posts]);
+  }, []);
 
   return (
     <Flex
@@ -114,10 +134,13 @@ export default function UserPost() {
       my={2}
       overflow={"auto"}
     >
+      {dietitianInfo.id != null ?
+        <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen}>
+          Create Post
+        </Button>
+        : <></>
+      }
 
-      <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen}>
-        Create Post
-      </Button>
       <Drawer
         isOpen={isOpen}
         onClose={onClose}
@@ -128,29 +151,72 @@ export default function UserPost() {
         <DrawerContent>
 
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth='1px'>
-            Create a new post
+          <DrawerHeader 
+          borderBottomWidth='1px'
+          textAlign={'center'}>
+            請在此刊登你的資訊
           </DrawerHeader>
 
+          <Box
+            height="100%"
+            width={"80%"}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignSelf={'center'}
+            margin={'10'}
+            border='4px'>
 
-          <Flex>
-            <Slate
-              editor={editor}
-              value={initialValue}
-              onChange={value => {
-                const isAstChange = editor.operations.some(
-                  op => 'set_selection' !== op.type
-                )
-                if (isAstChange) {
-                  const content = JSON.stringify(value)
-                  localStorage.setItem('content', content)
-                }
-              }}
+            <Flex
+            flex={1}
+            borderBottom={'4px'}
             >
-              <Editable
-              />
-            </Slate>
-          </Flex>
+              <FormLabel 
+              fontSize={'4xl'}
+              height='10'>Title:</FormLabel>
+
+              <Box>
+              <Slate
+                editor={titleEditor}
+                value={initialTitleValue}
+                onChange={value => {
+                  const isAstChange = titleEditor.operations.some(
+                    title => 'set_selection' !== title.type
+                  )
+                  if (isAstChange) {
+                    const title = JSON.stringify(value)
+                    localStorage.setItem('title', title)
+                  }
+                }}
+              >
+                <Editable/>
+              </Slate>
+              </Box>
+            </Flex>
+
+
+            <Flex
+            flex={9}
+            >
+              <Slate
+                editor={contentEditor}
+                value={initialContentValue}
+                onChange={value => {
+                  const isAstChange = contentEditor.operations.some(
+                    content => 'set_selection' !== content.type
+                  )
+                  if (isAstChange) {
+                    const content = JSON.stringify(value)
+                    localStorage.setItem('content', content)
+                  }
+                }}
+              >
+                <Editable
+                />
+              </Slate>
+            </Flex>
+
+          </Box>
 
           <DrawerFooter
             borderTopWidth='1px'
@@ -174,6 +240,7 @@ export default function UserPost() {
           <>
             <SinglePosts
               id={props.id}
+              key={`posts_${props.id}`}
               title={props.title}
               author={props.first_name + " " + props.last_name}
               time={props.date}

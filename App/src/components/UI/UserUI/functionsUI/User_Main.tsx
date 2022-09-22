@@ -405,7 +405,7 @@ export default function UserMain() {
     fetchIntakeFromServer()
     fetchMonthlyIntakeFromServer()
   }, [selectedDate]);
-
+  
   let lunch = 0
   let dinner = 0
   let snack = 0
@@ -1294,7 +1294,3 @@ export default function UserMain() {
     </>
   );
 }
-function toast(arg0: { position: string; title: string; duration: number; isClosable: boolean; }) {
-  throw new Error("Function not implemented.");
-}
-
