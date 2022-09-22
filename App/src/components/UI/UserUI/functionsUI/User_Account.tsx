@@ -241,7 +241,12 @@ export default function UserAccount() {
             <FormControl id="userIcon">
               <Stack direction={["column", "row"]} spacing={6}>
                 <Center>
-                  <Avatar size="xl" src="https://bit.ly/sage-adebayo">
+                  <Avatar
+                    size="xl"
+                    src={`https://i.pravatar.cc/500?img=${
+                      user[0].id ? user[0].id + 5 : user[0].id
+                    }`}
+                  >
                     <AvatarBadge
                       as={IconButton}
                       size="sm"

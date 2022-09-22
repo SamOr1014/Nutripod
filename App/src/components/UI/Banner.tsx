@@ -42,9 +42,6 @@ export default function Banner() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
-  const accountDir =
-    dietitian[0].id !== null ? "/dietitian/account" : "/dashboard/account";
-
   const logout = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
@@ -128,7 +125,11 @@ export default function Banner() {
             _hover={{ bg: "gray.400" }}
             _expanded={{ bg: "blue.400" }}
           >
-            <Avatar />
+            <Avatar
+              src={`https://i.pravatar.cc/300?img=${
+                (user[0].id ? user[0].id + 5 : user[0].id) || dietitian[0].id
+              }`}
+            />
           </MenuButton>
           <MenuList>
             <MenuItem
