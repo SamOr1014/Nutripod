@@ -140,7 +140,7 @@ export default function UserMed() {
   return (
     <Flex
       minW={"100%"}
-      maxH={"800px"}
+      maxH={isSmallerThan600 ? "auto" : "800px"}
       borderRadius={"3xl"}
       bg={"gray.500"}
       p={isSmallerThan600 ? 0 : 3}
@@ -149,7 +149,11 @@ export default function UserMed() {
       justifyContent={"center"}
       flexWrap={"wrap"}
     >
-      <Flex flexDir={"column"} w={isSmallerThan600 ? "100%" : "45%"}>
+      <Flex
+        flexDir={"column"}
+        w={isSmallerThan600 ? "100%" : "45%"}
+        maxH={"100%"}
+      >
         <Heading
           textAlign={"center"}
           w={"100%"}

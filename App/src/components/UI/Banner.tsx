@@ -48,7 +48,7 @@ export default function Banner() {
   const logout = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
-    window.location.href = "https://nutripod.xyz";
+    navigate("/");
   };
 
   function MobileNav() {
