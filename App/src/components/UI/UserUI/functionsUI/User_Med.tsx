@@ -17,6 +17,7 @@ import {
   Tr,
   useMediaQuery,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -34,6 +35,7 @@ const {
 } = process.env;
 
 export default function UserMed() {
+  const bg = useColorModeValue("gray.200", "gray.700");
   const user = useSelector((state: IRootState) => state.user.user);
   const uID = user[0].id;
   const dietitianList = useSelector((state: IRootState) => state.dietitian);
@@ -142,7 +144,7 @@ export default function UserMed() {
       minW={"100%"}
       maxH={isSmallerThan600 ? "auto" : "800px"}
       borderRadius={"3xl"}
-      bg={"gray.500"}
+      bg={bg}
       p={isSmallerThan600 ? 0 : 3}
       my={2}
       gap={10}

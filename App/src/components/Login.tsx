@@ -20,6 +20,7 @@ import {
   Center,
   useColorMode,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { MdDarkMode } from "react-icons/md";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
@@ -42,6 +43,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 
 export function Login() {
+  const bg = useColorModeValue("gray.200", "gray.700");
   const [username, setUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [saveUser, setSaveUser] = useBoolean(false);
@@ -231,7 +233,7 @@ export function Login() {
             }
           }}
         >
-          <Box bg="blue.300" padding="50px" rounded="md">
+          <Box bg={bg} padding="50px" rounded="md">
             <FormLabel>用戶名稱</FormLabel>
             <FormControl
               variant="floating"

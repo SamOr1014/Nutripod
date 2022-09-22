@@ -8,6 +8,7 @@ import {
   Text,
   Divider,
   Box,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -18,6 +19,7 @@ import locateToken from "../utility/Token";
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function FullPost() {
+  const bg = useColorModeValue("gray.200", "gray.700");
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const { id } = useParams();
   const [postContent, setPostContent] = useState<Array<FullSinglePost>>([]);
@@ -46,7 +48,7 @@ export default function FullPost() {
               <Flex
                 w={isSmallerThan600 ? "100%" : "80%"}
                 h={isSmallerThan600 ? "auto" : "720px"}
-                bg={"gray.500"}
+                bg={bg}
                 p={10}
                 rounded={"3xl"}
                 key={`post_id_${post.id}`}

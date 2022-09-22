@@ -29,6 +29,7 @@ import {
   HStack,
   VStack,
   Textarea,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Field, Form, Formik } from "formik";
@@ -46,6 +47,7 @@ import locateToken from "../../../../utility/Token";
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianMain() {
+  const bg = useColorModeValue("gray.200", "gray.700");
   let date = new Date();
   date.setDate(date.getDate() - 1);
 
@@ -559,7 +561,7 @@ export default function DietitianMain() {
         <Flex
           flex={1}
           flexDirection="column"
-          bg={"gray.500"}
+          bg={bg}
           p={4}
           borderRadius={"3xl"}
         >
@@ -621,10 +623,10 @@ export default function DietitianMain() {
           maxW={"100%"}
           p={4}
           borderRadius={"3xl"}
-          bg={"gray.500"}
+          bg={bg}
         >
           <Heading p={3} textAlign={"center"}>
-          {selectedDate ? selectedDate?.getFullYear() : ""}年
+            {selectedDate ? selectedDate?.getFullYear() : ""}年
             {selectedDate ? selectedDate?.getMonth() + 1 : ""}月
             {selectedDate ? selectedDate?.getDate() : ""}日
           </Heading>
