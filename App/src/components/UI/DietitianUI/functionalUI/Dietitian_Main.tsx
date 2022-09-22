@@ -64,7 +64,7 @@ export default function DietitianMain() {
   } = useDisclosure();
   //redux states
   const currentDietitian = useSelector(
-    (state: IRootState) => state.dietitian[0]
+    (state: IRootState) => state.user.dietitian[0]
   );
   const timeslot = useSelector((state: IRootState) => state.timeslot);
 
@@ -407,7 +407,7 @@ export default function DietitianMain() {
                         dateSubmit.toISOString(),
                         patient.bid,
                         patient.id,
-                        currentDietitian.id
+                        currentDietitian.id!
                       );
                       onClose();
                     }}
@@ -624,9 +624,9 @@ export default function DietitianMain() {
           bg={"gray.500"}
         >
           <Heading p={3} textAlign={"center"}>
-            {selectedDate?.toLocaleDateString().split("/")[2]}年
-            {selectedDate?.toLocaleDateString().split("/")[1]}月
-            {selectedDate?.toLocaleDateString().split("/")[0]}日
+          {selectedDate ? selectedDate?.getFullYear() : ""}年
+            {selectedDate ? selectedDate?.getMonth() + 1 : ""}月
+            {selectedDate ? selectedDate?.getDate() : ""}日
           </Heading>
           <Flex flexDir={"column"} alignItems={"center"} w={"100%"}>
             <Accordion allowToggle w={"100%"}>

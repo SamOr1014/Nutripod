@@ -30,9 +30,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Divider,
-  PopoverAnchor,
-  Radio,
-  RadioGroup,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -49,12 +47,22 @@ import {
   WeightDetail,
 } from "../../../../../utility/models";
 import locateToken from "../../../../../utility/Token";
+import { exercise, diet } from "../../../../../utility/models"
+
+const dietMappings = new Map([
+  ['breakfast', '早餐'],
+  ['lunch', '午餐'],
+  ['dinner', '晚餐'],
+  ['snack', '小食'],
+
+])
 
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianPatientDetailPanel(
   patient: DietitianPatientPanel
 ) {
+  const toast = useToast()
   const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -66,9 +74,11 @@ export default function DietitianPatientDetailPanel(
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
-  const [meal, setMeal] = useState<string>("早餐");
-  const [foodDetail, setFoodDetail] = useState<Array<any>>([]);
-  const [exDetail, setExDetail] = useState<Array<any>>([]);
+
+  const [foodDetail, setFoodDetail] = useState(Array<diet>)
+  const [hasFoodDetail, setHasFoodDetail] = useState(false)
+  const [exDetail, setExDetail] = useState<Array<exercise>>([]);
+
   //#######Age Function#######
   const userAge = () => {
     let today = new Date();
@@ -159,24 +169,84 @@ export default function DietitianPatientDetailPanel(
         });
       });
   }
+
   async function fetchExerciseAndDiet() {
+    setFoodDetail([])
+    setExDetail([])
     const exerciseRec = axios.get(
-      `${REACT_APP_API_SERVER}/diet/exercise/${
-        patient.id
+      `${REACT_APP_API_SERVER}/diet/exercisesRecord/${patient.id
       }/${selectedDate?.toISOString()}`,
       {
         headers: {
           Authorization: `Bearer ${locateToken()}`,
         },
       }
-    );
-    axios.all([exerciseRec]).then(
-      axios.spread((...responses) => {
-        let exerciseResult = responses[0];
-        setExDetail(exerciseResult.data.exercises);
+    )
+
+    const foodRec = axios.get(`${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${patient.id
+      }/${selectedDate?.toISOString()}`,
+      {
+        headers: {
+          Authorization: `Bearer ${locateToken()}`,
+        },
+      }
+    )
+
+    axios.all([exerciseRec, foodRec]).then(
+      axios.spread((...data) => {
+        let exerciseResult = data[0].data
+        let foodResult = data[1].data
+
+        if (exerciseResult.success === true) {
+          for (let exercise of exerciseResult.list) {
+            let exerciseInfo: exercise = {
+              id: exercise.id,
+              name: exercise.ex_type,
+              duration: parseInt(exercise.duration, 10),
+              ex_calories: parseInt(exercise.ex_calories, 10),
+              burn_calories: Math.round(parseInt(exercise.duration, 10) * parseInt(exercise.ex_calories, 10) / 60)
+            }
+            setExDetail((previous) => [...previous, exerciseInfo])
+          }
+        }
+
+        if (foodResult.success === true) {
+          setHasFoodDetail(true)
+          for (let food of foodResult.list) {
+            let diet = dietMappings.get(food.d_type)
+            let foodInfo: diet = {
+              id: food.id,
+              name: food.food_name,
+              food_group: food.food_group,
+              food_type: diet as string,
+              food_amount: parseInt(food.food_amount, 10),
+              food_calories: parseInt(food.food_calories, 10),
+              food_intake: (parseInt(food.food_amount, 10) * parseInt(food.food_calories, 10)) / 100,
+              carbohydrates: parseInt(food.carbohydrates, 10),
+              protein: parseInt(food.protein, 10),
+              fat: parseInt(food.fat, 10),
+              sodium: parseInt(food.sodium, 10),
+              sugars: parseInt(food.sugars, 10),
+              fiber: parseInt(food.fiber, 10),
+            }
+            setFoodDetail((previousList) => [...previousList, foodInfo])
+          }
+        }
       })
-    );
+    ).catch((error) => {
+      setFoodDetail([])
+      setHasFoodDetail(false)
+      setExDetail([])
+      toast({
+        position: 'top',
+        title: `${error.response.data.message}`,
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+    )
   }
+
   //Fetch when patient id changes and patient id is not undefined/null
   useEffect(() => {
     if (patient.id) {
@@ -421,8 +491,8 @@ export default function DietitianPatientDetailPanel(
                         {rec.gender === 1
                           ? "男"
                           : rec.gender === 2
-                          ? "女"
-                          : "其他"}
+                            ? "女"
+                            : "其他"}
                       </Text>
                       <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
                       <Text fontWeight={"bold"}>
@@ -452,21 +522,9 @@ export default function DietitianPatientDetailPanel(
     );
   }
   //#######################################
+
   function DietitianUserExerciseAndFoodDetailPanel() {
-    useEffect(() => {
-      if (meal === "早餐") {
-        console.log("B");
-      }
-      if (meal === "午餐") {
-        console.log("L");
-      }
-      if (meal === "晚餐") {
-        console.log("D");
-      }
-      if (meal === "小食") {
-        console.log("S");
-      }
-    }, [meal]);
+
     return (
       <>
         {/* The popover date picker */}
@@ -547,7 +605,6 @@ export default function DietitianPatientDetailPanel(
                 >
                   <Thead position="sticky" top={0} bg={"gray.300"} zIndex={1}>
                     <Tr>
-                      <Th>日期</Th>
                       <Th>時長(mins)</Th>
                       <Th>運動</Th>
                       <Th>消耗(kcal)</Th>
@@ -557,28 +614,24 @@ export default function DietitianPatientDetailPanel(
                   <Tbody>
                     {exDetail[0]
                       ? exDetail.map((item) => {
-                          return (
-                            <Tr>
-                              <Td>
-                                {new Date(item.date).toLocaleDateString()}
-                              </Td>
-                              <Td>{item.duration.slice(0, -3)}</Td>
-                              <Td>
-                                <Text
-                                  maxH={"50px"}
-                                  maxW={"150px"}
-                                  overflow="auto"
-                                >
-                                  {item.ex_type}
-                                </Text>
-                              </Td>
-                              <Td>
-                                {parseInt(item.ex_calories) *
-                                  (parseInt(item.duration) / 60)}
-                              </Td>
-                            </Tr>
-                          );
-                        })
+                        return (
+                          <Tr>
+                            <Td>{item.duration}</Td>
+                            <Td>
+                              <Text
+                                maxH={"50px"}
+                                maxW={"150px"}
+                                overflow="auto"
+                              >
+                                {item.name}
+                              </Text>
+                            </Td>
+                            <Td>
+                              {item.burn_calories}
+                            </Td>
+                          </Tr>
+                        );
+                      })
                       : ""}
                   </Tbody>
                 </Table>
@@ -604,57 +657,115 @@ export default function DietitianPatientDetailPanel(
               position={"relative"}
             >
               <Flex>
-                <Popover>
-                  <Box flex={"1"}>
-                    <PopoverAnchor>
-                      <Heading textAlign={"center"} fontSize={"2xl"}>
-                        {meal}
-                      </Heading>
-                    </PopoverAnchor>
-                  </Box>
-                  <PopoverTrigger>
-                    <Button position={"absolute"} right={10} size={"sm"}>
-                      更改
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <PopoverBody>
-                      進食時間：
-                      <RadioGroup
-                        value={meal}
-                        onChange={(value) => setMeal(value)}
-                      >
-                        <Radio mx={1} value="早餐">
-                          早餐
-                        </Radio>
-                        <Radio mx={1} value="午餐">
-                          午餐
-                        </Radio>
-                        <Radio mx={1} value="晚餐">
-                          晚餐
-                        </Radio>
-                        <Radio mx={1} value="小食">
-                          小食
-                        </Radio>
-                      </RadioGroup>
-                    </PopoverBody>
-                  </PopoverContent>
-                </Popover>
+                <Box
+                  flex={"1"}
+                  fontSize={"2xl"}>
+                  膳食
+                </Box>
               </Flex>
 
               <Box w={"90%"} maxH={"80%"} overflow={"auto"} mt={2}>
                 <Accordion allowToggle>
-                  <AccordionItem>
-                    <h2>
-                      <AccordionButton>
-                        <Box flex="1" textAlign="left">
-                          food + gram
-                        </Box>
-                        <AccordionIcon />
-                      </AccordionButton>
-                    </h2>
-                    <AccordionPanel pb={4}>nutrition info</AccordionPanel>
-                  </AccordionItem>
+                  {foodDetail.filter((food) => food.food_type === '早餐').map((food) => (
+                    <AccordionItem>
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" textAlign="left">
+                            {food.name} {`(${food.food_type})`}
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        種類: {food.food_group}<br></br>
+                        分量: {food.food_amount}g<br></br>
+                        每一百克卡路里： {food.food_calories}kcal<br></br>
+                        攝入卡路里：{food.food_intake}kcal<br></br>
+                        碳水化合物: {food.carbohydrates}g<br></br>
+                        糖分: {food.sugars}g<br></br>
+                        脂肪: {food.fat}g<br></br>
+                        蛋白質: {food.protein}g<br></br>
+                        膳食纖維: {food.fiber}g<br></br>
+                        鈉: {food.sodium}ng<br></br>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  ))}
+
+                  {foodDetail.filter((food) => food.food_type === '午餐').map((food) => (
+                    <AccordionItem>
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" textAlign="left">
+                            {food.name} {`(${food.food_type})`}
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        種類: {food.food_group}<br></br>
+                        分量: {food.food_amount}g<br></br>
+                        每一百克卡路里： {food.food_calories}kcal<br></br>
+                        攝入卡路里：{food.food_intake}kcal<br></br>
+                        碳水化合物: {food.carbohydrates}g<br></br>
+                        糖分: {food.sugars}g<br></br>
+                        脂肪: {food.fat}g<br></br>
+                        蛋白質: {food.protein}g<br></br>
+                        膳食纖維: {food.fiber}g<br></br>
+                        鈉: {food.sodium}ng<br></br>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  ))}
+
+                  {foodDetail.filter((food) => food.food_type === '晚餐').map((food) => (
+                    <AccordionItem>
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" textAlign="left">
+                            {food.name} {`(${food.food_type})`}
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        種類: {food.food_group}<br></br>
+                        分量: {food.food_amount}g<br></br>
+                        每一百克卡路里： {food.food_calories}kcal<br></br>
+                        攝入卡路里：{food.food_intake}kcal<br></br>
+                        碳水化合物: {food.carbohydrates}g<br></br>
+                        糖分: {food.sugars}g<br></br>
+                        脂肪: {food.fat}g<br></br>
+                        蛋白質: {food.protein}g<br></br>
+                        膳食纖維: {food.fiber}g<br></br>
+                        鈉: {food.sodium}ng<br></br>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  ))}
+
+                  {foodDetail.filter((food) => food.food_type === '小食').map((food) => (
+                    <AccordionItem>
+                      <h2>
+                        <AccordionButton>
+                          <Box flex="1" textAlign="left">
+                            {food.name} {`(${food.food_type})`}
+                          </Box>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+                      <AccordionPanel pb={4}>
+                        種類: {food.food_group}<br></br>
+                        分量: {food.food_amount}g<br></br>
+                        每一百克卡路里： {food.food_calories}kcal<br></br>
+                        攝入卡路里：{food.food_intake}kcal<br></br>
+                        碳水化合物: {food.carbohydrates}g<br></br>
+                        糖分: {food.sugars}g<br></br>
+                        脂肪: {food.fat}g<br></br>
+                        蛋白質: {food.protein}g<br></br>
+                        膳食纖維: {food.fiber}g<br></br>
+                        鈉: {food.sodium}ng<br></br>
+                      </AccordionPanel>
+                    </AccordionItem>
+                  ))}
+
                 </Accordion>
               </Box>
             </Flex>
