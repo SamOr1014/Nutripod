@@ -42,9 +42,8 @@ export default function Banner() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
-  // If the role is dietitian render a different route for account
-  const accountDir = "/dashboard/account";
-  //   state.role === "dietitian" ? "/dietitian/account" : "/dashboard/account";
+  const accountDir =
+    dietitian[0].id !== null ? "/dietitian/account" : "/dashboard/account";
 
   const logout = async () => {
     window.localStorage.clear();
