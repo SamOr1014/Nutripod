@@ -142,7 +142,14 @@ export default function Banner() {
                 onChange={() => toggleColorMode()}
               />
             </MenuItem>
-            <Link as={ReactLink} to={accountDir}>
+            <Link
+              as={ReactLink}
+              to={
+                dietitian[0].id !== null
+                  ? "/dietitian/account"
+                  : "/dashboard/account"
+              }
+            >
               <MenuItem
                 fontWeight="bold"
                 fontSize={isLargerThan1700 ? "xl" : "md"}
