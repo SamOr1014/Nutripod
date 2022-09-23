@@ -6,7 +6,6 @@ import { IRootState } from "../../../redux/store";
 
 import Banner from "../Banner";
 import UserNav from "./User_Nav";
-import UserNavLinks from "./User_nav_links";
 
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");

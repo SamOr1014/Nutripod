@@ -108,10 +108,6 @@ export default function DietitianMain() {
       });
   }
 
-  useEffect(() => {
-    fetchSelectedDateBooking();
-  }, [selectedDate]);
-
   //Booking Detail Component
   function BookingDetailToday(patient: PatientDetailOfTodayBooking) {
     //submit follow up date for the user
@@ -133,7 +129,6 @@ export default function DietitianMain() {
           }
         )
         .then(({ data }) => {
-          console.log(data);
           setCurrentDateBooking(data);
         });
     }
@@ -179,7 +174,11 @@ export default function DietitianMain() {
 
     useEffect(() => {
       fetchFollowUpAvailability();
-    }, [dateSubmit]);
+    }, [selectedDate, dateSubmit]);
+
+    useEffect(() => {
+      fetchSelectedDateBooking();
+    }, [selectedDate]);
     return (
       <>
         <AccordionItem>

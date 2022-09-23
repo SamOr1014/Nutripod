@@ -173,6 +173,18 @@ export default function Banner() {
                 登出
               </MenuItem>
             </Link>
+            {dietitian[0].id !== null && isSmallerThan800 === false ? (
+              <Link as={ReactLink} to={"/dietitian/datacenter"}>
+                <MenuItem
+                  fontWeight="bold"
+                  fontSize={isLargerThan1700 ? "xl" : "md"}
+                >
+                  數據庫
+                </MenuItem>
+              </Link>
+            ) : (
+              ""
+            )}
           </MenuList>
         </Menu>
       </Center>
