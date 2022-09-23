@@ -27,7 +27,7 @@ export default function DashBoard() {
       isClosable: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user[0].id]);
   return (
     <>
       <Banner />
