@@ -233,7 +233,7 @@ export const authSlice = createSlice({
                   phone: action.payload.data.phone,
                   address: action.payload.data.address,
                   profession: action.payload.data.profession,
-                  HKID: action.payload.data.HKID,
+                  HKID: action.payload.data.hkid,
                   chronic_condition: action.payload.data.chronic_condition,
                   education: action.payload.data.education,
                   is_deleted: action.payload.data.is_deleted,
