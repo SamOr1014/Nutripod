@@ -1,19 +1,4 @@
-import {
-  Box,
-  Button,
-  Center,
-  Divider,
-  Drawer,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  FormLabel,
-  useDisclosure,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Divider, Drawer, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, FormLabel, Textarea, useDisclosure, useMediaQuery } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,7 +11,6 @@ import SinglePosts from "./SinglePost";
 import { BaseEditor, Descendant, createEditor } from "slate";
 import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import { AddIcon } from "@chakra-ui/icons";
-
 const { REACT_APP_API_SERVER } = process.env;
 
 type CustomElement = { type: "paragraph"; children: CustomText[] };
@@ -77,20 +61,25 @@ export default function UserPost() {
   let content = "";
   let title = "";
 
-  let contentToken = localStorage.getItem("content");
-  if (contentToken) {
-    for (let par of JSON.parse(localStorage.getItem("content") as string)) {
-      if (par.children[0].text === "") {
-        content += "\n";
+
+  async function getContent() {
+    let contentToken = localStorage.getItem('content')
+    if (contentToken) {
+      for (let par of JSON.parse(localStorage.getItem('content') as string)) {
+        if (par.children[0].text === '') {
+          content += "\n"
+        }
+        content += par.children[0].text
       }
-      content += par.children[0].text;
     }
   }
 
-  let titleToken = localStorage.getItem("title");
-  if (titleToken) {
-    for (let par of JSON.parse(localStorage.getItem("title") as string)) {
-      title += par.children[0].text;
+  async function getTitle() {
+    let titleToken = localStorage.getItem('title')
+    if (titleToken) {
+      for (let par of JSON.parse(localStorage.getItem('title') as string)) {
+        title += par.children[0].text
+      }
     }
   }
 
@@ -108,9 +97,9 @@ export default function UserPost() {
   }
 
   async function postArticle() {
-    onClose();
-    console.log(content);
-    console.log(title);
+    onClose()
+    getContent()
+    getTitle()
     axios
       .post(
         `${REACT_APP_API_SERVER}/post/${
@@ -132,12 +121,11 @@ export default function UserPost() {
           window.localStorage.removeItem("title");
           Swal.fire({
             icon: "success",
-            title: "成功發文",
-          });
-          fetchAllPost();
+            title: "成功出POST"
+          })
+          fetchAllPost()
         }
-      })
-      .catch(() => {
+      }).catch(() => {
         Swal.fire({
           icon: "error",
           title: "發生錯誤，請稍後再試",
@@ -156,19 +144,19 @@ export default function UserPost() {
       my={2}
       overflow={"auto"}
     >
-      {dietitianInfo.id != null ? (
+      {dietitianInfo.id != null ? 
         <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
           Create Post
         </Button>
-      ) : (
-        <></>
-      )}
+        : <></>}
 
       <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px" textAlign={"center"}>
+          <DrawerHeader
+            borderBottomWidth='1px'
+            textAlign={'center'}>
             請在此刊登你的資訊
           </DrawerHeader>
 
@@ -178,50 +166,54 @@ export default function UserPost() {
             display="flex"
             flexDirection="column"
             justifyContent="center"
-            alignSelf={"center"}
-            margin={"10"}
-            border="4px"
-          >
-            <Flex flex={1} borderBottom={"4px"}>
-              <FormLabel fontSize={"4xl"} height="10">
-                Title:
-              </FormLabel>
+            alignSelf={'center'}
+            margin={'10'}
+            border='4px'>
 
-              <Box>
+            <Flex
+              flex={1}
+              borderBottom={'4px'}
+              flexDirection="row"
+            >
+
+              <Box
+                width={isSmallerThan600 ? "97%" : '99%'}
+                fontSize={isSmallerThan600 ? '2xl' : '3xl'}
+              >
                 <Slate
                   editor={titleEditor}
                   value={initialTitleValue}
-                  onChange={(value) => {
-                    const isAstChange = titleEditor.operations.some(
-                      (title) => "set_selection" !== title.type
-                    );
-                    if (isAstChange) {
-                      const title = JSON.stringify(value);
-                      localStorage.setItem("title", title);
-                    }
+                  onChange={value => {
+                    const title = JSON.stringify(value)
+                    localStorage.setItem('title', title)
                   }}
                 >
-                  <Editable />
+                  <Editable
+                  placeholder="請在此輸入標題" />
                 </Slate>
               </Box>
             </Flex>
 
-            <Flex flex={9}>
-              <Slate
-                editor={contentEditor}
-                value={initialContentValue}
-                onChange={(value) => {
-                  const isAstChange = contentEditor.operations.some(
-                    (content) => "set_selection" !== content.type
-                  );
-                  if (isAstChange) {
-                    const content = JSON.stringify(value);
-                    localStorage.setItem("content", content);
-                  }
-                }}
+
+            <Flex
+              flex={9}>
+              <Box
+                width={isSmallerThan600 ? "97%" : '99%'}
+                fontSize={isSmallerThan600 ? '2xl' : '3xl'}
               >
-                <Editable />
-              </Slate>
+                <Slate
+                  editor={contentEditor}
+                  value={initialContentValue}
+                  onChange={value => {
+                    const content = JSON.stringify(value)
+                    localStorage.setItem('content', content)
+                  }
+                  }
+                >
+                  <Editable 
+                   placeholder="請在此輸入內文"/>
+                </Slate>
+              </Box>
             </Flex>
           </Box>
 
@@ -237,7 +229,6 @@ export default function UserPost() {
       </Drawer>
 
       <Divider my={4} />
-      {/* Post Area */}
       {posts.map((props) => {
         return (
           <>

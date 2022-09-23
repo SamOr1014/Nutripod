@@ -39,7 +39,7 @@ export default function FullPost() {
   useEffect(() => {
     fetchSinglePost();
   }, []);
-  console.log(postContent)
+ 
 
   function getText(article: string) {
 
@@ -58,10 +58,12 @@ export default function FullPost() {
               bg={bg}
               p={10}
               rounded={"3xl"}
-              key={`post_id_${post.id}`}
+              key={`fullPost_id_${post.id}`}
               overflow={"auto"}
             >
-              <Stack gap={4}>
+              <Stack 
+              gap={4}
+              width={'100%'}>
                 <Heading fontStyle={"3xl"}>{post.title}</Heading>
                 <HStack fontSize={"lg"}>
                   <Avatar
@@ -73,9 +75,7 @@ export default function FullPost() {
                 </HStack>
                 <Divider />
                 <Box overflow={"auto"} w={"100%"}>
-
                   {getText(post.content)}
-
                 </Box>
               </Stack>
             </Flex>

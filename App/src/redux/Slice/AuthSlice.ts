@@ -204,28 +204,44 @@ export const authSlice = createSlice({
       .addCase(loginThunk.fulfilled, (state, action) => {
         console.log("check extra payload", action.payload);
         state.loading = false;
-        state.user = [
-          {
-            id: action.payload.data.id,
-            username: action.payload.data.username,
-            first_name: action.payload.data.first_name,
-            last_name: action.payload.data.last_name,
-            email: action.payload.data.email,
-            birthday: action.payload.data.birthday,
-            height: action.payload.data.height,
-            weight: action.payload.data.weight,
-            gender: action.payload.data.gender,
-            phone: action.payload.data.phone,
-            address: action.payload.data.address,
-            profession: action.payload.data.profession,
-            HKID: action.payload.data.HKID,
-            chronic_condition: action.payload.data.chronic_condition,
-            education: action.payload.data.education,
-            is_deleted: action.payload.data.is_deleted,
-            is_user: action.payload.data.is_user,
-          },
-        ];
-        state.saveToken = action.payload.saveToken;
+
+        if (action.payload.data.is_user === false) {
+          state.dietitian = [
+            {
+              id: action.payload.data.id,
+              username: action.payload.data.username,
+              first_name: action.payload.data.first_name,
+              last_name: action.payload.data.last_name,
+              email: action.payload.data.email,
+              is_deleted: action.payload.data.is_deleted,
+              is_user: action.payload.data.is_user
+            }
+          ]
+          state.saveToken = action.payload.saveToken;
+        } else if (action.payload.data.is_user === true) {
+          state.user = [
+            {
+              id: action.payload.data.id,
+                  username: action.payload.data.username,
+                  first_name: action.payload.data.first_name,
+                  last_name: action.payload.data.last_name,
+                  email: action.payload.data.email,
+                  birthday: action.payload.data.birthday,
+                  height: action.payload.data.height,
+                  weight: action.payload.data.weight,
+                  gender: action.payload.data.gender,
+                  phone: action.payload.data.phone,
+                  address: action.payload.data.address,
+                  profession: action.payload.data.profession,
+                  HKID: action.payload.data.HKID,
+                  chronic_condition: action.payload.data.chronic_condition,
+                  education: action.payload.data.education,
+                  is_deleted: action.payload.data.is_deleted,
+                  is_user: action.payload.data.is_user
+            }
+          ]
+          state.saveToken = action.payload.saveToken;
+        }
       })
       .addCase(loginThunk.rejected, (state, action: any) => {
         state.loading = false;

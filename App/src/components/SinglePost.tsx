@@ -91,8 +91,6 @@ export default function SinglePosts(props: PostTemplate) {
           {props.content}
         </Text>
         {dietitianInfo.id !== null ? (
-          ""
-        ) : (
           <CloseButton
             pos={"absolute"}
             size={"sm"}
@@ -102,6 +100,8 @@ export default function SinglePosts(props: PostTemplate) {
             }}
             right={2}
           />
+        ): (
+          ""
         )}
         <Divider my={4} />
       </LinkBox>

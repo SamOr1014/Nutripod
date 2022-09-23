@@ -145,17 +145,17 @@ export function Login() {
         // dispatch(userLogin(userData));
         navigate("/dashboard");
       } else if (userInfo.is_user === false) {
-        const dietitianData: dietitianSavedInfo = {
-          id: userInfo.id,
-          username: userInfo.username,
-          first_name: userInfo.first_name,
-          last_name: userInfo.last_name,
-          email: userInfo.email,
-          is_user: userInfo.is_user,
-          is_deleted: userInfo.is_deleted,
-          saveToken: saveUser,
-        };
-        dispatch(dietitianLogin(dietitianData));
+        // const dietitianData: dietitianSavedInfo = {
+        //   id: userInfo.id,
+        //   username: userInfo.username,
+        //   first_name: userInfo.first_name,
+        //   last_name: userInfo.last_name,
+        //   email: userInfo.email,
+        //   is_user: userInfo.is_user,
+        //   is_deleted: userInfo.is_deleted,
+        //   saveToken: saveUser,
+        // };
+        // dispatch(dietitianLogin(dietitianData));
         navigate("/dietitian");
       }
     }
@@ -411,7 +411,7 @@ export function Login() {
           justifyContent="center"
           mt="5"
         >
-          Terms of Use & Privacy Policy
+          {`Terms of Use & Privacy Policy`}
         </Link>
       </Box>
     </Box>
