@@ -85,7 +85,7 @@ export interface diet {
   id: number;
   name: string;
   food_group: string;
-  food_type:string
+  food_type: string;
   food_amount: number;
   food_calories: number;
   food_intake: number;
@@ -162,6 +162,7 @@ export interface PostTemplate {
   id: number;
   title: string;
   author: string | number;
+  authorid: string | number;
   time: string;
   content: string;
   refresh: () => void;
@@ -177,5 +178,5 @@ export interface FullSinglePost {
 }
 
 export interface searchFood {
-  name : string
+  name: string;
 }

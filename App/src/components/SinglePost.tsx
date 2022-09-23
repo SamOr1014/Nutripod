@@ -7,6 +7,7 @@ import {
   CloseButton,
   LinkBox,
   LinkOverlay,
+  Avatar,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useSelector } from "react-redux";
@@ -62,11 +63,16 @@ export default function SinglePosts(props: PostTemplate) {
         flex={1}
       >
         <Heading
-          fontSize={isSmallerThan600 ? "sm" : "md"}
+          fontSize={isSmallerThan600 ? "md" : "lg"}
           overflow={"hidden"}
+          alignItems={"center"}
           display={"flex"}
-          // position={"relative"}
+          gap={2}
         >
+          <Avatar
+            size="sm"
+            src={`https://i.pravatar.cc/500?img=${props.authorid}`}
+          />
           <Text flex={1}>{props.author}</Text>
         </Heading>
 
