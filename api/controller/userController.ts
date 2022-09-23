@@ -7,21 +7,22 @@ import { hashPassword, checkPassword } from '../utilities/hash'
 import { generateP } from '../utilities/generater'
 
 export class UserController {
-	constructor(private userService: UserServices) {}
+	constructor(private userService: UserServices) { }
 
-	checkUserByToken = async (req: Request, res: Response) => {
+	checkToken = async (req: Request, res: Response) => {
+
 		try {
-			const id = req.body.data.id
-			const username = req.body.data.username
+			const token = req.body.data.token
 
-			if (!id || !username) {
+			if (!token) {
 				res.status(400).json({
 					success: false
 				})
 				return
 			}
 
-			const result = await this.userService.checkToken(id, username)
+			const payload = jwtSimple.decode(token, jwt.jwtSecret as string)
+			const result = await this.userService.checkToken(payload.id, payload.username)
 
 			if (result.length === 0) {
 				res.status(400).json({
@@ -30,6 +31,7 @@ export class UserController {
 				return
 			}
 			res.json({ success: true, result: result[0] })
+
 		} catch (e) {
 			logger.error(e.message)
 			res.status(400).json({ success: false })

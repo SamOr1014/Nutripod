@@ -251,7 +251,7 @@ export async function up(knex: Knex): Promise<void> {
 		table.foreign('diet_type').references('diets_types.id')
 		table.integer('food').unsigned().notNullable()
 		table.foreign('food').references('food.id')
-		table.decimal('food_amount', 5, 2).notNullable()
+		table.integer('food_amount').notNullable()
 		table.date('date').notNullable()
 		table.timestamps(false, true)
 		table.integer('user_id').unsigned().notNullable()

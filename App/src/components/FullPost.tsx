@@ -38,12 +38,12 @@ export default function FullPost() {
 
   useEffect(() => {
     fetchSinglePost();
-  }, []);
+  },[]);
  
 
   function getText(article: string) {
 
-    const newText = article.split('\n').map(str => <Text><br></br>{str}</Text>);
+    const newText = article.split('\n').map(str => <Text fontSize={'xl'}>{str}<br></br></Text>);
     return newText
   }
 
@@ -61,7 +61,7 @@ export default function FullPost() {
               key={`fullPost_id_${post.id}`}
               overflow={"auto"}
             >
-              <Stack 
+              <Stack
               gap={4}
               width={'100%'}>
                 <Heading fontStyle={"3xl"}>{post.title}</Heading>

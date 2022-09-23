@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Center,
   Divider,
   Drawer,
   DrawerCloseButton,
@@ -10,8 +9,6 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
-  FormLabel,
-  Textarea,
   useDisclosure,
   useMediaQuery,
 } from "@chakra-ui/react";
@@ -57,7 +54,7 @@ export default function UserPost() {
       JSON.parse(localStorage.getItem("content") as string) || [
         {
           type: "paragraph",
-          children: [{ text: "Please input your post here." }],
+          children: [{ text: "請在此輸入內容." }],
         },
       ],
     []
@@ -68,7 +65,7 @@ export default function UserPost() {
       JSON.parse(localStorage.getItem("title") as string) || [
         {
           type: "paragraph",
-          children: [{ text: "Please input your title here." }],
+          children: [{ text: "請在此輸入標題." }],
         },
       ],
     []
@@ -162,18 +159,18 @@ export default function UserPost() {
       overflow={"auto"}
     >
       {dietitianInfo.id != null ? (
-        <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
+        <Button  leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
           Create Post
         </Button>
       ) : (
         <></>
       )}
 
-      <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"}>
+      <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"} >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px" textAlign={"center"}>
+          <DrawerHeader borderBottomWidth="1px" textAlign={"center"} fontSize='3xl'>
             請在此刊登你的資訊
           </DrawerHeader>
 
@@ -218,7 +215,7 @@ export default function UserPost() {
                     localStorage.setItem("content", content);
                   }}
                 >
-                  <Editable placeholder="請在此輸入內文" />
+                  <Editable placeholder="請在此輸入內容" />
                 </Slate>
               </Box>
             </Flex>
@@ -240,8 +237,8 @@ export default function UserPost() {
         return (
           <>
             <SinglePosts
-              id={props.id}
               key={`posts_${props.id}`}
+              id={props.id}
               title={props.title}
               author={props.first_name + " " + props.last_name}
               authorid={props.author_id}

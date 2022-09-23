@@ -27,20 +27,13 @@ import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, IRootState } from "../redux/store";
-import {
-  userLogin,
-  dietitianLogin,
-  userSavedInfo,
-  dietitianSavedInfo,
-} from "../redux/Slice/AuthSlice";
 import { loginThunk } from "../redux/Thunk/AuthThunk";
+import { tokenThunk } from "../redux/Thunk/tokenThunk";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
-import { token } from "../utility/models";
-import jwt_decode from "jwt-decode";
-import axios from "axios";
+
 
 export function Login() {
   const bg = useColorModeValue("gray.200", "gray.700");
@@ -54,61 +47,23 @@ export function Login() {
   const loadingStatus = useSelector((state: IRootState) => state.user.loading);
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
-  const { REACT_APP_API_SERVER } = process.env;
   const checkToken = window.localStorage.getItem("userLocalToken");
 
-  const checkTokenLogin = async () => {
-    const payload: token = jwt_decode(checkToken as string);
+  const TokenLogin = async () => {
+    const result = await dispatch(tokenThunk(checkToken as string))
+    if (result.payload.success) {
+      const userInfo = result.payload.data;
+      if (userInfo.is_user === true) {
+        navigate("/dashboard");
+      } else if (userInfo.is_user === false) {
+        navigate("/dietitian");
+      }
 
-    const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`, {
-      data: {
-        id: payload.id,
-        username: payload.username,
-      },
-    });
-    if (result.data.result.is_user) {
-      const userinfo = result.data.result;
-      const userData: userSavedInfo = {
-        id: userinfo.id,
-        username: userinfo.username,
-        first_name: userinfo.first_name,
-        last_name: userinfo.last_name,
-        email: userinfo.email,
-        birthday: userinfo.birthday,
-        height: userinfo.height,
-        weight: userinfo.weight,
-        gender: userinfo.gender,
-        phone: userinfo.phone,
-        address: userinfo.address,
-        profession: userinfo.profession,
-        HKID: userinfo.hkid,
-        chronic_condition: userinfo.chronic_condition,
-        education: userinfo.education,
-        is_deleted: userinfo.is_deleted,
-        is_user: userinfo.is_user,
-        saveToken: true,
-      };
-      dispatch(userLogin(userData));
-      navigate("/dashboard");
-    } else if (!result.data.result.is_user) {
-      const dietitianInfo = result.data.result;
-      const dietitianData: dietitianSavedInfo = {
-        id: dietitianInfo.id,
-        username: dietitianInfo.username,
-        first_name: dietitianInfo.first_name,
-        last_name: dietitianInfo.last_name,
-        email: dietitianInfo.email,
-        is_user: dietitianInfo.is_user,
-        is_deleted: dietitianInfo.is_deleted,
-        saveToken: true,
-      };
-      dispatch(dietitianLogin(dietitianData));
-      navigate("/dietitian");
     }
-  };
+  }
 
   if (checkToken != null) {
-    checkTokenLogin();
+    TokenLogin()
   }
 
   const LoginSubmit = async () => {
@@ -122,40 +77,8 @@ export function Login() {
     if (result.payload.success) {
       const userInfo = result.payload.data;
       if (userInfo.is_user === true) {
-        // const userData: userSavedInfo = {
-        //   id: userInfo.id,
-        //   username: userInfo.username,
-        //   first_name: userInfo.first_name,
-        //   last_name: userInfo.last_name,
-        //   email: userInfo.email,
-        //   birthday: userInfo.birthday,
-        //   height: userInfo.height,
-        //   weight: userInfo.weight,
-        //   gender: userInfo.gender,
-        //   phone: userInfo.phone,
-        //   address: userInfo.address,
-        //   profession: userInfo.profession,
-        //   HKID: userInfo.hkid,
-        //   chronic_condition: userInfo.chronic_condition,
-        //   education: userInfo.education,
-        //   is_deleted: userInfo.is_deleted,
-        //   is_user: userInfo.is_user,
-        //   saveToken: saveUser,
-        // };
-        // dispatch(userLogin(userData));
         navigate("/dashboard");
       } else if (userInfo.is_user === false) {
-        // const dietitianData: dietitianSavedInfo = {
-        //   id: userInfo.id,
-        //   username: userInfo.username,
-        //   first_name: userInfo.first_name,
-        //   last_name: userInfo.last_name,
-        //   email: userInfo.email,
-        //   is_user: userInfo.is_user,
-        //   is_deleted: userInfo.is_deleted,
-        //   saveToken: saveUser,
-        // };
-        // dispatch(dietitianLogin(dietitianData));
         navigate("/dietitian");
       }
     }

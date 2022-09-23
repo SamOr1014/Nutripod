@@ -15,7 +15,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
 } from "@chakra-ui/react";
-import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
+import { EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { Link as ReactLink } from "react-router-dom";
 
