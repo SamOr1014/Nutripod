@@ -20,6 +20,7 @@ import {
   MenuList,
   useMediaQuery,
   Image,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
@@ -30,6 +31,7 @@ import DietitianNavLinks from "./DietitianUI/Dietitian_nav_links";
 import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner() {
+  const bg = useColorModeValue("gray.200", "gray.800");
   const navigate = useNavigate();
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
@@ -80,11 +82,12 @@ export default function Banner() {
   return (
     <Center
       height={isLargerThan1700 ? 40 : 20}
-      p={"10"}
-      mb={isLargerThan1700 ? 10 : 2}
+      bg={bg}
       pos={"sticky"}
       top={0}
       zIndex={100}
+      w={"100vw"}
+      p={5}
     >
       <Center flex="2" display="flex" justifyContent="start">
         <Show above="md"></Show>

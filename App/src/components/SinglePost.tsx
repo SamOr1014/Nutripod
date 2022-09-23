@@ -56,16 +56,17 @@ export default function SinglePosts(props: PostTemplate) {
     <>
       <LinkBox
         as={"article"}
-        w={"100%"}
-        h={"150px"}
+        maxH={"150px"}
+        maxW={"95vw"}
         flexDir={"column"}
         display={"flex"}
-        position={"relative"}
+        flex={1}
       >
         <Heading
           fontSize={isSmallerThan600 ? "sm" : "md"}
           overflow={"hidden"}
           display={"flex"}
+          // position={"relative"}
         >
           <Text flex={1}>{props.author}</Text>
         </Heading>

@@ -10,13 +10,19 @@ import {
 } from '../utilities/formatDate'
 
 export class DietRecordController {
-	constructor(private dietRecordService: DietRecordServices) { }
+	constructor(private dietRecordService: DietRecordServices) {}
 
 	//##############Weight BP BG Record Controller#############################
 
 	getWeightByUserID = async (req: Request, res: Response) => {
 		try {
 			let userID = req.params.uid
+			if (!userID || isNaN(parseInt(userID))) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+			}
 			const weightRec = await this.dietRecordService.getWeightByUserID(
 				userID
 			)
@@ -75,6 +81,12 @@ export class DietRecordController {
 
 	getBPByUserID = async (req: Request, res: Response) => {
 		try {
+			if (!req.params.uid || isNaN(parseInt(req.params.uid))) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+			}
 			const bpRec = await this.dietRecordService.getBPByUserID(
 				req.params.uid
 			)
@@ -135,6 +147,12 @@ export class DietRecordController {
 
 	getBGByUserID = async (req: Request, res: Response) => {
 		try {
+			if (!req.params.uid || isNaN(parseInt(req.params.uid))) {
+				res.status(400).json({
+					success: false,
+					message: 'No ID Provided'
+				})
+			}
 			const bgRec = await this.dietRecordService.getBGByUserID(
 				req.params.uid
 			)
@@ -601,24 +619,26 @@ export class DietRecordController {
 	}
 
 	searchFood = async (req: Request, res: Response) => {
-
 		try {
 			const food = req.params.food
 
 			if (!food) {
 				res.status(400).json({
-					success: false, message: "Information not provided"
+					success: false,
+					message: 'Information not provided'
 				})
 				return
 			}
 			const result = await this.dietRecordService.search(food)
 
 			if (result.length === 0) {
-				res.status(400).json({ success: false, message: "沒有此食物,請更改字眼" })
+				res.status(400).json({
+					success: false,
+					message: '沒有此食物,請更改字眼'
+				})
 				return
 			}
 			res.status(200).json({ success: true, list: result })
-
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
@@ -627,19 +647,25 @@ export class DietRecordController {
 	}
 
 	postFood = async (req: Request, res: Response) => {
-
 		try {
 			const { food, dietType, amount, date, userID } = req.body.values
 
 			if (!food || !date || !amount || !userID || !dietType) {
 				res.status(400).json({
-					success: false, message: "Information not provided"
+					success: false,
+					message: 'Information not provided'
 				})
 				return
 			}
 
 			const formattedDate = formatDate(date)
-			const result = await this.dietRecordService.postFood(userID, food, formattedDate, amount, dietType)
+			const result = await this.dietRecordService.postFood(
+				userID,
+				food,
+				formattedDate,
+				amount,
+				dietType
+			)
 
 			if (result.length === 0) {
 				res.status(400).json({ success: false })
@@ -647,7 +673,6 @@ export class DietRecordController {
 			}
 
 			res.status(200).json({ success: true })
-
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
@@ -656,7 +681,6 @@ export class DietRecordController {
 	}
 
 	getExercisesRecord = async (req: Request, res: Response) => {
-
 		try {
 			let uid = req.params.uid
 			let date = req.params.date
@@ -670,15 +694,17 @@ export class DietRecordController {
 			}
 
 			let formattedDate = formatDate(date)
-			const result = await this.dietRecordService.getExerciseByID(uid, formattedDate)
+			const result = await this.dietRecordService.getExerciseByID(
+				uid,
+				formattedDate
+			)
 
 			if (result.length === 0) {
-				res.json({ success: false, message: "沒有記錄" })
+				res.json({ success: false, message: '沒有記錄' })
 				return
 			}
 
 			res.status(200).json({ success: true, list: result })
-
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false })
@@ -687,7 +713,6 @@ export class DietRecordController {
 	}
 
 	getFoodIntakeRecord = async (req: Request, res: Response) => {
-
 		try {
 			let uid = req.params.uid
 			let date = req.params.date
@@ -701,10 +726,13 @@ export class DietRecordController {
 			}
 
 			let formattedDate = formatDate(date)
-			const result = await this.dietRecordService.getFoodIntakeByID(uid, formattedDate)
+			const result = await this.dietRecordService.getFoodIntakeByID(
+				uid,
+				formattedDate
+			)
 
 			if (result.length === 0) {
-				res.json({ success: false, message: "沒有記錄" })
+				res.json({ success: false, message: '沒有記錄' })
 				return
 			}
 
