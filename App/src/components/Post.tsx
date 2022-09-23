@@ -241,6 +241,7 @@ export default function UserPost() {
               id={props.id}
               title={props.title}
               author={props.first_name + " " + props.last_name}
+              authorid={props.author_id}
               time={props.date}
               content={props.content}
               refresh={fetchAllPost}
