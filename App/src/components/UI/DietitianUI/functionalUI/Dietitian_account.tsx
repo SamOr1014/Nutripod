@@ -13,18 +13,20 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../../../../redux/store";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
-import { IRootState } from "../../../../redux/store";
 import axios from "axios";
 import locateToken from "../../../../utility/Token";
+import { tokenThunk } from "../../../../redux/Thunk/tokenThunk";
 
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianAccount() {
   // obtain data from redux
-  //   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const token = locateToken()
+  
   const user = useSelector((state: IRootState) => state.user.user);
 
   const dietitianID = useSelector(
@@ -70,6 +72,7 @@ export default function DietitianAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的電郵已更改為: ${result.value}`);
+          dispatch(tokenThunk(token as string))
         }
       }
     });

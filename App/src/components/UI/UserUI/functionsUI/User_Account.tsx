@@ -1,16 +1,12 @@
 import {
-  Box,
   Text,
   Divider,
   Button,
   Flex,
   FormControl,
-  FormLabel,
   Heading,
-  Input,
   Stack,
   useColorModeValue,
-  HStack,
   Avatar,
   AvatarBadge,
   IconButton,
@@ -18,20 +14,21 @@ import {
   useMediaQuery,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, IRootState } from "../../../../redux/store";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
-import { IRootState } from "../../../../redux/store";
 import axios from "axios";
 import locateToken from "../../../../utility/Token";
-import { useNavigate } from "react-router";
-import { loginThunk } from "../../../../redux/Thunk/AuthThunk";
+import { tokenThunk } from "../../../../redux/Thunk/tokenThunk";
+
 
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserAccount() {
   // obtain data from redux
-  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const token = locateToken()
+  
   const user = useSelector((state: IRootState) => state.user.user);
 
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
@@ -66,8 +63,6 @@ export default function UserAccount() {
     (state: IRootState) => state.user.user[0].address
   );
 
-  const [noInput, setNoInput] = useState<string>("");
-
   async function changeGender() {
     await Swal.fire({
       title: "請選擇",
@@ -75,7 +70,6 @@ export default function UserAccount() {
       inputOptions: { 1: "男性", 2: "女性", 3: "其他" },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(result.value);
         const results = await axios.put(
           `${REACT_APP_API_SERVER}/user/info/gender`,
           {
@@ -89,7 +83,8 @@ export default function UserAccount() {
           }
         );
         if (results.data.success) {
-          Swal.fire(`你的性別已更改為: ${result.value}`);
+          Swal.fire(`你的性別已更改`);
+          dispatch(tokenThunk(token as string))
         }
       }
     });
@@ -114,6 +109,7 @@ export default function UserAccount() {
           icon: "error",
           title: "請輸入正確的電話號碼",
         });
+        dispatch(tokenThunk(token as string))
       }
       if (result.isConfirmed && result.value.length === 8) {
         // token validate thunk
@@ -135,6 +131,7 @@ export default function UserAccount() {
         if (results.data.success) {
           //
           Swal.fire(`你的電話號碼已更改為: +852 ${result.value}`);
+          dispatch(tokenThunk(token as string))
         }
       }
     });
@@ -156,7 +153,6 @@ export default function UserAccount() {
       // },
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(result.value);
         const results = await axios.put(
           `${REACT_APP_API_SERVER}/user/info/address`,
           {
@@ -171,6 +167,7 @@ export default function UserAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的地址已更改為:${result.value}`);
+          dispatch(tokenThunk(token as string))
         }
       }
     });
@@ -186,7 +183,6 @@ export default function UserAccount() {
       showCancelButton: true,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(result.value);
         const results = await axios.put(
           `${REACT_APP_API_SERVER}/user/info/email`,
           {
@@ -201,16 +197,11 @@ export default function UserAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的電郵已更改為: ${result.value}`);
-          // navigate("/dashboard/account");
+          dispatch(tokenThunk(token as string))
         }
       }
     });
   }
-  // useEffect(() => {
-  //   if (user[0].id) {
-  //     changePhone();
-  //   }
-  // }, [user]);
 
   return (
     <Flex gap={2} w={"100%"} flexDir={isSmallerThan600 ? "column" : "row"}>

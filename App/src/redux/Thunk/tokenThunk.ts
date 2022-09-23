@@ -19,7 +19,6 @@ export const tokenThunk = createAsyncThunk<any, string, ThunkExtraInfo>(
                         token: token
                     }
                 })
-            console.log(result)
 
             if (result.data.success) {
                 return { data: result.data.result, success: true };
