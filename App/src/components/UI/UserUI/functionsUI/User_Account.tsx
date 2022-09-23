@@ -21,14 +21,13 @@ import axios from "axios";
 import locateToken from "../../../../utility/Token";
 import { tokenThunk } from "../../../../redux/Thunk/tokenThunk";
 
-
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function UserAccount() {
   // obtain data from redux
   const dispatch = useDispatch<AppDispatch>();
-  const token = locateToken()
-  
+  const token = locateToken();
+
   const user = useSelector((state: IRootState) => state.user.user);
 
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
@@ -84,7 +83,7 @@ export default function UserAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的性別已更改`);
-          dispatch(tokenThunk(token as string))
+          dispatch(tokenThunk(token as string));
         }
       }
     });
@@ -109,7 +108,7 @@ export default function UserAccount() {
           icon: "error",
           title: "請輸入正確的電話號碼",
         });
-        dispatch(tokenThunk(token as string))
+        dispatch(tokenThunk(token as string));
       }
       if (result.isConfirmed && result.value.length === 8) {
         // token validate thunk
@@ -131,7 +130,7 @@ export default function UserAccount() {
         if (results.data.success) {
           //
           Swal.fire(`你的電話號碼已更改為: +852 ${result.value}`);
-          dispatch(tokenThunk(token as string))
+          dispatch(tokenThunk(token as string));
         }
       }
     });
@@ -167,7 +166,7 @@ export default function UserAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的地址已更改為:${result.value}`);
-          dispatch(tokenThunk(token as string))
+          dispatch(tokenThunk(token as string));
         }
       }
     });
@@ -197,7 +196,7 @@ export default function UserAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的電郵已更改為: ${result.value}`);
-          dispatch(tokenThunk(token as string))
+          dispatch(tokenThunk(token as string));
         }
       }
     });
@@ -336,8 +335,6 @@ export default function UserAccount() {
         <FormControl id="hkid">
           <Heading fontSize="lg">身份證號碼</Heading>
           <Text fontSize="xl" my="1">
-            {/* {userHKID?.slice(0, 7) + "("}
-            {userHKID?.slice(-1) + ")"} */}
             {userHKID}
           </Text>
         </FormControl>

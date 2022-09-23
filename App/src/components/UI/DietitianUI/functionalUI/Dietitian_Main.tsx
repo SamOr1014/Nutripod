@@ -108,7 +108,6 @@ export default function DietitianMain() {
       });
   }
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchSelectedDateBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
@@ -177,10 +176,8 @@ export default function DietitianMain() {
 
     useEffect(() => {
       fetchFollowUpAvailability();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dateSubmit]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
       <>
         <AccordionItem>
