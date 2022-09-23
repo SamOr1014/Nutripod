@@ -55,7 +55,7 @@ export default function SinglePosts(props: PostTemplate) {
     <>
       <LinkBox
         as={"article"}
-        maxH={"150px"}
+        maxH={"120px"}
         maxW={"95vw"}
         flexDir={"column"}
         display={"flex"}
@@ -80,15 +80,8 @@ export default function SinglePosts(props: PostTemplate) {
             {props.title}
           </LinkOverlay>
         </Heading>
-        <Text fontSize={isSmallerThan600 ? "xs" : "sm"}>{new Date(props.time).toLocaleDateString()}</Text>
-        <Text
-          overflow={"hidden"}
-          h={"30px"}
-          textOverflow={"ellipsis"}
-          whiteSpace={"nowrap"}
-          fontSize={isSmallerThan600 ? "sm" : "md"}
-        >
-          {props.content}
+        <Text fontSize={isSmallerThan600 ? "xs" : "sm"}>
+          {new Date(props.time).toLocaleDateString()}
         </Text>
         {dietitianInfo.id !== null ? (
           <CloseButton
@@ -100,7 +93,7 @@ export default function SinglePosts(props: PostTemplate) {
             }}
             right={2}
           />
-        ): (
+        ) : (
           ""
         )}
         <Divider my={4} />
