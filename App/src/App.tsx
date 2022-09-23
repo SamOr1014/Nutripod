@@ -21,6 +21,7 @@ import UserPrivate from "./components/userPrivate";
 import DietitianPrivate from "./components/dietitianPrivate";
 import Register from "./components/UI/DietitianUI/functionalUI/Register";
 import FullPost from "./components/FullPost";
+import DataCenter from "./components/Data";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -51,6 +52,7 @@ function App() {
           <Route path="posts" element={<UserPost />} />
           <Route path="posts/:id" element={<FullPost />} />
           <Route path="register" element={<Register />} />
+          <Route path="datacenter" element={<DataCenter />} />
           <Route path="account" element={<DietitianAccount />} />
         </Route>
       </Route>
