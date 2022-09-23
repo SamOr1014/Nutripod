@@ -205,10 +205,6 @@ export default function UserPost() {
                   editor={contentEditor}
                   value={initialContentValue}
                   onChange={value => {
-                    // const isAstChange = contentEditor.operations.some(
-                    //   content => 'set_selection' !== content.type
-                    // )
-                    // if (isAstChange) {
                     const content = JSON.stringify(value)
                     localStorage.setItem('content', content)
                   }
@@ -233,7 +229,6 @@ export default function UserPost() {
       </Drawer>
 
       <Divider my={4} />
-      {/* Post Area */}
       {posts.map((props) => {
         return (
           <>
