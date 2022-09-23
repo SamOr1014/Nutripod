@@ -18,7 +18,9 @@ export default function DashBoard() {
     if (user[0].id === (undefined || null)) {
       navigate("/login");
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user[0].id]);
+  useEffect(() => {
     toast({
       position: "bottom",
       title: `${user[0].username}`,
@@ -27,7 +29,7 @@ export default function DashBoard() {
       isClosable: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user[0].id]);
+  }, []);
   return (
     <>
       <Banner />
