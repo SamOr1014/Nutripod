@@ -11,6 +11,7 @@ import {
   AvatarBadge,
   IconButton,
   Center,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
@@ -44,6 +45,8 @@ export default function DietitianAccount() {
     (state: IRootState) => state.user.dietitian[0].last_name
   );
 
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+
   async function changeEmail() {
     await Swal.fire({
       title: "請輸入你的電郵",
@@ -75,88 +78,79 @@ export default function DietitianAccount() {
 
   return (
     <>
-      <Flex
-        display={"flex"}
-        flexDir={"column"}
-        width="100%"
-        h="100%"
-        borderRadius={10}
+      <Stack
+        spacing={4}
+        w={"full"}
+        maxW={"md"}
+        maxH={isSmallerThan600 ? "min-content" : "auto"}
+        bg={useColorModeValue("white", "gray.700")}
+        rounded={"xl"}
+        boxShadow={"lg"}
+        p={6}
+        my={12}
       >
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          bg={useColorModeValue("gray.50", "gray.800")}
-        >
-          <Stack
-            spacing={4}
-            w={"full"}
-            maxW={"md"}
-            bg={useColorModeValue("white", "gray.700")}
-            rounded={"xl"}
-            boxShadow={"lg"}
-            p={6}
-            my={12}
-          >
-            <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-              你的用戶資料
-              <Divider mb={2} />
-            </Heading>
-            <FormControl id="userIcon">
-              <Stack direction={["column", "row"]} spacing={6}>
-                <Center>
-                  <Avatar size="xl" src="https://bit.ly/sage-adebayo">
-                    <AvatarBadge
-                      as={IconButton}
-                      size="sm"
-                      rounded="full"
-                      top="-10px"
-                      colorScheme="red"
-                      aria-label="remove Image"
-                      icon={<SmallCloseIcon />}
-                    />
-                  </Avatar>
-                </Center>
-                <Center w="full">
-                  <Button w="full">更換頭像</Button>
-                </Center>
-              </Stack>
-            </FormControl>
-            <FormControl id="userName">
-              <Heading fontSize="lg">用戶名稱</Heading>
-              <Text fontSize="xl" my="1">
-                {dietitianUserName}
-              </Text>
-            </FormControl>
-
-            <FormControl id="userName">
-              <Heading fontSize="lg">姓名</Heading>
-              <Text fontSize="xl" my="1">
-                {dietitianFirstName + dietitianLastName!}
-              </Text>
-            </FormControl>
-
-            <FormControl id="email">
-              <Heading fontSize="lg">電郵</Heading>
-              <Text fontSize="xl" my="1">
-                {dietitianEmail}
-              </Text>
-              <Button
-                colorScheme="red"
-                onClick={async () => {
-                  changeEmail();
-                }}
+        <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          你的用戶資料
+          <Divider mb={2} />
+        </Heading>
+        <FormControl id="userIcon">
+          <Stack direction={["column", "row"]} spacing={6}>
+            <Center>
+              <Avatar
+                size="xl"
+                src={`https://i.pravatar.cc/500?img=${
+                  dietitianID ? dietitianID : 100
+                }`}
               >
-                更改
-              </Button>
-            </FormControl>
-
-            <Button colorScheme="red" maxWidth={20} m={3}>
-              更改密碼?
-            </Button>
+                <AvatarBadge
+                  as={IconButton}
+                  size="sm"
+                  rounded="full"
+                  top="-10px"
+                  colorScheme="red"
+                  aria-label="remove Image"
+                  icon={<SmallCloseIcon />}
+                />
+              </Avatar>
+            </Center>
+            <Center w="full">
+              <Button w="full">更換頭像</Button>
+            </Center>
           </Stack>
-        </Flex>
-      </Flex>
+        </FormControl>
+        <FormControl id="userName">
+          <Heading fontSize="lg">用戶名稱</Heading>
+          <Text fontSize="xl" my="1">
+            {dietitianUserName}
+          </Text>
+        </FormControl>
+
+        <FormControl id="userName">
+          <Heading fontSize="lg">姓名</Heading>
+          <Text fontSize="xl" my="1">
+            {dietitianFirstName + dietitianLastName!}
+          </Text>
+        </FormControl>
+
+        <FormControl id="email">
+          <Heading fontSize="lg">電郵</Heading>
+          <Text fontSize="xl" my="1">
+            {dietitianEmail}
+          </Text>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changeEmail();
+            }}
+          >
+            更改
+          </Button>
+        </FormControl>
+
+        <Button colorScheme="red" maxWidth={20} m={3}>
+          更改密碼?
+        </Button>
+      </Stack>
     </>
   );
 }

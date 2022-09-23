@@ -15,6 +15,7 @@ import {
   AvatarBadge,
   IconButton,
   Center,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
@@ -36,6 +37,8 @@ export default function UserAccount() {
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
 
   const userHKID = useSelector((state: IRootState) => state.user.user[0].HKID);
+
+  const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
 
   const userEmail = useSelector(
     (state: IRootState) => state.user.user[0].email
@@ -210,177 +213,150 @@ export default function UserAccount() {
   // }, [user]);
 
   return (
-    <>
-      <Flex
-        display={"flex"}
-        flexDir={"column"}
-        width="100%"
-        h="100%"
-        borderRadius={10}
+    <Flex gap={2} w={"100%"} flexDir={isSmallerThan600 ? "column" : "row"}>
+      <Stack
+        spacing={4}
+        flex={1}
+        bg={useColorModeValue("white", "gray.700")}
+        rounded={"xl"}
+        boxShadow={"lg"}
+        p={6}
       >
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          bg={useColorModeValue("gray.50", "gray.800")}
-        >
-          <Stack
-            spacing={4}
-            w={"full"}
-            maxW={"md"}
-            bg={useColorModeValue("white", "gray.700")}
-            rounded={"xl"}
-            boxShadow={"lg"}
-            p={6}
-            my={12}
-          >
-            <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-              你的用戶資料
-              <Divider mb={2} />
-            </Heading>
-            <FormControl id="userIcon">
-              <Stack direction={["column", "row"]} spacing={6}>
-                <Center>
-                  <Avatar
-                    size="xl"
-                    src={`https://i.pravatar.cc/500?img=${
-                      user[0].id ? user[0].id + 5 : user[0].id
-                    }`}
-                  >
-                    <AvatarBadge
-                      as={IconButton}
-                      size="sm"
-                      rounded="full"
-                      top="-10px"
-                      colorScheme="red"
-                      aria-label="remove Image"
-                      icon={<SmallCloseIcon />}
-                    />
-                  </Avatar>
-                </Center>
-                <Center w="full">
-                  <Button w="full">更換頭像</Button>
-                </Center>
-              </Stack>
-            </FormControl>
-            <FormControl id="userName">
-              <Heading fontSize="lg">用戶名稱</Heading>
-              <Text fontSize="xl" my="1">
-                {userName}
-              </Text>
-            </FormControl>
-            <FormControl id="gender">
-              <Heading fontSize="lg">性別</Heading>
-              <Text fontSize="xl" my="1">
-                {userGender === 1 ? (
-                  <Text size="md">男性</Text>
-                ) : (
-                  <Text size="md">女性</Text>
-                )}
-              </Text>
-              <Button
-                colorScheme="red"
-                onClick={async () => {
-                  changeGender();
-                }}
+        <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          你的用戶資料
+          <Divider mb={2} />
+        </Heading>
+        <FormControl id="userIcon">
+          <Stack direction={["column", "row"]} spacing={6}>
+            <Center>
+              <Avatar
+                size="xl"
+                src={`https://i.pravatar.cc/500?img=${
+                  user[0].id ? user[0].id + 5 : user[0].id
+                }`}
               >
-                更改
-              </Button>
-            </FormControl>
-            <FormControl id="phone">
-              <Heading fontSize="lg">電話號碼</Heading>
-              <Text fontSize="xl" my="1">
-                +852 {userPhone}
-              </Text>
-              <Button
-                colorScheme="red"
-                onClick={async () => {
-                  changePhone();
-                }}
-              >
-                更改
-              </Button>
-            </FormControl>
-            <FormControl id="email">
-              <Heading fontSize="lg">電郵</Heading>
-              <Text fontSize="xl" my="1">
-                {userEmail}
-              </Text>
-              <Button
-                colorScheme="red"
-                onClick={async () => {
-                  changeEmail();
-                }}
-              >
-                更改
-              </Button>
-            </FormControl>
-            <FormControl id="address">
-              <Heading fontSize="lg">地址</Heading>
-              <Text fontSize="xl" my="1">
-                {userAddress}
-              </Text>
-              <Button
-                colorScheme="red"
-                onClick={async () => {
-                  changeAddress();
-                }}
-              >
-                更改
-              </Button>
-            </FormControl>
-            <Button colorScheme="red" maxWidth={20} m={3}>
-              更改密碼?
-            </Button>
+                <AvatarBadge
+                  as={IconButton}
+                  size="sm"
+                  rounded="full"
+                  top="-10px"
+                  colorScheme="red"
+                  aria-label="remove Image"
+                  icon={<SmallCloseIcon />}
+                />
+              </Avatar>
+            </Center>
+            <Center w="full">
+              <Button w="full">更換頭像</Button>
+            </Center>
           </Stack>
-        </Flex>
-
-        <Flex
-          minH={"100vh"}
-          align={"center"}
-          justify={"center"}
-          bg={useColorModeValue("gray.50", "gray.800")}
-        >
-          <Stack
-            spacing={4}
-            w={"full"}
-            maxW={"md"}
-            bg={useColorModeValue("white", "gray.700")}
-            rounded={"xl"}
-            boxShadow={"lg"}
-            p={6}
-            my={12}
+        </FormControl>
+        <FormControl id="userName">
+          <Heading fontSize="lg">用戶名稱</Heading>
+          <Text fontSize="xl" my="1">
+            {userName}
+          </Text>
+        </FormControl>
+        <FormControl id="gender">
+          <Heading fontSize="lg">性別</Heading>
+          <Text fontSize="xl" my="1">
+            {userGender === 1 ? (
+              <Text size="md">男性</Text>
+            ) : (
+              <Text size="md">女性</Text>
+            )}
+          </Text>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changeGender();
+            }}
           >
-            <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-              基本個人資料
-              <Divider mb={2} />
-            </Heading>
-            <Text fontSize="md">如你發現你的個人資料有錯誤,請立即通知我們</Text>
+            更改
+          </Button>
+        </FormControl>
+        <FormControl id="phone">
+          <Heading fontSize="lg">電話號碼</Heading>
+          <Text fontSize="xl" my="1">
+            +852 {userPhone}
+          </Text>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changePhone();
+            }}
+          >
+            更改
+          </Button>
+        </FormControl>
+        <FormControl id="email">
+          <Heading fontSize="lg">電郵</Heading>
+          <Text fontSize="xl" my="1">
+            {userEmail}
+          </Text>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changeEmail();
+            }}
+          >
+            更改
+          </Button>
+        </FormControl>
+        <FormControl id="address">
+          <Heading fontSize="lg">地址</Heading>
+          <Text fontSize="xl" my="1">
+            {userAddress}
+          </Text>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              changeAddress();
+            }}
+          >
+            更改
+          </Button>
+        </FormControl>
+        <Button colorScheme="red" maxWidth={20} m={3}>
+          更改密碼?
+        </Button>
+      </Stack>
 
-            <FormControl id="userRealName">
-              <Heading fontSize="lg">姓名</Heading>
-              <Text fontSize="xl" my="1">
-                {userFirstName + userLastName!}
-              </Text>
-            </FormControl>
-            <FormControl id="hkid">
-              <Heading fontSize="lg">身份證號碼</Heading>
-              <Text fontSize="xl" my="1">
-                {userHKID?.slice(0, 7) + "("}
-                {userHKID?.slice(-1) + ")"}
-              </Text>
-            </FormControl>
-            <FormControl id="birthday">
-              <Heading fontSize="lg">出生日期</Heading>
-              <Text fontSize="xl" my="1">
-                {userBirthday
-                  ? new Date(userBirthday).toLocaleDateString()
-                  : ""}
-              </Text>
-            </FormControl>
-          </Stack>
-        </Flex>
-      </Flex>
-    </>
+      <Stack
+        spacing={4}
+        flex={1}
+        bg={useColorModeValue("white", "gray.700")}
+        rounded={"xl"}
+        boxShadow={"lg"}
+        p={6}
+      >
+        <Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
+          基本個人資料
+          <Divider my={2} />
+        </Heading>
+        <Text fontSize="md">如你發現你的個人資料有錯誤,請立即通知我們</Text>
+
+        <FormControl id="userRealName">
+          <Heading fontSize="lg">姓名</Heading>
+          <Text fontSize="xl" my="1">
+            {userLastName + " " + userFirstName}
+          </Text>
+        </FormControl>
+        <FormControl id="hkid">
+          <Heading fontSize="lg">身份證號碼</Heading>
+          <Text fontSize="xl" my="1">
+            {/* {userHKID?.slice(0, 7) + "("}
+            {userHKID?.slice(-1) + ")"} */}
+            {userHKID}
+          </Text>
+        </FormControl>
+        <FormControl id="birthday">
+          <Heading fontSize="lg">出生日期</Heading>
+          <Text fontSize="xl" my="1">
+            {userBirthday ? new Date(userBirthday).toLocaleDateString() : ""}
+          </Text>
+        </FormControl>
+      </Stack>
+    </Flex>
   );
 }
