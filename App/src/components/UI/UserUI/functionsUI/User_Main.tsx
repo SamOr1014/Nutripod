@@ -481,7 +481,7 @@ export default function UserMain() {
         });
       });
   }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchExercisesFromServer();
@@ -491,8 +491,9 @@ export default function UserMain() {
     fetchIntakeFromServer();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchMonthlyIntakeFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate]);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   let lunch = 0;
   let dinner = 0;
   let snack = 0;

@@ -26,7 +26,8 @@ export default function DashBoard() {
       duration: 5000,
       isClosable: true,
     });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, navigate, toast]);
   return (
     <>
       <Banner />

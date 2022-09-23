@@ -274,6 +274,7 @@ export default function DietitianPatientDetailPanel(
     if (patient.id && selectedDate) {
       fetchExerciseAndDiet();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [patient.id, selectedDate]);
 
   // #############################

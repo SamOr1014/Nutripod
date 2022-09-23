@@ -38,7 +38,7 @@ export default function FullPost() {
         });
     }
     fetchSinglePost();
-  }, []);
+  }, [id]);
 
   function getText(article: string) {
     const newText = article.split("\n").map((str) => (

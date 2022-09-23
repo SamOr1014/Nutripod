@@ -102,7 +102,9 @@ export default function UserBooking() {
       });
   }
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchBookingDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedDate, dietitian]);
   //debug use to check if fetch is done
 

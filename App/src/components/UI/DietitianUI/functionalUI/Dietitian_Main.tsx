@@ -174,11 +174,14 @@ export default function DietitianMain() {
       }
 
       fetchFollowUpAvailability();
-    }, [selectedDate, dateSubmit]);
-
+    }, [dateSubmit]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchSelectedDateBooking();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedDate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
       <>
         <AccordionItem>

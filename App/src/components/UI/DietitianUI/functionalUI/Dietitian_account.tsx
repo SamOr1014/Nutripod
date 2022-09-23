@@ -25,9 +25,7 @@ const { REACT_APP_API_SERVER } = process.env;
 export default function DietitianAccount() {
   // obtain data from redux
   const dispatch = useDispatch<AppDispatch>();
-  const token = locateToken()
-  
-  const user = useSelector((state: IRootState) => state.user.user);
+  const token = locateToken();
 
   const dietitianID = useSelector(
     (state: IRootState) => state.user.dietitian[0].id
@@ -72,7 +70,7 @@ export default function DietitianAccount() {
         );
         if (results.data.success) {
           Swal.fire(`你的電郵已更改為: ${result.value}`);
-          dispatch(tokenThunk(token as string))
+          dispatch(tokenThunk(token as string));
         }
       }
     });

@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 
 import Banner from "../Banner";
 import DietitianNav from "./Dietitian_Nav";
-import DietitianNavLinks from "./Dietitian_nav_links";
 
 export default function DashBoardDietitian() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
