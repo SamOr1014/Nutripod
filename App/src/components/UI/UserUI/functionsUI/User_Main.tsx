@@ -483,9 +483,13 @@ export default function UserMain() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchExercisesFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchMonthlyExercisesFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchIntakeFromServer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     fetchMonthlyIntakeFromServer();
   }, [selectedDate]);
 
@@ -1470,12 +1474,4 @@ export default function UserMain() {
       </Flex>
     </>
   );
-}
-function toast(arg0: {
-  position: string;
-  title: string;
-  duration: number;
-  isClosable: boolean;
-}) {
-  throw new Error("Function not implemented.");
 }

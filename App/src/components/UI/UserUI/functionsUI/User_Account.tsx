@@ -105,7 +105,7 @@ export default function UserAccount() {
         isInteger: "true",
       },
     }).then(async (result) => {
-      if (result.isConfirmed && result.value.length != 8) {
+      if (result.isConfirmed && result.value.length !== 8) {
         Swal.fire({
           icon: "error",
           title: "請輸入正確的電話號碼",

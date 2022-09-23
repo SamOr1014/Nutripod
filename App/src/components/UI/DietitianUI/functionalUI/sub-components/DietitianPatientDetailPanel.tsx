@@ -95,170 +95,89 @@ export default function DietitianPatientDetailPanel(
   //################
   //API Functions
   //################
-  async function fetchPatientsRecords() {
-    const patientBooking = axios.get(
-      `${REACT_APP_API_SERVER}/booking/user/${patient.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-    const patientMedRec = axios.get(
-      `${REACT_APP_API_SERVER}/medical/user/${patient.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-
-    axios
-      .all([patientBooking, patientMedRec])
-      .then(
-        axios.spread((...responses) => {
-          let patientBookingResult = responses[0];
-          let patientMedRecResult = responses[1];
-          setBooking(patientBookingResult.data.data);
-          setMedRec(patientMedRecResult.data.result);
-        })
-      )
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          title: "發生錯誤，請稍後再試",
-        });
-      });
-  }
-  async function fetchUserBodyState() {
-    const weightFetch = axios.get(
-      `${REACT_APP_API_SERVER}/diet/weight/${patient.id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-    const BPFetch = axios.get(`${REACT_APP_API_SERVER}/diet/bp/${patient.id}`, {
-      headers: {
-        Authorization: `Bearer ${locateToken()}`,
-      },
-    });
-    const BGFetch = axios.get(`${REACT_APP_API_SERVER}/diet/bg/${patient.id}`, {
-      headers: {
-        Authorization: `Bearer ${locateToken()}`,
-      },
-    });
-
-    axios
-      .all([weightFetch, BPFetch, BGFetch])
-      .then(
-        axios.spread((...responses) => {
-          let weightResult = responses[0];
-          let BPResult = responses[1];
-          let BGResult = responses[2];
-          setWeightRec(weightResult.data.weightRec);
-          setBpRec(BPResult.data.bpRec);
-          setBgRec(BGResult.data.bgRec);
-        })
-      )
-      .catch(() => {
-        Swal.fire({
-          icon: "error",
-          title: "發生錯誤，請稍後再試",
-        });
-      });
-  }
-
-  async function fetchExerciseAndDiet() {
-    setFoodDetail([]);
-    setExDetail([]);
-    const exerciseRec = axios.get(
-      `${REACT_APP_API_SERVER}/diet/exercisesRecord/${
-        patient.id
-      }/${selectedDate?.toISOString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-
-    const foodRec = axios.get(
-      `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${
-        patient.id
-      }/${selectedDate?.toISOString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      }
-    );
-
-    axios
-      .all([exerciseRec, foodRec])
-      .then(
-        axios.spread((...data) => {
-          let exerciseResult = data[0].data;
-          let foodResult = data[1].data;
-
-          if (exerciseResult.success === true) {
-            for (let exercise of exerciseResult.list) {
-              let exerciseInfo: exercise = {
-                id: exercise.id,
-                name: exercise.ex_type,
-                duration: parseInt(exercise.duration, 10),
-                ex_calories: parseInt(exercise.ex_calories, 10),
-                burn_calories: Math.round(
-                  (parseInt(exercise.duration, 10) *
-                    parseInt(exercise.ex_calories, 10)) /
-                    60
-                ),
-              };
-              setExDetail((previous) => [...previous, exerciseInfo]);
-            }
-          }
-
-          if (foodResult.success === true) {
-            for (let food of foodResult.list) {
-              let diet = dietMappings.get(food.d_type);
-              let foodInfo: diet = {
-                id: food.id,
-                name: food.food_name,
-                food_group: food.food_group,
-                food_type: diet as string,
-                food_amount: parseInt(food.food_amount, 10),
-                food_calories: parseInt(food.food_calories, 10),
-                food_intake:
-                  (parseInt(food.food_amount, 10) *
-                    parseInt(food.food_calories, 10)) /
-                  100,
-                carbohydrates: parseInt(food.carbohydrates, 10),
-                protein: parseInt(food.protein, 10),
-                fat: parseInt(food.fat, 10),
-                sodium: parseInt(food.sodium, 10),
-                sugars: parseInt(food.sugars, 10),
-                fiber: parseInt(food.fiber, 10),
-              };
-              setFoodDetail((previousList) => [...previousList, foodInfo]);
-            }
-          }
-        })
-      )
-      .catch((error) => {
-        setFoodDetail([]);
-        setExDetail([]);
-        toast({
-          position: "top",
-          title: `${error.response.data.message}`,
-          duration: 3000,
-          isClosable: true,
-        });
-      });
-  }
 
   //Fetch when patient id changes and patient id is not undefined/null
   useEffect(() => {
+    async function fetchPatientsRecords() {
+      const patientBooking = axios.get(
+        `${REACT_APP_API_SERVER}/booking/user/${patient.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+      const patientMedRec = axios.get(
+        `${REACT_APP_API_SERVER}/medical/user/${patient.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+
+      axios
+        .all([patientBooking, patientMedRec])
+        .then(
+          axios.spread((...responses) => {
+            let patientBookingResult = responses[0];
+            let patientMedRecResult = responses[1];
+            setBooking(patientBookingResult.data.data);
+            setMedRec(patientMedRecResult.data.result);
+          })
+        )
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "發生錯誤，請稍後再試",
+          });
+        });
+    }
+    async function fetchUserBodyState() {
+      const weightFetch = axios.get(
+        `${REACT_APP_API_SERVER}/diet/weight/${patient.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+      const BPFetch = axios.get(
+        `${REACT_APP_API_SERVER}/diet/bp/${patient.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+      const BGFetch = axios.get(
+        `${REACT_APP_API_SERVER}/diet/bg/${patient.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+
+      axios
+        .all([weightFetch, BPFetch, BGFetch])
+        .then(
+          axios.spread((...responses) => {
+            let weightResult = responses[0];
+            let BPResult = responses[1];
+            let BGResult = responses[2];
+            setWeightRec(weightResult.data.weightRec);
+            setBpRec(BPResult.data.bpRec);
+            setBgRec(BGResult.data.bgRec);
+          })
+        )
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "發生錯誤，請稍後再試",
+          });
+        });
+    }
     if (patient.id) {
       fetchPatientsRecords();
       fetchUserBodyState();
@@ -266,6 +185,92 @@ export default function DietitianPatientDetailPanel(
   }, [patient.id]);
 
   useEffect(() => {
+    async function fetchExerciseAndDiet() {
+      setFoodDetail([]);
+      setExDetail([]);
+      const exerciseRec = axios.get(
+        `${REACT_APP_API_SERVER}/diet/exercisesRecord/${
+          patient.id
+        }/${selectedDate?.toISOString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+
+      const foodRec = axios.get(
+        `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${
+          patient.id
+        }/${selectedDate?.toISOString()}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+
+      axios
+        .all([exerciseRec, foodRec])
+        .then(
+          axios.spread((...data) => {
+            let exerciseResult = data[0].data;
+            let foodResult = data[1].data;
+
+            if (exerciseResult.success === true) {
+              for (let exercise of exerciseResult.list) {
+                let exerciseInfo: exercise = {
+                  id: exercise.id,
+                  name: exercise.ex_type,
+                  duration: parseInt(exercise.duration, 10),
+                  ex_calories: parseInt(exercise.ex_calories, 10),
+                  burn_calories: Math.round(
+                    (parseInt(exercise.duration, 10) *
+                      parseInt(exercise.ex_calories, 10)) /
+                      60
+                  ),
+                };
+                setExDetail((previous) => [...previous, exerciseInfo]);
+              }
+            }
+
+            if (foodResult.success === true) {
+              for (let food of foodResult.list) {
+                let diet = dietMappings.get(food.d_type);
+                let foodInfo: diet = {
+                  id: food.id,
+                  name: food.food_name,
+                  food_group: food.food_group,
+                  food_type: diet as string,
+                  food_amount: parseInt(food.food_amount, 10),
+                  food_calories: parseInt(food.food_calories, 10),
+                  food_intake:
+                    (parseInt(food.food_amount, 10) *
+                      parseInt(food.food_calories, 10)) /
+                    100,
+                  carbohydrates: parseInt(food.carbohydrates, 10),
+                  protein: parseInt(food.protein, 10),
+                  fat: parseInt(food.fat, 10),
+                  sodium: parseInt(food.sodium, 10),
+                  sugars: parseInt(food.sugars, 10),
+                  fiber: parseInt(food.fiber, 10),
+                };
+                setFoodDetail((previousList) => [...previousList, foodInfo]);
+              }
+            }
+          })
+        )
+        .catch((error) => {
+          setFoodDetail([]);
+          setExDetail([]);
+          toast({
+            position: "top",
+            title: `${error.response.data.message}`,
+            duration: 3000,
+            isClosable: true,
+          });
+        });
+    }
     if (patient.id && selectedDate) {
       fetchExerciseAndDiet();
     }

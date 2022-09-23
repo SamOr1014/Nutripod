@@ -9,16 +9,16 @@ import UserNav from "./User_Nav";
 
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+
+  const navigate = useNavigate();
   const toast = useToast();
   const user = useSelector((state: IRootState) => state.user.user);
-  const navigate = useNavigate();
+
   useEffect(() => {
     if (user[0].id === (undefined || null)) {
       navigate("/login");
     }
-  }, [user]);
 
-  useEffect(() => {
     toast({
       position: "bottom",
       title: `${user[0].username}`,
@@ -27,7 +27,6 @@ export default function DashBoard() {
       isClosable: true,
     });
   }, []);
-
   return (
     <>
       <Banner />

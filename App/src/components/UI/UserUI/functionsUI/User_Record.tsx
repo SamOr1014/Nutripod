@@ -215,8 +215,11 @@ export default function UserBPBGRecord() {
   //###############
   useEffect(() => {
     if (user[0].id) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchWeightRecordFromServerByID();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchBGRecordFromServerByID();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchBPRecordFromServerByID();
     }
   }, [user]);

@@ -47,6 +47,22 @@ export default function UserBooking() {
     Array<UserBookingDetailByDateAndDietitian>
   >([]);
 
+  async function fetchBookingDetail() {
+    if (selectedDate && dietitian) {
+      const { data } = await axios.get(
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${dietitian}`,
+        {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        }
+      );
+      let dateBookingWithSelectedDietitian = data;
+      setExistedBooking(dateBookingWithSelectedDietitian);
+    }
+    return;
+  }
+
   async function postBookingToServer(
     timeslotID: string | number,
     dietitianID: string,
@@ -84,22 +100,6 @@ export default function UserBooking() {
           });
         }
       });
-  }
-
-  async function fetchBookingDetail() {
-    if (selectedDate && dietitian) {
-      const { data } = await axios.get(
-        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${dietitian}`,
-        {
-          headers: {
-            Authorization: `Bearer ${locateToken()}`,
-          },
-        }
-      );
-      let dateBookingWithSelectedDietitian = data;
-      setExistedBooking(dateBookingWithSelectedDietitian);
-    }
-    return;
   }
   useEffect(() => {
     fetchBookingDetail();

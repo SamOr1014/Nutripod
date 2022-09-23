@@ -116,23 +116,6 @@ export default function DietitianMain() {
       []
     );
 
-    async function fetchFollowUpAvailability() {
-      axios
-        .get(
-          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
-            currentDietitian.id
-          }`,
-          {
-            headers: {
-              Authorization: `Bearer ${locateToken()}`,
-            },
-          }
-        )
-        .then(({ data }) => {
-          setCurrentDateBooking(data);
-        });
-    }
-
     async function postFollowUpBooking(
       timeid: number,
       dateString: string,
@@ -158,7 +141,6 @@ export default function DietitianMain() {
         )
         .then(({ data }) => {
           if (data.success) {
-            fetchSelectedDateBooking();
             Swal.fire({
               icon: "success",
               title: `你成功預約${new Date(
@@ -170,9 +152,27 @@ export default function DietitianMain() {
             });
           }
         });
+      fetchSelectedDateBooking();
     }
 
     useEffect(() => {
+      async function fetchFollowUpAvailability() {
+        axios
+          .get(
+            `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
+              currentDietitian.id
+            }`,
+            {
+              headers: {
+                Authorization: `Bearer ${locateToken()}`,
+              },
+            }
+          )
+          .then(({ data }) => {
+            setCurrentDateBooking(data);
+          });
+      }
+
       fetchFollowUpAvailability();
     }, [selectedDate, dateSubmit]);
 

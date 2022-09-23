@@ -24,21 +24,21 @@ export default function FullPost() {
   const { id } = useParams();
   const [postContent, setPostContent] = useState<Array<FullSinglePost>>([]);
   //API Function
-  async function fetchSinglePost() {
-    axios
-      .get(`${REACT_APP_API_SERVER}/post/${id}`, {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      })
-      .then(({ data }) => {
-        setPostContent(data.post);
-      });
-  }
 
   useEffect(() => {
+    async function fetchSinglePost() {
+      axios
+        .get(`${REACT_APP_API_SERVER}/post/${id}`, {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        })
+        .then(({ data }) => {
+          setPostContent(data.post);
+        });
+    }
     fetchSinglePost();
-  }, [id]);
+  }, []);
 
   function getText(article: string) {
     const newText = article.split("\n").map((str) => (

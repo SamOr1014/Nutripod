@@ -134,7 +134,9 @@ export default function UserMed() {
   }
   useEffect(() => {
     if (uID) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchBooking();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchMedEvaluation();
     }
   }, [user]);
