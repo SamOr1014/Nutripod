@@ -23,7 +23,6 @@ export default function FullPost() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const { id } = useParams();
   const [postContent, setPostContent] = useState<Array<FullSinglePost>>([]);
-
   //API Function
   async function fetchSinglePost() {
     axios
@@ -39,39 +38,49 @@ export default function FullPost() {
 
   useEffect(() => {
     fetchSinglePost();
-  }, [postContent]);
+  }, []);
+  console.log(postContent)
+
+  function getText(article: string) {
+
+    const newText = article.split('\n').map(str => <Text><br></br>{str}</Text>);
+    return newText
+  }
+
   return (
     <>
       {postContent
         ? postContent.map((post) => {
-            return (
-              <Flex
-                w={isSmallerThan600 ? "100%" : "80%"}
-                h={isSmallerThan600 ? "auto" : "720px"}
-                bg={bg}
-                p={10}
-                rounded={"3xl"}
-                key={`post_id_${post.id}`}
-                overflow={"auto"}
-              >
-                <Stack gap={4}>
-                  <Heading fontStyle={"3xl"}>{post.title}</Heading>
-                  <HStack fontSize={"lg"}>
-                    <Avatar
-                      name={`${post.first_name + " " + post.last_name}`}
-                      src="https://bit.ly/broken-link"
-                    />
-                    <Text>{post.first_name + " " + post.last_name}</Text>
-                    <Text>- {new Date(post.date).toLocaleDateString()}</Text>
-                  </HStack>
-                  <Divider />
-                  <Box overflow={"auto"} w={"100%"}>
-                    <Text fontSize={"2xl"}>{post.content}</Text>
-                  </Box>
-                </Stack>
-              </Flex>
-            );
-          })
+          return (
+            <Flex
+              w={isSmallerThan600 ? "100%" : "80%"}
+              h={isSmallerThan600 ? "auto" : "720px"}
+              bg={bg}
+              p={10}
+              rounded={"3xl"}
+              key={`post_id_${post.id}`}
+              overflow={"auto"}
+            >
+              <Stack gap={4}>
+                <Heading fontStyle={"3xl"}>{post.title}</Heading>
+                <HStack fontSize={"lg"}>
+                  <Avatar
+                    name={`${post.first_name + " " + post.last_name}`}
+                    src="https://bit.ly/broken-link"
+                  />
+                  <Text>{post.first_name + " " + post.last_name}</Text>
+                  <Text>- {new Date(post.date).toLocaleDateString()}</Text>
+                </HStack>
+                <Divider />
+                <Box overflow={"auto"} w={"100%"}>
+
+                  {getText(post.content)}
+
+                </Box>
+              </Stack>
+            </Flex>
+          );
+        })
         : ""}
     </>
   );

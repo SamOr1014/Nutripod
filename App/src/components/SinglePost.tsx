@@ -9,7 +9,6 @@ import {
   LinkOverlay,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { Button } from "react-day-picker";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../redux/store";
@@ -81,7 +80,7 @@ export default function SinglePosts(props: PostTemplate) {
             {props.title}
           </LinkOverlay>
         </Heading>
-        <Text fontSize={isSmallerThan600 ? "xs" : "sm"}>{props.time}</Text>
+        <Text fontSize={isSmallerThan600 ? "xs" : "sm"}>{new Date(props.time).toLocaleDateString()}</Text>
         <Text
           overflow={"hidden"}
           h={"30px"}

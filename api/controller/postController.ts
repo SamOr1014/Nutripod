@@ -10,6 +10,8 @@ export class PostController {
 		try {
 			const posts = await this.postService.getAllPost()
 			res.json({ success: true, posts: posts })
+
+			// console.log(posts)
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({
@@ -56,14 +58,14 @@ export class PostController {
 			const uid = req.params.uid
 			const postDate = req.params.date
 			const formattedDate = formatDate(postDate)
+			const title = req.body.title
 			const content = req.body.content
-			const title = "testing"
+			console.log(content)
 
-			if (!uid) {
-				res.status(400).json({ success: false })
+			if (!uid ||!postDate || title === "" || content === "") {
+				res.status(400).json({ success: false})
 				return
 			}
-
 			const result = await this.postService.postArticle(uid,title,content,formattedDate)
 
 			if (result.length === 0) {

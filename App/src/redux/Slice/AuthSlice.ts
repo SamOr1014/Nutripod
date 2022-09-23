@@ -158,6 +158,43 @@ export const authSlice = createSlice({
         saveToken: action.payload.saveToken,
       };
     },
+    logout: (state) => {
+      return {
+        ...state,
+        user: [
+          {
+            id: null,
+            username: null,
+            first_name: null,
+            last_name: null,
+            email: null,
+            birthday: null,
+            height: null,
+            weight: null,
+            gender: null,
+            phone: null,
+            address: null,
+            profession: null,
+            HKID: null,
+            chronic_condition: null,
+            education: null,
+            is_deleted: null,
+            is_user: null
+          }
+        ],
+        dietitian: [
+          {
+            id: null,
+            username: null,
+            first_name: null,
+            last_name: null,
+            email: null,
+            is_deleted: null,
+            is_user: null
+          }
+        ]
+      }
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -197,5 +234,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { userLogin, dietitianLogin } = authSlice.actions;
+export const { userLogin, dietitianLogin, logout } = authSlice.actions;
 export default authSlice.reducer;

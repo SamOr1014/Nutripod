@@ -23,16 +23,17 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
-import { IRootState } from "../../redux/store";
-
+import { AppDispatch, IRootState, useAppDispatch } from "../../redux/store";
+import { logout } from "../../redux/Slice/AuthSlice"
 import DietitianNavLinks from "./DietitianUI/Dietitian_nav_links";
 import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner() {
   const bg = useColorModeValue("gray.200", "gray.800");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
@@ -44,10 +45,14 @@ export default function Banner() {
     onClose: onDrawerClose,
   } = useDisclosure();
 
-  const logout = async () => {
+  const accountDir =
+    dietitian[0].id !== null ? "/dietitian/account" : "/dashboard/account";
+
+  const logoutNow = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
-    navigate("/");
+    dispatch(logout())
+    navigate("/")
   };
 
   function MobileNav() {
@@ -166,7 +171,7 @@ export default function Banner() {
               <MenuItem
                 fontWeight="bold"
                 fontSize={isLargerThan1700 ? "xl" : "md"}
-                onClick={() => logout()}
+                onClick={() => logoutNow()}
               >
                 登出
               </MenuItem>
