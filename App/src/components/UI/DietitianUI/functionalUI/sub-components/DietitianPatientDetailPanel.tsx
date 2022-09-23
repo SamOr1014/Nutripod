@@ -77,7 +77,6 @@ export default function DietitianPatientDetailPanel(
   );
 
   const [foodDetail, setFoodDetail] = useState(Array<diet>);
-  const [hasFoodDetail, setHasFoodDetail] = useState(false);
   const [exDetail, setExDetail] = useState<Array<exercise>>([]);
 
   //#######Age Function#######
@@ -221,7 +220,6 @@ export default function DietitianPatientDetailPanel(
           }
 
           if (foodResult.success === true) {
-            setHasFoodDetail(true);
             for (let food of foodResult.list) {
               let diet = dietMappings.get(food.d_type);
               let foodInfo: diet = {
@@ -249,7 +247,6 @@ export default function DietitianPatientDetailPanel(
       )
       .catch((error) => {
         setFoodDetail([]);
-        setHasFoodDetail(false);
         setExDetail([]);
         toast({
           position: "top",

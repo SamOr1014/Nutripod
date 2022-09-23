@@ -15,7 +15,6 @@ import {
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { useEffect, useState } from "react";
 import { IRootState } from "../../../../redux/store";
 import axios from "axios";
 import locateToken from "../../../../utility/Token";
@@ -23,10 +22,6 @@ import locateToken from "../../../../utility/Token";
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function DietitianAccount() {
-  // obtain data from redux
-  //   const navigate = useNavigate();
-  const user = useSelector((state: IRootState) => state.user.user);
-
   const dietitianID = useSelector(
     (state: IRootState) => state.user.dietitian[0].id
   );

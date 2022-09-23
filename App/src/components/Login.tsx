@@ -34,7 +34,6 @@ import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { ArrowForwardIcon, EmailIcon } from "@chakra-ui/icons";
 import { FaFacebook, FaTwitter } from "react-icons/fa";
 
-
 export function Login() {
   const bg = useColorModeValue("gray.200", "gray.700");
   const [username, setUsername] = useState("");
@@ -50,7 +49,7 @@ export function Login() {
   const checkToken = window.localStorage.getItem("userLocalToken");
 
   const TokenLogin = async () => {
-    const result = await dispatch(tokenThunk(checkToken as string))
+    const result = await dispatch(tokenThunk(checkToken as string));
     if (result.payload.success) {
       const userInfo = result.payload.data;
       if (userInfo.is_user === true) {
@@ -58,12 +57,11 @@ export function Login() {
       } else if (userInfo.is_user === false) {
         navigate("/dietitian");
       }
-
     }
-  }
+  };
 
   if (checkToken != null) {
-    TokenLogin()
+    TokenLogin();
   }
 
   const LoginSubmit = async () => {
@@ -151,9 +149,7 @@ export function Login() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            {
-              LoginSubmit();
-            }
+            LoginSubmit();
           }}
         >
           <Box bg={bg} padding="50px" rounded="md">

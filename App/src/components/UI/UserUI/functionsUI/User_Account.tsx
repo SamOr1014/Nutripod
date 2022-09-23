@@ -1,16 +1,12 @@
 import {
-  Box,
   Text,
   Divider,
   Button,
   Flex,
   FormControl,
-  FormLabel,
   Heading,
-  Input,
   Stack,
   useColorModeValue,
-  HStack,
   Avatar,
   AvatarBadge,
   IconButton,
@@ -24,8 +20,8 @@ import { useEffect, useState } from "react";
 import { IRootState } from "../../../../redux/store";
 import axios from "axios";
 import locateToken from "../../../../utility/Token";
-import { useNavigate } from "react-router";
 import { loginThunk } from "../../../../redux/Thunk/AuthThunk";
+import { useNavigate } from "react-router";
 
 const { REACT_APP_API_SERVER } = process.env;
 
