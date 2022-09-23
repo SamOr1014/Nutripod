@@ -26,14 +26,14 @@ import { Link } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as ReactLink, useNavigate } from "react-router-dom";
 import { AppDispatch, IRootState, useAppDispatch } from "../../redux/store";
-import { logout } from "../../redux/Slice/AuthSlice"
+import { logout } from "../../redux/Slice/AuthSlice";
 import DietitianNavLinks from "./DietitianUI/Dietitian_nav_links";
 import UserNavLinks from "./UserUI/User_nav_links";
 
 export default function Banner() {
   const bg = useColorModeValue("gray.200", "gray.800");
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const { toggleColorMode } = useColorMode();
   const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [isSmallerThan800] = useMediaQuery("(max-width: 800px)");
@@ -51,8 +51,8 @@ export default function Banner() {
   const logoutNow = async () => {
     window.localStorage.clear();
     window.sessionStorage.clear();
-    dispatch(logout())
-    navigate("/")
+    dispatch(logout());
+    navigate("/");
   };
 
   function MobileNav() {
@@ -121,7 +121,7 @@ export default function Banner() {
             fontSize={isLargerThan1700 ? "xl" : "md"}
             fontWeight="extrabold"
           >
-            你好, {user[0].last_name || dietitian[0].last_name}
+            你好, {user[0].username || dietitian[0].username}
           </Text>
         </Show>
         <Menu>
