@@ -505,7 +505,13 @@ export default function UserMain() {
   return (
     <>
       <style>{css}</style>
-      <Flex alignSelf={"center"} justifyContent={"center"} w="100%">
+      <Flex
+        alignSelf={"center"}
+        justifyContent={"center"}
+        w="100%"
+        pb={isSmallerThan600 ? 20 : 0}
+        maxH={"100vh"}
+      >
         <Popover>
           <PopoverTrigger>
             <Box as="button" fontSize={"4xl"} fontWeight={"extrabold"}>

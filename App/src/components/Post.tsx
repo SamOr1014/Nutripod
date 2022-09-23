@@ -8,56 +8,58 @@ import { Posts } from "../utility/models";
 import locateToken from "../utility/Token";
 import SinglePosts from "./SinglePost";
 
-import { BaseEditor, Descendant, createEditor } from 'slate'
-import { Slate, Editable, withReact, ReactEditor } from 'slate-react'
+import { BaseEditor, Descendant, createEditor } from "slate";
+import { Slate, Editable, withReact, ReactEditor } from "slate-react";
 import { AddIcon } from "@chakra-ui/icons";
 const { REACT_APP_API_SERVER } = process.env;
 
-type CustomElement = { type: 'paragraph'; children: CustomText[] }
-type CustomText = { text: string }
+type CustomElement = { type: "paragraph"; children: CustomText[] };
+type CustomText = { text: string };
 
-declare module 'slate' {
+declare module "slate" {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor
-    Element: CustomElement
-    Text: CustomText
+    Editor: BaseEditor & ReactEditor;
+    Element: CustomElement;
+    Text: CustomText;
   }
 }
 
-const date = new Date
+const date = new Date();
 
 export default function UserPost() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   const [posts, setPosts] = useState<Array<Posts>>([]);
-  const [contentEditor] = useState(() => withReact(createEditor()))
-  const [titleEditor] = useState(() => withReact(createEditor()))
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const dietitianInfo = useSelector((state: IRootState) => state.user.dietitian[0])
+  const [contentEditor] = useState(() => withReact(createEditor()));
+  const [titleEditor] = useState(() => withReact(createEditor()));
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const dietitianInfo = useSelector(
+    (state: IRootState) => state.user.dietitian[0]
+  );
 
   const initialContentValue: Descendant[] = useMemo(
     () =>
-      JSON.parse(localStorage.getItem('content') as string) || [
+      JSON.parse(localStorage.getItem("content") as string) || [
         {
-          type: 'paragraph',
-          children: [{ text: 'Please input your post here.' }],
+          type: "paragraph",
+          children: [{ text: "Please input your post here." }],
         },
       ],
     []
-  )
+  );
 
   const initialTitleValue: Descendant[] = useMemo(
     () =>
-      JSON.parse(localStorage.getItem('title') as string) || [
+      JSON.parse(localStorage.getItem("title") as string) || [
         {
-          type: 'paragraph',
-          children: [{ text: 'Please input your title here.' }],
+          type: "paragraph",
+          children: [{ text: "Please input your title here." }],
         },
       ],
     []
-  )
+  );
 
-  let content = ""
-  let title = ""
+  let content = "";
+  let title = "";
 
 
   async function getContent() {
@@ -99,20 +101,24 @@ export default function UserPost() {
     getContent()
     getTitle()
     axios
-      .post(`${REACT_APP_API_SERVER}/post/${dietitianInfo.id}/${date.toISOString()}`,
+      .post(
+        `${REACT_APP_API_SERVER}/post/${
+          dietitianInfo.id
+        }/${date.toISOString()}`,
         {
           content: content,
-          title: title
-        }
-        , {
+          title: title,
+        },
+        {
           headers: {
             Authorization: `Bearer ${locateToken()}`,
           },
-        })
+        }
+      )
       .then(({ data }) => {
         if (data.success) {
-          window.localStorage.removeItem('content')
-          window.localStorage.removeItem('title')
+          window.localStorage.removeItem("content");
+          window.localStorage.removeItem("title");
           Swal.fire({
             icon: "success",
             title: "成功出POST"
@@ -122,8 +128,8 @@ export default function UserPost() {
       }).catch(() => {
         Swal.fire({
           icon: "error",
-          title: "發生錯誤，請稍後再試"
-        })
+          title: "發生錯誤，請稍後再試",
+        });
       });
   }
   useEffect(() => {
@@ -138,21 +144,15 @@ export default function UserPost() {
       my={2}
       overflow={"auto"}
     >
-      {dietitianInfo.id != null ?
-        <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen}>
+      {dietitianInfo.id != null ? 
+        <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
           Create Post
         </Button>
         : <></>}
 
-      <Drawer
-        isOpen={isOpen}
-        onClose={onClose}
-        placement='top'
-        size={"full"}
-      >
+      <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"}>
         <DrawerOverlay />
         <DrawerContent>
-
           <DrawerCloseButton />
           <DrawerHeader
             borderBottomWidth='1px'
@@ -221,17 +221,13 @@ export default function UserPost() {
             </Flex>
           </Box>
 
-          <DrawerFooter
-            borderTopWidth='1px'
-            justifyContent='center'
-            gap='5'
-          >
-            <Button variant='outline' mr={3} onClick={onClose}>
+          <DrawerFooter borderTopWidth="1px" justifyContent="center" gap="5">
+            <Button variant="outline" mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              colorScheme='blue'
-              onClick={() => postArticle()}>Submit</Button>
+            <Button colorScheme="blue" onClick={() => postArticle()}>
+              Submit
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

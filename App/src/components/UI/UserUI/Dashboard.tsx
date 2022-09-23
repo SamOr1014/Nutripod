@@ -1,4 +1,4 @@
-import { Container, Flex, useMediaQuery,useToast} from "@chakra-ui/react";
+import { Container, Flex, useMediaQuery, useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import UserNavLinks from "./User_nav_links";
 
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
-  const toast = useToast()
+  const toast = useToast();
   const user = useSelector((state: IRootState) => state.user.user);
   const navigate = useNavigate();
   useEffect(() => {
@@ -21,13 +21,13 @@ export default function DashBoard() {
 
   useEffect(() => {
     toast({
-      position: 'bottom',
+      position: "bottom",
       title: `${user[0].username}`,
       description: "歡迎回來",
       duration: 5000,
       isClosable: true,
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <>
@@ -44,7 +44,6 @@ export default function DashBoard() {
           flex="8"
           p="2"
           borderRadius="2xl"
-          overflow={"auto"}
           flexWrap={"wrap"}
           maxW={"1500px"}
           maxH={isSmallerThan600 ? "100%" : "850px"}
