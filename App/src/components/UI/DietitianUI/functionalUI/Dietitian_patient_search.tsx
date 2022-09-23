@@ -1,20 +1,16 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import {
-  Button,
-  Center,
   Flex,
   FormControl,
   FormErrorMessage,
-  Heading,
   Input,
   InputGroup,
   InputRightElement,
-  Text,
   useMediaQuery,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Field, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import { UserDetailInDietiainPanel } from "../../../../utility/models";
 import locateToken from "../../../../utility/Token";

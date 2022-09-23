@@ -11,9 +11,8 @@ export function UserPrivate() {
 
     if (isLoggedInByUser === null || isDietitian === false ) {
         return <Navigate to="/login" replace />;
-
     }
-
+    
     return (
        <Outlet/>
     )

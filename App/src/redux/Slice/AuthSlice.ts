@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
 import { loginThunk } from "../Thunk/AuthThunk";
+import { tokenThunk } from "../Thunk/tokenThunk"
 
 interface userInfo {
   id: number | null;
@@ -114,50 +114,6 @@ export const authSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    userLogin: (state, action: PayloadAction<userSavedInfo>) => {
-      return {
-        ...state,
-        user: [
-          {
-            id: action.payload.id,
-            username: action.payload.username,
-            first_name: action.payload.first_name,
-            last_name: action.payload.last_name,
-            email: action.payload.email,
-            birthday: action.payload.birthday,
-            height: action.payload.height,
-            weight: action.payload.weight,
-            gender: action.payload.gender,
-            phone: action.payload.phone,
-            address: action.payload.address,
-            profession: action.payload.profession,
-            HKID: action.payload.HKID,
-            chronic_condition: action.payload.chronic_condition,
-            education: action.payload.education,
-            is_deleted: action.payload.is_deleted,
-            is_user: action.payload.is_user,
-          },
-        ],
-        saveToken: action.payload.saveToken,
-      };
-    },
-    dietitianLogin: (state, action: PayloadAction<dietitianSavedInfo>) => {
-      return {
-        ...state,
-        dietitian: [
-          {
-            id: action.payload.id,
-            username: action.payload.username,
-            first_name: action.payload.first_name,
-            last_name: action.payload.last_name,
-            email: action.payload.email,
-            is_user: action.payload.is_user,
-            is_deleted: action.payload.is_deleted,
-          },
-        ],
-        saveToken: action.payload.saveToken,
-      };
-    },
     logout: (state) => {
       return {
         ...state,
@@ -197,12 +153,60 @@ export const authSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder.addCase(tokenThunk.pending, (state) => {
+      state.loading = true;
+    }).addCase(tokenThunk.fulfilled, (state, action) => {
+      state.loading = false;
+
+      if (action.payload.data.is_user === false) {
+        state.dietitian = [
+          {
+            id: action.payload.data.id,
+            username: action.payload.data.username,
+            first_name: action.payload.data.first_name,
+            last_name: action.payload.data.last_name,
+            email: action.payload.data.email,
+            is_deleted: action.payload.data.is_deleted,
+            is_user: action.payload.data.is_user
+          }
+        ]
+        state.saveToken = true
+      } else if (action.payload.data.is_user === true) {
+        state.user = [
+          {
+            id: action.payload.data.id,
+            username: action.payload.data.username,
+            first_name: action.payload.data.first_name,
+            last_name: action.payload.data.last_name,
+            email: action.payload.data.email,
+            birthday: action.payload.data.birthday,
+            height: action.payload.data.height,
+            weight: action.payload.data.weight,
+            gender: action.payload.data.gender,
+            phone: action.payload.data.phone,
+            address: action.payload.data.address,
+            profession: action.payload.data.profession,
+            HKID: action.payload.data.hkid,
+            chronic_condition: action.payload.data.chronic_condition,
+            education: action.payload.data.education,
+            is_deleted: action.payload.data.is_deleted,
+            is_user: action.payload.data.is_user
+          }
+        ]
+        state.saveToken = true
+      }
+    })
+      .addCase(tokenThunk.rejected, (state, action: any) => {
+        state.loading = false;
+        Swal.fire("OOPS!", action.payload?.error, "error");
+      });
+
+
     builder
       .addCase(loginThunk.pending, (state) => {
         state.loading = true;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
-        console.log("check extra payload", action.payload);
         state.loading = false;
 
         if (action.payload.data.is_user === false) {
@@ -222,22 +226,22 @@ export const authSlice = createSlice({
           state.user = [
             {
               id: action.payload.data.id,
-                  username: action.payload.data.username,
-                  first_name: action.payload.data.first_name,
-                  last_name: action.payload.data.last_name,
-                  email: action.payload.data.email,
-                  birthday: action.payload.data.birthday,
-                  height: action.payload.data.height,
-                  weight: action.payload.data.weight,
-                  gender: action.payload.data.gender,
-                  phone: action.payload.data.phone,
-                  address: action.payload.data.address,
-                  profession: action.payload.data.profession,
-                  HKID: action.payload.data.hkid,
-                  chronic_condition: action.payload.data.chronic_condition,
-                  education: action.payload.data.education,
-                  is_deleted: action.payload.data.is_deleted,
-                  is_user: action.payload.data.is_user
+              username: action.payload.data.username,
+              first_name: action.payload.data.first_name,
+              last_name: action.payload.data.last_name,
+              email: action.payload.data.email,
+              birthday: action.payload.data.birthday,
+              height: action.payload.data.height,
+              weight: action.payload.data.weight,
+              gender: action.payload.data.gender,
+              phone: action.payload.data.phone,
+              address: action.payload.data.address,
+              profession: action.payload.data.profession,
+              HKID: action.payload.data.hkid,
+              chronic_condition: action.payload.data.chronic_condition,
+              education: action.payload.data.education,
+              is_deleted: action.payload.data.is_deleted,
+              is_user: action.payload.data.is_user
             }
           ]
           state.saveToken = action.payload.saveToken;
@@ -250,5 +254,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { userLogin, dietitianLogin, logout } = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;
