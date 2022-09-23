@@ -23,11 +23,11 @@ export default function DashBoard() {
       position: "bottom",
       title: `${user[0].username}`,
       description: "歡迎回來",
-      duration: 5000,
+      duration: 2000,
       isClosable: true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, navigate, toast]);
+  }, []);
   return (
     <>
       <Banner />

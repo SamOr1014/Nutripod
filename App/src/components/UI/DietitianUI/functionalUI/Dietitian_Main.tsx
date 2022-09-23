@@ -107,6 +107,11 @@ export default function DietitianMain() {
         setAllBookings(data);
       });
   }
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchSelectedDateBooking();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
 
   //Booking Detail Component
   function BookingDetailToday(patient: PatientDetailOfTodayBooking) {
@@ -115,7 +120,22 @@ export default function DietitianMain() {
     const [currentDateBooking, setCurrentDateBooking] = useState<Array<any>>(
       []
     );
-
+    async function fetchFollowUpAvailability() {
+      axios
+        .get(
+          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
+            currentDietitian.id
+          }`,
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        )
+        .then(({ data }) => {
+          setCurrentDateBooking(data);
+        });
+    }
     async function postFollowUpBooking(
       timeid: number,
       dateString: string,
@@ -156,31 +176,10 @@ export default function DietitianMain() {
     }
 
     useEffect(() => {
-      async function fetchFollowUpAvailability() {
-        axios
-          .get(
-            `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
-              currentDietitian.id
-            }`,
-            {
-              headers: {
-                Authorization: `Bearer ${locateToken()}`,
-              },
-            }
-          )
-          .then(({ data }) => {
-            setCurrentDateBooking(data);
-          });
-      }
-
       fetchFollowUpAvailability();
     }, [dateSubmit]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      fetchSelectedDateBooking();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedDate]);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     return (
       <>
