@@ -193,4 +193,23 @@ export class UserServices {
 
 		return result
 	}
+
+	async postDietitian(
+		username: string,
+		firstName: string,
+		lastName: string,
+		password: string,
+		email: string
+	) {
+		const result = await this.knex('dietitian')
+			.insert({
+				username: username,
+				first_name: firstName,
+				last_name: lastName,
+				password: password,
+				email: email
+			})
+			.returning('id')
+		return result
+	}
 }

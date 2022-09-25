@@ -14,5 +14,10 @@ userRoutes.put('/info/email', userController.changeEmail)
 userRoutes.put('/info/dietitianEmail', userController.changeDietitianEmail)
 
 userRoutes.get('/dietitians', userController.getAllDietitian)
+userRoutes.post(
+	'/dietitians',
+	isDietitianLoggedIn,
+	userController.postDietitian
+)
 
 userRoutes.get('/hkid/:hkid', isDietitianLoggedIn, userController.getUserByHKID)

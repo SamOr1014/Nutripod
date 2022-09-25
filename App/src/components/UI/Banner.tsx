@@ -163,16 +163,6 @@ export default function Banner() {
                 帳戶
               </MenuItem>
             </Link>
-
-            <Link>
-              <MenuItem
-                fontWeight="bold"
-                fontSize={isLargerThan1700 ? "xl" : "md"}
-                onClick={() => logoutNow()}
-              >
-                登出
-              </MenuItem>
-            </Link>
             {dietitian[0].id !== null && isSmallerThan800 === false ? (
               <Link as={ReactLink} to={"/dietitian/datacenter"}>
                 <MenuItem
@@ -185,6 +175,27 @@ export default function Banner() {
             ) : (
               ""
             )}
+            {dietitian[0].id === 1 ? (
+              <Link as={ReactLink} to={"/dietitian/dietitianreg"}>
+                <MenuItem
+                  fontWeight="bold"
+                  fontSize={isLargerThan1700 ? "xl" : "md"}
+                >
+                  新增營養師
+                </MenuItem>
+              </Link>
+            ) : (
+              ""
+            )}
+            <Link>
+              <MenuItem
+                fontWeight="bold"
+                fontSize={isLargerThan1700 ? "xl" : "md"}
+                onClick={() => logoutNow()}
+              >
+                登出
+              </MenuItem>
+            </Link>
           </MenuList>
         </Menu>
       </Center>

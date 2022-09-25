@@ -7,10 +7,9 @@ import { hashPassword, checkPassword } from '../utilities/hash'
 import { generateP } from '../utilities/generater'
 
 export class UserController {
-	constructor(private userService: UserServices) { }
+	constructor(private userService: UserServices) {}
 
 	checkToken = async (req: Request, res: Response) => {
-
 		try {
 			const token = req.body.data.token
 
@@ -22,7 +21,10 @@ export class UserController {
 			}
 
 			const payload = jwtSimple.decode(token, jwt.jwtSecret as string)
-			const result = await this.userService.checkToken(payload.id, payload.username)
+			const result = await this.userService.checkToken(
+				payload.id,
+				payload.username
+			)
 
 			if (result.length === 0) {
 				res.status(400).json({
@@ -31,7 +33,6 @@ export class UserController {
 				return
 			}
 			res.json({ success: true, result: result[0] })
-
 		} catch (e) {
 			logger.error(e.message)
 			res.status(400).json({ success: false })
@@ -291,6 +292,33 @@ export class UserController {
 			}
 			res.status(400).json({ success: false })
 			return
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
+	postDietitian = async (req: Request, res: Response) => {
+		try {
+			const { username, firstName, lastName, password, email } =
+				req.body.values
+			if (!username || !firstName || !lastName || !password || !email) {
+				res.status(400).json({
+					success: false,
+					message: 'Invalid information provided'
+				})
+				return
+			}
+			const hashedPassword = await hashPassword(password)
+			await this.userService.postDietitian(
+				username,
+				firstName,
+				lastName,
+				hashedPassword,
+				email
+			)
+			console.log(username, firstName, lastName, hashedPassword, email)
+			res.status(200).json({ success: true })
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false, message: e.message })
