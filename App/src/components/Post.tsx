@@ -54,7 +54,7 @@ export default function UserPost() {
       JSON.parse(localStorage.getItem("content") as string) || [
         {
           type: "paragraph",
-          children: [{ text: "請在此輸入內容." }],
+          children: [{ text: "" }],
         },
       ],
     []
@@ -65,7 +65,7 @@ export default function UserPost() {
       JSON.parse(localStorage.getItem("title") as string) || [
         {
           type: "paragraph",
-          children: [{ text: "請在此輸入標題." }],
+          children: [{ text: "" }],
         },
       ],
     []
@@ -160,7 +160,7 @@ export default function UserPost() {
     >
       {dietitianInfo.id != null ? (
         <Button  leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
-          Create Post
+          開新帖文
         </Button>
       ) : (
         <></>
@@ -223,10 +223,10 @@ export default function UserPost() {
 
           <DrawerFooter borderTopWidth="1px" justifyContent="center" gap="5">
             <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
+              取消
             </Button>
             <Button colorScheme="blue" onClick={() => postArticle()}>
-              Submit
+              提交
             </Button>
           </DrawerFooter>
         </DrawerContent>
