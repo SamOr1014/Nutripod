@@ -498,9 +498,8 @@ export default function UserMain() {
   dinnerList.map((food) => (dinner += food.food_intake));
   snackList.map((food) => (snack += food.food_intake));
 
-  //Insert later
-  // const today = new Date();
-  // disabled={selectedDate && { after: today }}
+  const today = new Date();
+
 
   return (
     <>
@@ -528,7 +527,7 @@ export default function UserMain() {
               <Flex justifyContent={"center"} mb={-6}>
                 <DayPicker
                   mode="single"
-                  disabled={selectedDate}
+                  disabled={selectedDate && { after: today }}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   defaultMonth={new Date()}
@@ -664,7 +663,7 @@ export default function UserMain() {
                               mr={3}
                               onClick={foodFormOnClose}
                             >
-                              Close
+                              關閉
                             </Button>
                           </Center>
                         </Form>
@@ -748,6 +747,7 @@ export default function UserMain() {
                                 name="amount"
                                 type="number"
                                 min={1}
+                                max={10000}
                                 isRequired={true}
                                 validate={(value: number) => {
                                   let error;
@@ -774,7 +774,7 @@ export default function UserMain() {
                                   setHasSearchResult(false);
                                 }}
                               >
-                                Close
+                                關閉
                               </Button>
                             </Center>
                           </Form>
@@ -979,6 +979,7 @@ export default function UserMain() {
                                   name="duration"
                                   type="number"
                                   min={1}
+                                  max={300}
                                   isRequired={true}
                                   validate={(value: number) => {
                                     let error;
@@ -1004,7 +1005,7 @@ export default function UserMain() {
                                     exerciseFormOnClose();
                                   }}
                                 >
-                                  Close
+                                  關閉
                                 </Button>
                               </Center>
                             </Form>
@@ -1059,7 +1060,7 @@ export default function UserMain() {
                     mr={3}
                     onClick={exerciseOnClose}
                   >
-                    Close
+                    關閉
                   </Button>
                 </ModalFooter>
               </ModalContent>
@@ -1207,7 +1208,7 @@ export default function UserMain() {
                   mr={3}
                   onClick={breakfastOnClose}
                 >
-                  Close
+                  關閉
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -1289,7 +1290,7 @@ export default function UserMain() {
                   mr={3}
                   onClick={lunchOnClose}
                 >
-                  Close
+                  關閉
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -1371,7 +1372,7 @@ export default function UserMain() {
                   mr={3}
                   onClick={dinnerOnClose}
                 >
-                  Close
+                  關閉
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -1453,7 +1454,7 @@ export default function UserMain() {
                   mr={3}
                   onClick={snackOnClose}
                 >
-                  Close
+                  關閉
                 </Button>
               </ModalFooter>
             </ModalContent>
@@ -1471,11 +1472,4 @@ export default function UserMain() {
     </>
   );
 }
-function toast(arg0: {
-  position: string;
-  title: string;
-  duration: number;
-  isClosable: boolean;
-}) {
-  throw new Error("Function not implemented.");
-}
+

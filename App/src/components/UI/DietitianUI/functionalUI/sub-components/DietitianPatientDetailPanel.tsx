@@ -32,11 +32,13 @@ import {
   Divider,
   useToast,
   useColorModeValue,
+  TableCaption,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { MdToday } from "react-icons/md";
+import { WarningIcon } from '@chakra-ui/icons'
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../../redux/store";
@@ -75,6 +77,7 @@ export default function DietitianPatientDetailPanel(
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date()
   );
+  const today = new Date();
 
   const [foodDetail, setFoodDetail] = useState(Array<diet>);
   const [exDetail, setExDetail] = useState<Array<exercise>>([]);
@@ -90,7 +93,6 @@ export default function DietitianPatientDetailPanel(
     }
     return age;
   };
-  //###################
 
   //################
   //API Functions
@@ -174,8 +176,7 @@ export default function DietitianPatientDetailPanel(
     setFoodDetail([]);
     setExDetail([]);
     const exerciseRec = axios.get(
-      `${REACT_APP_API_SERVER}/diet/exercisesRecord/${
-        patient.id
+      `${REACT_APP_API_SERVER}/diet/exercisesRecord/${patient.id
       }/${selectedDate?.toISOString()}`,
       {
         headers: {
@@ -185,8 +186,7 @@ export default function DietitianPatientDetailPanel(
     );
 
     const foodRec = axios.get(
-      `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${
-        patient.id
+      `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${patient.id
       }/${selectedDate?.toISOString()}`,
       {
         headers: {
@@ -212,7 +212,7 @@ export default function DietitianPatientDetailPanel(
                 burn_calories: Math.round(
                   (parseInt(exercise.duration, 10) *
                     parseInt(exercise.ex_calories, 10)) /
-                    60
+                  60
                 ),
               };
               setExDetail((previous) => [...previous, exerciseInfo]);
@@ -501,8 +501,8 @@ export default function DietitianPatientDetailPanel(
                         {rec.gender === 1
                           ? "男"
                           : rec.gender === 2
-                          ? "女"
-                          : "其他"}
+                            ? "女"
+                            : "其他"}
                       </Text>
                       <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
                       <Text fontWeight={"bold"}>
@@ -534,6 +534,10 @@ export default function DietitianPatientDetailPanel(
   //#######################################
 
   function DietitianUserExerciseAndFoodDetailPanel() {
+    // const [intake, setIntake] = useState(0)
+    let intake = 0
+    foodDetail.map((food) => (intake += food.food_intake))
+
     return (
       <>
         {/* The popover date picker */}
@@ -556,6 +560,7 @@ export default function DietitianPatientDetailPanel(
                     mode="single"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
+                    disabled={selectedDate && { after: today }}
                     defaultMonth={new Date()}
                     modifiersClassNames={{
                       selected: "my-selected",
@@ -623,24 +628,30 @@ export default function DietitianPatientDetailPanel(
                   <Tbody>
                     {exDetail[0]
                       ? exDetail.map((item) => {
-                          return (
-                            <Tr>
-                              <Td>{item.duration}</Td>
-                              <Td>
-                                <Text
-                                  maxH={"50px"}
-                                  maxW={"150px"}
-                                  overflow="auto"
-                                >
-                                  {item.name}
-                                </Text>
-                              </Td>
-                              <Td>{item.burn_calories}</Td>
-                            </Tr>
-                          );
-                        })
+                        return (
+                          <Tr>
+                            <Td>{item.duration}</Td>
+                            <Td>
+                              <Text
+                                maxH={"50px"}
+                                maxW={"150px"}
+                                overflow="auto"
+                              >
+                                {item.name}
+                              </Text>
+                            </Td>
+                            <Td>{item.burn_calories}</Td>
+                          </Tr>
+                        );
+                      })
                       : ""}
                   </Tbody>
+                  {exDetail[0] ? "" :
+                    <TableCaption
+                      fontSize={'3xl'}
+                      textAlign={'center'}>
+                      沒有紀錄
+                    </TableCaption>}
                 </Table>
               </Flex>
             </Flex>
@@ -664,12 +675,19 @@ export default function DietitianPatientDetailPanel(
               position={"relative"}
             >
               <Flex>
-                <Box flex={"1"} fontSize={"2xl"}>
-                  膳食
-                </Box>
+                {foodDetail[0] ?
+                  <Box flex={"1"} fontSize={"2xl"}>
+                    該日總共膳食卡路為: {`${intake}kcal`}
+                    {intake > 2400 ? <WarningIcon w={8} h={6} color="red.500" /> : ""}
+                  </Box> : ""}
               </Flex>
 
               <Box w={"90%"} maxH={"80%"} overflow={"auto"} mt={2}>
+                {foodDetail[0] ? "" : <Text
+                  fontSize={'3xl'}
+                  textAlign={'center'}>
+                  沒有紀錄
+                </Text>}
                 <Accordion allowToggle>
                   {foodDetail
                     .filter((food) => food.food_type === "早餐")
@@ -794,7 +812,6 @@ export default function DietitianPatientDetailPanel(
   function UserWeightBPBGData() {
     return (
       <>
-        {/* Weight part */}
         <Flex
           flexDir={"column"}
           w={isSmallerThan600 ? "100%" : "30%"}
