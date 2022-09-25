@@ -107,6 +107,10 @@ export default function DietitianMain() {
         setAllBookings(data);
       });
   }
+  useEffect(() => {
+    fetchSelectedDateBooking();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
 
   //Booking Detail Component
   function BookingDetailToday(patient: PatientDetailOfTodayBooking) {
@@ -115,7 +119,6 @@ export default function DietitianMain() {
     const [currentDateBooking, setCurrentDateBooking] = useState<Array<any>>(
       []
     );
-
     async function fetchFollowUpAvailability() {
       axios
         .get(
@@ -132,7 +135,6 @@ export default function DietitianMain() {
           setCurrentDateBooking(data);
         });
     }
-
     async function postFollowUpBooking(
       timeid: number,
       dateString: string,
@@ -158,7 +160,6 @@ export default function DietitianMain() {
         )
         .then(({ data }) => {
           if (data.success) {
-            fetchSelectedDateBooking();
             Swal.fire({
               icon: "success",
               title: `你成功預約${new Date(
@@ -170,15 +171,13 @@ export default function DietitianMain() {
             });
           }
         });
+      fetchSelectedDateBooking();
     }
 
     useEffect(() => {
       fetchFollowUpAvailability();
-    }, [selectedDate, dateSubmit]);
-
-    useEffect(() => {
-      fetchSelectedDateBooking();
-    }, [selectedDate]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dateSubmit]);
     return (
       <>
         <AccordionItem>

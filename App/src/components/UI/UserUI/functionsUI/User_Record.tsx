@@ -219,6 +219,7 @@ export default function UserBPBGRecord() {
       fetchBGRecordFromServerByID();
       fetchBPRecordFromServerByID();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

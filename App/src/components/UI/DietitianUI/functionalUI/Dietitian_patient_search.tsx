@@ -32,6 +32,12 @@ export default function PatientSearchPanel() {
         },
       })
       .then(({ data }) => {
+        if (!data.user[0]) {
+          Swal.fire({
+            icon: "question",
+            title: "無此用戶",
+          });
+        }
         setUserinfo(data.user);
       })
       .catch((e) => {
@@ -61,7 +67,6 @@ export default function PatientSearchPanel() {
           initialValues={initialValues}
           onSubmit={async (values, actions) => {
             searchUserByHKID(values.hkid);
-            actions.setSubmitting(false);
           }}
         >
           {({ handleSubmit, errors, touched }) => (

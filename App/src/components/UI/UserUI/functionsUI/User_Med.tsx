@@ -134,10 +134,14 @@ export default function UserMed() {
   }
   useEffect(() => {
     if (uID) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchBooking();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       fetchMedEvaluation();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
   return (
     <Flex

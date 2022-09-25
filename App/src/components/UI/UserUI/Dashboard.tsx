@@ -9,25 +9,27 @@ import UserNav from "./User_Nav";
 
 export default function DashBoard() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+
+  const navigate = useNavigate();
   const toast = useToast();
   const user = useSelector((state: IRootState) => state.user.user);
-  const navigate = useNavigate();
+
   useEffect(() => {
     if (user[0].id === (undefined || null)) {
       navigate("/login");
     }
-  }, [user]);
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user[0].id]);
   useEffect(() => {
     toast({
       position: "bottom",
       title: `${user[0].username}`,
       description: "歡迎回來",
-      duration: 5000,
+      duration: 2000,
       isClosable: true,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   return (
     <>
       <Banner />

@@ -9,6 +9,7 @@ export default function DataCenter() {
       ) : (
         <iframe
           key={"datacenter_client"}
+          title={"eslint-made-me-do-this"}
           width="100%"
           height="100%"
           src="https://datastudio.google.com/embed/reporting/2570dc1b-ea37-44a4-b4e8-b515386f6560/page/DYK3C"
