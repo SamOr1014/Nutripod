@@ -121,8 +121,7 @@ export class BookingController {
 	getFollowUpBooking = async (req: Request, res: Response) => {
 		try {
 			let bid = req.params.bid
-			console.log(bid)
-			res.status(200).json({ success: true })
+			res.status(200).json({ success: true, bid:bid})
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({
@@ -144,7 +143,6 @@ export class BookingController {
 				})
 				return
 			}
-			console.log(req.body)
 			const { timeid, dateString, currentBooking, uid, did } = req.body
 
 			let formattedDate = formatDate(dateString)

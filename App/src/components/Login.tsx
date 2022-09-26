@@ -43,6 +43,8 @@ export function Login() {
   const handleClick = () => setShow(!show);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const userID = useSelector((state: IRootState) => state.user.user[0].id);
+  const DietitianID = useSelector((state: IRootState) => state.user.dietitian[0].id);
   const loadingStatus = useSelector((state: IRootState) => state.user.loading);
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
@@ -60,7 +62,7 @@ export function Login() {
     }
   };
 
-  if (checkToken != null) {
+  if (checkToken != null && (!userID || !DietitianID)) {
     TokenLogin();
   }
 

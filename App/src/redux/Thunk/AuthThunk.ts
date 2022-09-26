@@ -19,7 +19,6 @@ export const loginThunk = createAsyncThunk<any, userInfo, ThunkExtraInfo>(
     thunkAPI
   ) => {
     try {
-      console.log("check loginThunk");
       let info = { username, password };
       const result = await axios.post(`${REACT_APP_API_SERVER}/user/login`, {
         data: {

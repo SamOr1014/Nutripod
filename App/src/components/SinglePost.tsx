@@ -49,7 +49,9 @@ export default function SinglePosts(props: PostTemplate) {
           icon: "success",
           title: "成功移除",
         });
-      });
+      }).then(()=>{
+        props.refresh()
+      })
   }
   return (
     <>

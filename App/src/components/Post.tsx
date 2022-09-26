@@ -56,8 +56,8 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],
-    []
+      ],// eslint-disable-next-line react-hooks/exhaustive-deps
+    [isOpen]
   );
 
   const initialTitleValue: Descendant[] = useMemo(
@@ -67,8 +67,8 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],
-    []
+      ],// eslint-disable-next-line react-hooks/exhaustive-deps
+    [isOpen]
   );
 
   let content = "";
@@ -79,7 +79,7 @@ export default function UserPost() {
     if (contentToken) {
       for (let par of JSON.parse(localStorage.getItem("content") as string)) {
         if (par.children[0].text === "") {
-          content += "\n";
+          content += "\n"
         }
         content += par.children[0].text;
       }
@@ -94,6 +94,7 @@ export default function UserPost() {
       }
     }
   }
+
 
   //API functions
   async function fetchAllPost() {
@@ -114,8 +115,7 @@ export default function UserPost() {
     getTitle();
     axios
       .post(
-        `${REACT_APP_API_SERVER}/post/${
-          dietitianInfo.id
+        `${REACT_APP_API_SERVER}/post/${dietitianInfo.id
         }/${date.toISOString()}`,
         {
           content: content,
@@ -159,8 +159,8 @@ export default function UserPost() {
       overflow={"auto"}
     >
       {dietitianInfo.id != null ? (
-        <Button  leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
-          開新帖文
+        <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
+          出Post
         </Button>
       ) : (
         <></>
@@ -182,12 +182,15 @@ export default function UserPost() {
             justifyContent="center"
             alignSelf={"center"}
             margin={"10"}
-            border="4px"
+            border="2px"
+            borderRadius={'2xl'}
+            borderColor={'gray.400'}
           >
-            <Flex flex={1} borderBottom={"4px"} flexDirection="row">
+            <Flex flex={1} borderBottom={"2px"} flexDirection="row">
               <Box
                 width={isSmallerThan600 ? "97%" : "99%"}
                 fontSize={isSmallerThan600 ? "2xl" : "3xl"}
+                p={3}
               >
                 <Slate
                   editor={titleEditor}
@@ -197,7 +200,9 @@ export default function UserPost() {
                     localStorage.setItem("title", title);
                   }}
                 >
-                  <Editable placeholder="請在此輸入標題" />
+                  <Editable
+                    placeholder="請在此輸入標題"
+                  />
                 </Slate>
               </Box>
             </Flex>
@@ -206,6 +211,8 @@ export default function UserPost() {
               <Box
                 width={isSmallerThan600 ? "97%" : "99%"}
                 fontSize={isSmallerThan600 ? "2xl" : "3xl"}
+                overflow={"auto"}
+                p={3}
               >
                 <Slate
                   editor={contentEditor}
@@ -215,18 +222,18 @@ export default function UserPost() {
                     localStorage.setItem("content", content);
                   }}
                 >
-                  <Editable placeholder="請在此輸入內容" />
+                  <Box as={Editable} placeholder="請在此輸入內容" overflow={"auto"} maxH={isSmallerThan600 ? "62vh" : "60vh"}></Box>
                 </Slate>
               </Box>
             </Flex>
           </Box>
 
           <DrawerFooter borderTopWidth="1px" justifyContent="center" gap="5">
-            <Button variant="outline" mr={3} onClick={onClose}>
-              取消
-            </Button>
             <Button colorScheme="blue" onClick={() => postArticle()}>
               提交
+            </Button>
+            <Button variant="outline" mr={3} onClick={onClose}>
+              取消
             </Button>
           </DrawerFooter>
         </DrawerContent>

@@ -260,9 +260,9 @@ export default function UserBooking() {
                         Swal.fire({
                           icon: "question",
                           title: "請確認以下時間",
-                          text: `Time: ${
+                          text: `時段: ${
                             timeslotDetail.time
-                          }, Date: ${selectedDate.toLocaleDateString()}`,
+                          }, 日子: ${selectedDate.toLocaleDateString()}`,
                           showCloseButton: true,
                           showCancelButton: true,
                         }).then(async (value) => {

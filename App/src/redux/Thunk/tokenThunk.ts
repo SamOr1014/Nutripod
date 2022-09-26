@@ -12,7 +12,6 @@ export const tokenThunk = createAsyncThunk<any, string, ThunkExtraInfo>(
     "@user/tokenLogin",
     async (token, thunkAPI) => {
         try {
-            console.log("going to backend")
             const result = await axios.post(`${REACT_APP_API_SERVER}/user/checkToken`,
                 {
                     data: {
