@@ -8,11 +8,10 @@ export default function DataCenter() {
         ""
       ) : (
         <iframe
-          key={"datacenter_client"}
-          title={"eslint-made-me-do-this"}
+          title="PowerBI_iframe"
           width="100%"
           height="100%"
-          src="https://datastudio.google.com/embed/reporting/2570dc1b-ea37-44a4-b4e8-b515386f6560/page/DYK3C"
+          src="https://datastudio.google.com/embed/reporting/2b7c1066-4eb1-47b1-a127-1812eaedb8f9/page/p_5ixedkbyyc"
         ></iframe>
       )}
     </>
