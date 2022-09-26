@@ -56,7 +56,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],
+      ],// eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen]
   );
 
@@ -67,7 +67,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],
+      ],// eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen]
   );
 
@@ -79,7 +79,7 @@ export default function UserPost() {
     if (contentToken) {
       for (let par of JSON.parse(localStorage.getItem("content") as string)) {
         if (par.children[0].text === "") {
-          content += "\n";
+          content += "\n"
         }
         content += par.children[0].text;
       }
@@ -115,8 +115,7 @@ export default function UserPost() {
     getTitle();
     axios
       .post(
-        `${REACT_APP_API_SERVER}/post/${
-          dietitianInfo.id
+        `${REACT_APP_API_SERVER}/post/${dietitianInfo.id
         }/${date.toISOString()}`,
         {
           content: content,
@@ -160,7 +159,7 @@ export default function UserPost() {
       overflow={"auto"}
     >
       {dietitianInfo.id != null ? (
-        <Button  leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
+        <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
           出Post
         </Button>
       ) : (
@@ -191,6 +190,7 @@ export default function UserPost() {
               <Box
                 width={isSmallerThan600 ? "97%" : "99%"}
                 fontSize={isSmallerThan600 ? "2xl" : "3xl"}
+                p={3}
               >
                 <Slate
                   editor={titleEditor}
@@ -200,7 +200,9 @@ export default function UserPost() {
                     localStorage.setItem("title", title);
                   }}
                 >
-                  <Editable placeholder="請在此輸入標題" />
+                  <Editable
+                    placeholder="請在此輸入標題"
+                  />
                 </Slate>
               </Box>
             </Flex>
@@ -209,6 +211,8 @@ export default function UserPost() {
               <Box
                 width={isSmallerThan600 ? "97%" : "99%"}
                 fontSize={isSmallerThan600 ? "2xl" : "3xl"}
+                overflow={"auto"}
+                p={3}
               >
                 <Slate
                   editor={contentEditor}
@@ -218,7 +222,7 @@ export default function UserPost() {
                     localStorage.setItem("content", content);
                   }}
                 >
-                  <Editable placeholder="請在此輸入內容" />
+                  <Box as={Editable} placeholder="請在此輸入內容" overflow={"auto"} maxH={isSmallerThan600? "62vh": "70vh"}></Box>
                 </Slate>
               </Box>
             </Flex>
