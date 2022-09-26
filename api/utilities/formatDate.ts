@@ -9,19 +9,21 @@ export function formatDate(dateString: string) {
 		(HKDate.getMonth() + 1).toString() +
 		'-' +
 		HKDate.getDate().toString()
-		
+
 	return formattedDate
 }
 
 export function formatLastDate(dateString: string) {
-	const date = new Date(dateString)
-	date.setDate(date.getDate() - 1)
+	let date = new Date(dateString)
+	let datestring = new Date(date.setDate(date.getDate() - 1)).toLocaleString('en-US', { timeZone: "Asia/Shanghai" })
+	let hkDate = new Date(datestring)
+
 	const formattedDate =
-		date.getFullYear().toString() +
+		hkDate.getFullYear().toString() +
 		'-' +
-		(date.getMonth() + 1).toString() +
+		(hkDate.getMonth() + 1).toString() +
 		'-' +
-		date.getDate().toString()
+		hkDate.getDate().toString()
 
 	return formattedDate
 }
