@@ -1,6 +1,6 @@
 import express from 'express'
 import { bookingController } from '../server'
-import { isUserLoggedIn } from '../utilities/guards'
+import { isUserLoggedIn,isDietitianLoggedIn} from '../utilities/guards'
 export const bookingRoutes = express.Router()
 
 bookingRoutes.get('/timeslot', bookingController.getTimeslot)
@@ -30,12 +30,12 @@ bookingRoutes.put('/attendance', isUserLoggedIn, bookingController.attendance)
 
 bookingRoutes.get(
 	'/followup/:bid',
-	isUserLoggedIn,
+	isDietitianLoggedIn,
 	bookingController.getFollowUpBooking
 )
 bookingRoutes.post(
 	'/followup',
-	isUserLoggedIn,
+	isDietitianLoggedIn,
 	bookingController.postFollowUpBooking
 )
 

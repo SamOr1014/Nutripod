@@ -679,7 +679,7 @@ export default function UserBPBGRecord() {
                 setModalPostControl("");
               }}
             >
-              Close
+              關閉
             </Button>
           </ModalFooter>
         </ModalContent>

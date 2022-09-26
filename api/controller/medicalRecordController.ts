@@ -35,7 +35,6 @@ export class MedicalRecordController {
 				})
 				return
 			}
-			console.log(medRec)
 			await this.medicalRecordService.postUserMedRecRefCurrentBooking(
 				medRec.bid,
 				medRec.content,

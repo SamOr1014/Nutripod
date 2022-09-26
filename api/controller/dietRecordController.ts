@@ -623,7 +623,7 @@ export class DietRecordController {
 			const food = req.params.food
 
 			if (!food) {
-				res.status(400).json({
+				res.json({
 					success: false,
 					message: 'Information not provided'
 				})

@@ -57,7 +57,7 @@ export default function UserPost() {
           children: [{ text: "" }],
         },
       ],
-    []
+    [isOpen]
   );
 
   const initialTitleValue: Descendant[] = useMemo(
@@ -68,7 +68,7 @@ export default function UserPost() {
           children: [{ text: "" }],
         },
       ],
-    []
+    [isOpen]
   );
 
   let content = "";
@@ -94,6 +94,7 @@ export default function UserPost() {
       }
     }
   }
+
 
   //API functions
   async function fetchAllPost() {
@@ -160,7 +161,7 @@ export default function UserPost() {
     >
       {dietitianInfo.id != null ? (
         <Button  leftIcon={<AddIcon />} colorScheme="teal" onClick={onOpen}>
-          開新帖文
+          出Post
         </Button>
       ) : (
         <></>
@@ -182,9 +183,11 @@ export default function UserPost() {
             justifyContent="center"
             alignSelf={"center"}
             margin={"10"}
-            border="4px"
+            border="2px"
+            borderRadius={'2xl'}
+            borderColor={'gray.400'}
           >
-            <Flex flex={1} borderBottom={"4px"} flexDirection="row">
+            <Flex flex={1} borderBottom={"2px"} flexDirection="row">
               <Box
                 width={isSmallerThan600 ? "97%" : "99%"}
                 fontSize={isSmallerThan600 ? "2xl" : "3xl"}
@@ -222,11 +225,11 @@ export default function UserPost() {
           </Box>
 
           <DrawerFooter borderTopWidth="1px" justifyContent="center" gap="5">
-            <Button variant="outline" mr={3} onClick={onClose}>
-              取消
-            </Button>
             <Button colorScheme="blue" onClick={() => postArticle()}>
               提交
+            </Button>
+            <Button variant="outline" mr={3} onClick={onClose}>
+              取消
             </Button>
           </DrawerFooter>
         </DrawerContent>

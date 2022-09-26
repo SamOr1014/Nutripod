@@ -317,7 +317,6 @@ export class UserController {
 				hashedPassword,
 				email
 			)
-			console.log(username, firstName, lastName, hashedPassword, email)
 			res.status(200).json({ success: true })
 		} catch (e) {
 			logger.error(e.message)

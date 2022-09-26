@@ -44,7 +44,12 @@ import {
 } from "../../../../utility/models";
 import locateToken from "../../../../utility/Token";
 
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 
 export default function DietitianMain() {
   const bg = useColorModeValue("gray.200", "gray.700");
@@ -68,6 +73,7 @@ export default function DietitianMain() {
   const currentDietitian = useSelector(
     (state: IRootState) => state.user.dietitian[0]
   );
+  const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const timeslot = useSelector((state: IRootState) => state.timeslot);
 
   //local state for bookings of selected date
@@ -168,7 +174,37 @@ export default function DietitianMain() {
                 0,
                 -3
               )}`,
-            });
+            }).then(async () => {
+              await axios.post(
+                `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+                {
+                  encoding: "AUTO",
+                  track: "None",
+                  destination: `${REACT_APP_PHONE_NUMBER}`,
+                  text: `你需要於${new Date(
+                    dateString
+                  ).toLocaleDateString()}的${timeslot[timeid - 1].time.slice(
+                    0,
+                    -3
+                  )}覆診。營養師為${
+                    dietitianList.filter(
+                      (dietitianInfo) =>
+                        dietitianInfo.id === currentDietitian.id
+                    )[0].first_name
+                  } ${
+                    dietitianList.filter(
+                      (dietitianInfo) =>
+                        dietitianInfo.id === currentDietitian.id
+                    )[0].last_name
+                  }，請記得準時到診`,
+                },
+                {
+                  headers: {
+                    Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+                  },
+                }
+              );
+            });;
           }
         });
       fetchSelectedDateBooking();
