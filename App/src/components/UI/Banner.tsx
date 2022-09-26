@@ -185,7 +185,7 @@ export default function Banner() {
                 </MenuItem>
               </Link>
             ) : (
-              ""
+              <></>
             )}
             <Link>
               <MenuItem
