@@ -58,7 +58,7 @@ export default function FullPost() {
             return (
               <Flex
                 w={isSmallerThan600 ? "100%" : "80%"}
-                h={isSmallerThan600 ? "auto" : "720px"}
+                h={isSmallerThan600 ? "auto" : "690px"}
                 bg={bg}
                 p={10}
                 rounded={"3xl"}

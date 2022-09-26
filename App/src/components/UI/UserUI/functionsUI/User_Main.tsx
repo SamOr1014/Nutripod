@@ -532,7 +532,7 @@ export default function UserMain() {
               <Flex justifyContent={"center"} mb={-6}>
                 <DayPicker
                   mode="single"
-                  disabled={selectedDate && { after: today }}
+                  disabled={ { after: today }}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   defaultMonth={new Date()}
