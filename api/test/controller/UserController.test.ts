@@ -4,7 +4,7 @@ import { checkPassword } from '../../utilities/hash'
 import jwtSimple from 'jwt-simple'
 import type { Request, Response } from 'express'
 import type { Knex } from 'knex'
-import { createRequest, createResponse } from '../helper'
+import { createResponse, createRequest } from '../helper'
 
 jest.mock('jwt-simple')
 jest.mock('../../services/userServices')
@@ -18,14 +18,14 @@ describe('UserController', () => {
 
 	beforeEach(() => {
 		service = new UserServices({} as Knex)
-		service.register = jest.fn(() =>
+		service.login = jest.fn(() =>
 			Promise.resolve([
 				{
 					id: 1,
 					firstName: 'chan',
 					lastName: 'wan',
 					username: 'roy',
-					password: '1234',
+					password: 'hashedPassword',
 					email: 'roy@gmail.com',
 					birthday: '2000 / 10 / 10',
 					height: '190',
@@ -41,50 +41,71 @@ describe('UserController', () => {
 			])
 		)
 
-		req = createRequest()
+		// req = createRequest()
 		res = createResponse()
+		req = createRequest()
 		;(checkPassword as jest.Mock).mockResolvedValue(true)
 		controller = new UserController(service)
 	})
 
 	it('test login - missing username', async () => {
-		req.body = { username: 'peter', password: '123' }
-
+		req.body.data.user = { username: '', password: '123' }
 		await controller.login(req, res)
 
 		expect(res.status).lastCalledWith(400)
 		expect(res.json).lastCalledWith({
+			success: false,
 			message: 'username or password are missing'
 		})
 		expect(res.json).toBeCalledTimes(1)
 	})
-
-	// it('test login - missing password', async () => {
-	// 	req.body.data = { username: 'roy' }
-
-	// 	await controller.login(req, res)
-
-	// 	expect(res.status).lastCalledWith(400)
-	// 	expect(res.json).lastCalledWith({
-	// 		message: 'username or password are missing'
-	// 	})
-	// 	expect(res.json).toBeCalledTimes(1)
-	// })
 
 	it('test login - success', async () => {
 		const username = 'roy'
 		const password = '1234'
 		const dummyCode = 'i_am_dummy'
 
-		req.body = { username, password }
+		req.body.data.user = { username, password }
 		;(jwtSimple.encode as jest.Mock).mockReturnValue(dummyCode)
 
 		await controller.login(req, res)
 
-		expect(service.checkUserToken).toBeCalledWith(username)
+		expect(service.login).toBeCalledWith(username)
 		expect(checkPassword).toBeCalledWith(password, 'hashedPassword')
-		expect(res.json).toBeCalledWith({ token: dummyCode })
+		expect(res.json).toHaveBeenCalledWith({
+			info: {
+				address: 'Tsuen wan',
+				birthday: '2000 / 10 / 10',
+				chronic_condition: '1',
+				education: '1',
+				email: 'roy@gmail.com',
+				firstName: 'chan',
+				gender: '1',
+				height: '190',
+				hkid: 'Y654321',
+				id: 1,
+				lastName: 'wan',
+				password: 'hashedPassword',
+				phone: '98765432',
+				profession: '1',
+				username: 'roy',
+				weight: '70'
+			},
+			success: true,
+			token: dummyCode
+		})
 	})
 
-	// it("test login - internal server error", () => {});
+	it('get user by their hkid', async () => {
+		const hkid = 'Y654321'
+		const username = 'roy'
+
+		req.params = { hkid }
+		;(service.getUserBYHKID as jest.Mock).mockReturnValue(username)
+
+		await controller.getUserByHKID(req, res)
+
+		expect(service.getUserBYHKID).toBeCalledWith(hkid)
+		expect(res.json).toBeCalledWith({ success: true, user: 'roy' })
+	})
 })

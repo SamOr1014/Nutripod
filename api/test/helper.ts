@@ -4,7 +4,7 @@ export function createRequest(): Request {
 	return {
 		params: {},
 		query: {},
-		body: {},
+		body: { data: { user: {} } },
 		user: {}
 	} as Request
 }

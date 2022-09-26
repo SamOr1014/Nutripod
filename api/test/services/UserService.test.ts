@@ -13,10 +13,20 @@ describe('UserService', () => {
 
 	beforeEach(async () => {
 		service = new UserServices(knex)
-		// await knex('users').del()
-		await knex.raw(
-			'truncate gender, profession_types, education restart identity cascade'
-		)
+		await knex('users').del()
+		await knex.raw('truncate users restart identity cascade')
+
+		const gender_id = await knex('gender')
+			.insert({ gender_type: 'male' })
+			.returning('id')
+
+		const profession_id = await knex('profession_types')
+			.insert({ pf_type: 'abc' })
+			.returning('id')
+
+		const education_id = await knex('education')
+			.insert({ education_level: 'edf' })
+			.returning('id')
 
 		await knex('users').insert({
 			first_name: 'chan',
@@ -27,10 +37,10 @@ describe('UserService', () => {
 			birthday: '2000/1/1',
 			height: '190',
 			weight: '60',
-			gender: '1',
+			gender: gender_id[0].id,
 			phone: '98765432',
-			profession: '1',
-			education: '1',
+			profession: profession_id[0].id,
+			education: education_id[0].id,
 			is_deleted: 'false',
 			is_user: 'true',
 			hkid: 'Y6543210'
@@ -39,19 +49,20 @@ describe('UserService', () => {
 
 	it('get username by username - success', async () => {
 		const username = 'roy'
-		const user_id = 1
-		const user = await service.checkUserToken(user_id, username)
+
+		const user = await service.login(username)
 
 		expect(user).toBeDefined()
-		// expect(user.!username).toEqual("roy");
+		expect(user[0].username).toEqual('roy')
 	})
 
-	it('get username by username - fail to find the user', async () => {
-		const username = 'peter'
-		const user_id = 1
-		const user = await service.checkUserToken(user_id, username)
+	it('get username by their hkid - success', async () => {
+		const hkid = 'Y6543210'
 
-		expect(user).not.toBeDefined()
+		const user = await service.getUserBYHKID(hkid)
+		expect(hkid).toEqual('Y6543210')
+		expect(user[0].first_name).toEqual('chan')
+		expect(user[0].last_name).toEqual('man')
 	})
 
 	afterAll(async () => {
