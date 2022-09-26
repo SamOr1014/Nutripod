@@ -45,6 +45,7 @@ export default function FullPost() {
       <Text fontSize={"xl"}>
         {str}
         <br></br>
+        <br></br>
       </Text>
     ));
     return newText;
