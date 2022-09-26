@@ -56,7 +56,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],
+      ],// eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen]
   );
 
@@ -67,6 +67,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       ],
     [isOpen]
   );
