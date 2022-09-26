@@ -222,7 +222,7 @@ export default function UserPost() {
                     localStorage.setItem("content", content);
                   }}
                 >
-                  <Box as={Editable} placeholder="請在此輸入內容" overflow={"auto"} maxH={isSmallerThan600? "62vh": "70vh"}></Box>
+                  <Box as={Editable} placeholder="請在此輸入內容" overflow={"auto"} maxH={isSmallerThan600 ? "62vh" : "60vh"}></Box>
                 </Slate>
               </Box>
             </Flex>
