@@ -1,3 +1,4 @@
+import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
   Divider,
@@ -69,6 +70,11 @@ export default function DietitianMain() {
     onOpen: onMedRecOpen,
     onClose: onMedRecClose,
   } = useDisclosure();
+  const {
+    isOpen: modalOpen,
+    onOpen: onModalOpen,
+    onClose: onModalClose
+  } = useDisclosure();
   //redux states
   const currentDietitian = useSelector(
     (state: IRootState) => state.user.dietitian[0]
@@ -100,8 +106,7 @@ export default function DietitianMain() {
   async function fetchSelectedDateBooking() {
     axios
       .get(
-        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${
-          currentDietitian.id
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${currentDietitian.id
         }`,
         {
           headers: {
@@ -112,6 +117,10 @@ export default function DietitianMain() {
       .then(({ data }) => {
         setAllBookings(data);
       });
+  }
+
+  async function addBooking() {
+    console.log("123")
   }
   useEffect(() => {
     fetchSelectedDateBooking();
@@ -128,8 +137,7 @@ export default function DietitianMain() {
     async function fetchFollowUpAvailability() {
       axios
         .get(
-          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
-            currentDietitian.id
+          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${currentDietitian.id
           }`,
           {
             headers: {
@@ -186,17 +194,15 @@ export default function DietitianMain() {
                   ).toLocaleDateString()}的${timeslot[timeid - 1].time.slice(
                     0,
                     -3
-                  )}覆診。營養師為${
-                    dietitianList.filter(
-                      (dietitianInfo) =>
-                        dietitianInfo.id === currentDietitian.id
-                    )[0].first_name
-                  } ${
-                    dietitianList.filter(
+                  )}覆診。營養師為${dietitianList.filter(
+                    (dietitianInfo) =>
+                      dietitianInfo.id === currentDietitian.id
+                  )[0].first_name
+                    } ${dietitianList.filter(
                       (dietitianInfo) =>
                         dietitianInfo.id === currentDietitian.id
                     )[0].last_name
-                  }，請記得準時到診`,
+                    }，請記得準時到診`,
                 },
                 {
                   headers: {
@@ -599,9 +605,16 @@ export default function DietitianMain() {
           p={4}
           borderRadius={"3xl"}
         >
-          <Heading p={3} textAlign={"center"} mb={1}>
-            📅請選擇應診日期
-          </Heading>
+
+          <Flex>
+            <Heading flex={'1'} p={3} textAlign={"center"} mb={1}>
+              📅請選擇應診日期
+            </Heading>
+            <Button>
+              <AddIcon onClick={() => addBooking()}/>
+            </Button>
+          </Flex>
+
           <Divider />
           <Flex
             justifyContent={"center"}
@@ -679,8 +692,8 @@ export default function DietitianMain() {
                       booking.gender === 1
                         ? "男"
                         : booking.gender === 2
-                        ? "女"
-                        : "其他"
+                          ? "女"
+                          : "其他"
                     }
                     HKID={booking.hkid}
                     phone={booking.phone}
