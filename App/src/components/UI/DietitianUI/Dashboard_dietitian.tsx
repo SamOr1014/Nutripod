@@ -6,6 +6,7 @@ import DietitianNav from "./Dietitian_Nav";
 
 export default function DashBoardDietitian() {
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   return (
     <>
       <Banner />
@@ -24,7 +25,7 @@ export default function DashBoardDietitian() {
           overflow={"auto"}
           flexWrap={"wrap"}
           maxW={"1500px"}
-          maxH={isSmallerThan600 ? "100%" : "850px"}
+          maxH={isSmallerThan600 ? "100%" : isLargerThan1700 ? "68vh" : "850px"}
           justifyContent={"center"}
         >
           <Outlet />

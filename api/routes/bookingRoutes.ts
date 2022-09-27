@@ -1,6 +1,6 @@
 import express from 'express'
 import { bookingController } from '../server'
-import { isUserLoggedIn,isDietitianLoggedIn} from '../utilities/guards'
+import { isUserLoggedIn, isDietitianLoggedIn } from '../utilities/guards'
 export const bookingRoutes = express.Router()
 
 bookingRoutes.get('/timeslot', bookingController.getTimeslot)
@@ -12,6 +12,8 @@ bookingRoutes.get(
 )
 
 bookingRoutes.post('/', isUserLoggedIn, bookingController.postUserBooking)
+
+bookingRoutes.post('/first', bookingController.firstTimeBooking)
 
 bookingRoutes.delete(
 	'/user/:id/:bID',
