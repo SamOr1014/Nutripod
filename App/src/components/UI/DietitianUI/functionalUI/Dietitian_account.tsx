@@ -128,7 +128,7 @@ export default function DietitianAccount() {
         <FormControl id="userName">
           <Heading fontSize="lg">姓名</Heading>
           <Text fontSize="xl" my="1">
-            {dietitianFirstName + dietitianLastName!}
+            {dietitianFirstName + " " + dietitianLastName!}
           </Text>
         </FormControl>
 

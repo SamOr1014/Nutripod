@@ -278,7 +278,7 @@ export default function UserBPBGRecord() {
                       return;
                     }
                     await postWeightRecord(
-                      parseInt(weightInput),
+                      parseFloat(weightInput),
                       new Date().toISOString(),
                       user[0].id as number
                     );
@@ -656,7 +656,7 @@ export default function UserBPBGRecord() {
                 }
                 if (modalPostControl === "bg") {
                   await postBGRecord(
-                    parseInt(bgInput),
+                    parseFloat(bgInput),
                     dateTimeSubmit.toISOString(),
                     user[0].id as number
                   );
