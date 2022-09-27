@@ -1,4 +1,3 @@
-import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
   Divider,
@@ -129,9 +128,6 @@ export default function DietitianMain() {
       });
   }
 
-  async function addBooking() {
-    console.log("123");
-  }
   useEffect(() => {
     fetchSelectedDateBooking();
     // eslint-disable-next-line react-hooks/exhaustive-deps
