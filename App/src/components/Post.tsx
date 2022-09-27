@@ -56,7 +56,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],// eslint-disable-next-line react-hooks/exhaustive-deps
+      ], // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen]
   );
 
@@ -67,7 +67,7 @@ export default function UserPost() {
           type: "paragraph",
           children: [{ text: "" }],
         },
-      ],// eslint-disable-next-line react-hooks/exhaustive-deps
+      ], // eslint-disable-next-line react-hooks/exhaustive-deps
     [isOpen]
   );
 
@@ -79,7 +79,7 @@ export default function UserPost() {
     if (contentToken) {
       for (let par of JSON.parse(localStorage.getItem("content") as string)) {
         if (par.children[0].text === "") {
-          content += "\n"
+          content += "\n";
         }
         content += par.children[0].text;
       }
@@ -94,7 +94,6 @@ export default function UserPost() {
       }
     }
   }
-
 
   //API functions
   async function fetchAllPost() {
@@ -115,7 +114,8 @@ export default function UserPost() {
     getTitle();
     axios
       .post(
-        `${REACT_APP_API_SERVER}/post/${dietitianInfo.id
+        `${REACT_APP_API_SERVER}/post/${
+          dietitianInfo.id
         }/${date.toISOString()}`,
         {
           content: content,
@@ -152,8 +152,8 @@ export default function UserPost() {
   return (
     <Flex
       flexDir={"column"}
-      w={"100%"}
-      maxW={"100%"}
+      w={"90%"}
+      maxW={"90%"}
       p={isSmallerThan600 ? 0 : 2}
       my={2}
       overflow={"auto"}
@@ -166,11 +166,15 @@ export default function UserPost() {
         <></>
       )}
 
-      <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"} >
+      <Drawer isOpen={isOpen} onClose={onClose} placement="top" size={"full"}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px" textAlign={"center"} fontSize='3xl'>
+          <DrawerHeader
+            borderBottomWidth="1px"
+            textAlign={"center"}
+            fontSize="3xl"
+          >
             請在此刊登你的資訊
           </DrawerHeader>
 
@@ -183,8 +187,8 @@ export default function UserPost() {
             alignSelf={"center"}
             margin={"10"}
             border="2px"
-            borderRadius={'2xl'}
-            borderColor={'gray.400'}
+            borderRadius={"2xl"}
+            borderColor={"gray.400"}
           >
             <Flex flex={1} borderBottom={"2px"} flexDirection="row">
               <Box
@@ -200,9 +204,7 @@ export default function UserPost() {
                     localStorage.setItem("title", title);
                   }}
                 >
-                  <Editable
-                    placeholder="請在此輸入標題"
-                  />
+                  <Editable placeholder="請在此輸入標題" />
                 </Slate>
               </Box>
             </Flex>
@@ -222,7 +224,12 @@ export default function UserPost() {
                     localStorage.setItem("content", content);
                   }}
                 >
-                  <Box as={Editable} placeholder="請在此輸入內容" overflow={"auto"} maxH={isSmallerThan600 ? "62vh" : "60vh"}></Box>
+                  <Box
+                    as={Editable}
+                    placeholder="請在此輸入內容"
+                    overflow={"auto"}
+                    maxH={isSmallerThan600 ? "62vh" : "60vh"}
+                  ></Box>
                 </Slate>
               </Box>
             </Flex>

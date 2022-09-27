@@ -245,7 +245,7 @@ export default function UserBPBGRecord() {
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"720px"}
+          h={isLargerThan1700 ? "70vh" : isSmallerThan600 ? "auto" : "720px"}
           p={5}
         >
           <Flex h={isSmallerThan600 ? "auto" : "150px"}>
@@ -356,7 +356,7 @@ export default function UserBPBGRecord() {
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"720px"}
+          h={isLargerThan1700 ? "70vh" : isSmallerThan600 ? "auto" : "720px"}
           p={5}
         >
           <Flex h={isSmallerThan600 ? "auto" : "150px"}>
@@ -484,7 +484,7 @@ export default function UserBPBGRecord() {
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
-          maxH={"720px"}
+          h={isLargerThan1700 ? "70vh" : isSmallerThan600 ? "auto" : "720px"}
           p={5}
         >
           <Flex h={isSmallerThan600 ? "auto" : "150px"}>
