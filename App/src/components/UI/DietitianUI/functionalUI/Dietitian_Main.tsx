@@ -163,7 +163,7 @@ export default function DietitianMain() {
       uid: number | string,
       did: number | string
     ) {
-      axios
+      await axios
         .post(
           `${REACT_APP_API_SERVER}/booking/followup`,
           {
@@ -219,6 +219,7 @@ export default function DietitianMain() {
                   },
                 }
               );
+              fetchSelectedDateBooking();
             });
           }
         });
