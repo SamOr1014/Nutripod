@@ -334,4 +334,15 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+	changeDietitianPassword = async (req: Request, res: Response) => {
+		try {
+			const { id, password } = req.body
+			const hashedPassword = await hashPassword(password)
+			await this.userService.changeDietitianPassword(hashedPassword, id)
+			res.json({ success: true })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
 }
