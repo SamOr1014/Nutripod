@@ -117,7 +117,11 @@ export default function UserBPBGRecord() {
     }
   }
   //post
-  async function postWeightRecord(weight: number, date: string, uid: number) {
+  async function postWeightRecord(
+    weight: number | string,
+    date: string,
+    uid: number
+  ) {
     axios
       .post(
         `${REACT_APP_API_SERVER}/diet/weight`,
@@ -182,7 +186,11 @@ export default function UserBPBGRecord() {
         });
       });
   }
-  async function postBGRecord(bg: number, dateString: string, uid: number) {
+  async function postBGRecord(
+    bg: number | string,
+    dateString: string,
+    uid: number
+  ) {
     axios
       .post(
         `${REACT_APP_API_SERVER}/diet/bg`,
@@ -278,7 +286,7 @@ export default function UserBPBGRecord() {
                       return;
                     }
                     await postWeightRecord(
-                      parseFloat(weightInput),
+                      weightInput,
                       new Date().toISOString(),
                       user[0].id as number
                     );
@@ -656,7 +664,7 @@ export default function UserBPBGRecord() {
                 }
                 if (modalPostControl === "bg") {
                   await postBGRecord(
-                    parseFloat(bgInput),
+                    bgInput,
                     dateTimeSubmit.toISOString(),
                     user[0].id as number
                   );
