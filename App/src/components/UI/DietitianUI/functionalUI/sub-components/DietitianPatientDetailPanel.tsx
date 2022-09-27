@@ -38,7 +38,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { MdToday } from "react-icons/md";
-import { WarningIcon } from '@chakra-ui/icons'
+import { WarningIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { IRootState } from "../../../../../redux/store";
@@ -191,7 +191,8 @@ export default function DietitianPatientDetailPanel(
       setFoodDetail([]);
       setExDetail([]);
       const exerciseRec = axios.get(
-        `${REACT_APP_API_SERVER}/diet/exercisesRecord/${patient.id
+        `${REACT_APP_API_SERVER}/diet/exercisesRecord/${
+          patient.id
         }/${selectedDate?.toISOString()}`,
         {
           headers: {
@@ -201,7 +202,8 @@ export default function DietitianPatientDetailPanel(
       );
 
       const foodRec = axios.get(
-        `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${patient.id
+        `${REACT_APP_API_SERVER}/diet/foodIntakeRecord/${
+          patient.id
         }/${selectedDate?.toISOString()}`,
         {
           headers: {
@@ -227,7 +229,7 @@ export default function DietitianPatientDetailPanel(
                   burn_calories: Math.round(
                     (parseInt(exercise.duration, 10) *
                       parseInt(exercise.ex_calories, 10)) /
-                    60
+                      60
                   ),
                 };
                 setExDetail((previous) => [...previous, exerciseInfo]);
@@ -485,11 +487,11 @@ export default function DietitianPatientDetailPanel(
                       </AccordionButton>
                     </h2>
                     <AccordionPanel pb={4}>
-
-                      <Flex width={'100%'}>
+                      <Flex width={"100%"}>
                         <Box flex={1}>
                           <Text fontWeight={"bold"}>
-                            主診營養師：{" "}
+                            主診營養師：
+                            <br />
                             {dietitianList.filter(
                               (dietitian) => dietitian.id === rec.dietitian_id
                             )[0].first_name +
@@ -510,10 +512,12 @@ export default function DietitianPatientDetailPanel(
                             {rec.gender === 1
                               ? "男"
                               : rec.gender === 2
-                                ? "女"
-                                : "其他"}
+                              ? "女"
+                              : "其他"}
                           </Text>
-                          <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
+                          <Text fontWeight={"bold"}>
+                            身高： {rec.height} cm
+                          </Text>
                           <Text fontWeight={"bold"}>
                             起初體重： {rec.weight} kg
                           </Text>
@@ -527,8 +531,9 @@ export default function DietitianPatientDetailPanel(
                             血壓： {rec.bp}/{rec.dbp} mmHG
                           </Text>
                           <Text fontWeight={"bold"}>血糖：{rec.bg} mmol/L</Text>
-                          <Text fontWeight={"bold"}>慢性疾病：{rec.disease} </Text>
-
+                          <Text fontWeight={"bold"}>
+                            慢性疾病：{rec.disease}{" "}
+                          </Text>
                         </Box>
 
                         <Box flex={1}>
@@ -536,7 +541,6 @@ export default function DietitianPatientDetailPanel(
                           <Text fontWeight={"bold"}>{rec.content}</Text>
                         </Box>
                       </Flex>
-
                     </AccordionPanel>
                   </AccordionItem>
                 );
@@ -551,8 +555,8 @@ export default function DietitianPatientDetailPanel(
 
   function DietitianUserExerciseAndFoodDetailPanel() {
     // const [intake, setIntake] = useState(0)
-    let intake = 0
-    foodDetail.map((food) => (intake += food.food_intake))
+    let intake = 0;
+    foodDetail.map((food) => (intake += food.food_intake));
 
     return (
       <>
@@ -633,42 +637,51 @@ export default function DietitianPatientDetailPanel(
                   maxW={"100%"}
                   fontSize={isSmallerThan600 ? "xs" : "md"}
                 >
-                  <Thead position="sticky" top={0} bg={"gray.300"} zIndex={1} >
+                  <Thead position="sticky" top={0} bg={"gray.300"} zIndex={1}>
                     <Tr>
-                      <Th fontSize={'md'} color='black'>時長(mins)</Th>
-                      <Th fontSize={'md'} color='black'>運動</Th>
-                      <Th fontSize={'md'} color='black'>消耗(kcal)</Th>
+                      <Th fontSize={"md"} color="black">
+                        時長(mins)
+                      </Th>
+                      <Th fontSize={"md"} color="black">
+                        運動
+                      </Th>
+                      <Th fontSize={"md"} color="black">
+                        消耗(kcal)
+                      </Th>
                     </Tr>
                   </Thead>
 
                   <Tbody>
-                    {exDetail[0]
-                      ? exDetail.map((item) => {
+                    {exDetail[0] ? (
+                      exDetail.map((item) => {
                         return (
                           <Tr>
-                            <Td fontSize={'large'}>{item.duration}</Td>
+                            <Td fontSize={"large"}>{item.duration}</Td>
                             <Td>
                               <Text
                                 maxH={"50px"}
                                 maxW={"150px"}
                                 overflow="auto"
-                                fontSize={'large'}
+                                fontSize={"large"}
                               >
                                 {item.name}
                               </Text>
                             </Td>
-                            <Td fontSize={'large'} >{item.burn_calories}</Td>
+                            <Td fontSize={"large"}>{item.burn_calories}</Td>
                           </Tr>
                         );
                       })
-                      : <></>}
+                    ) : (
+                      <></>
+                    )}
                   </Tbody>
-                  {exDetail[0] ? <></> :
-                    <TableCaption
-                      fontSize={'3xl'}
-                      textAlign={'center'}>
+                  {exDetail[0] ? (
+                    <></>
+                  ) : (
+                    <TableCaption fontSize={"3xl"} textAlign={"center"}>
                       沒有紀錄
-                    </TableCaption>}
+                    </TableCaption>
+                  )}
                 </Table>
               </Flex>
             </Flex>
@@ -691,17 +704,22 @@ export default function DietitianPatientDetailPanel(
               p={3}
               position={"relative"}
             >
-
               <Box w={"90%"} maxH={"80%"} overflow={"auto"} mt={2}>
-                <Heading textAlign={"center"} fontSize={"2xl"} mb={'4'}>
-                  膳食  {intake > 2400 ? <WarningIcon w={8} h={8} color="red.500" /> : ""}
+                <Heading textAlign={"center"} fontSize={"2xl"} mb={"4"}>
+                  膳食{" "}
+                  {intake > 2400 ? (
+                    <WarningIcon w={8} h={8} color="red.500" />
+                  ) : (
+                    ""
+                  )}
                 </Heading>
-                {foodDetail[0] ? "" :
-                  <Text
-                    fontSize={'3xl'}
-                    textAlign={'center'}>
+                {foodDetail[0] ? (
+                  ""
+                ) : (
+                  <Text fontSize={"3xl"} textAlign={"center"}>
                     沒有紀錄
-                  </Text>}
+                  </Text>
+                )}
                 <Accordion allowToggle>
                   {foodDetail
                     .filter((food) => food.food_type === "早餐")
@@ -712,7 +730,7 @@ export default function DietitianPatientDetailPanel(
                             <Box flex="1" textAlign="left">
                               {food.name} {`(${food.food_type})`}
                             </Box>
-                            <Box flex="1" textAlign="right" >
+                            <Box flex="1" textAlign="right">
                               {food.food_intake}kcal
                             </Box>
                             <AccordionIcon />
@@ -743,7 +761,7 @@ export default function DietitianPatientDetailPanel(
                             <Box flex="1" textAlign="left">
                               {food.name} {`(${food.food_type})`}
                             </Box>
-                            <Box flex="1" textAlign="right" >
+                            <Box flex="1" textAlign="right">
                               {food.food_intake}kcal
                             </Box>
                             <AccordionIcon />
@@ -774,7 +792,7 @@ export default function DietitianPatientDetailPanel(
                             <Box flex="1" textAlign="left">
                               {food.name} {`(${food.food_type})`}
                             </Box>
-                            <Box flex="1" textAlign="right" >
+                            <Box flex="1" textAlign="right">
                               {food.food_intake}kcal
                             </Box>
                             <AccordionIcon />
@@ -805,7 +823,7 @@ export default function DietitianPatientDetailPanel(
                             <Box flex="1" textAlign="left">
                               {food.name} {`(${food.food_type})`}
                             </Box>
-                            <Box flex="1" textAlign="right" >
+                            <Box flex="1" textAlign="right">
                               {food.food_intake}kcal
                             </Box>
                             <AccordionIcon />
@@ -828,16 +846,19 @@ export default function DietitianPatientDetailPanel(
                     ))}
                 </Accordion>
                 <Flex>
-                  {foodDetail[0] ?
+                  {foodDetail[0] ? (
                     <Box
-                      position={'absolute'}
-                      bottom={'4'}
-                      right={'5'}
+                      position={"absolute"}
+                      bottom={"4"}
+                      right={"5"}
                       flex={"1"}
                       fontSize={"2xl"}
                     >
                       總共膳食卡路里: {`${intake}kcal`}
-                    </Box> : ""}
+                    </Box>
+                  ) : (
+                    ""
+                  )}
                 </Flex>
               </Box>
             </Flex>
