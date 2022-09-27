@@ -21,7 +21,12 @@ import axios from "axios";
 import locateToken from "../../../../utility/Token";
 import { tokenThunk } from "../../../../redux/Thunk/tokenThunk";
 
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 
 export default function UserAccount() {
   // obtain data from redux
@@ -176,7 +181,6 @@ export default function UserAccount() {
     await Swal.fire({
       title: "請輸入你的電郵",
       input: "email",
-      inputLabel: "Your email address",
       inputPlaceholder: "abc@example.com",
       showCloseButton: true,
       showCancelButton: true,
@@ -206,7 +210,6 @@ export default function UserAccount() {
     await Swal.fire({
       title: "請輸入你的新密碼",
       input: "password",
-      inputLabel: "Your password",
       showCloseButton: true,
       showCancelButton: true,
     }).then(async (result) => {
@@ -224,11 +227,27 @@ export default function UserAccount() {
           }
         );
         if (results.data.success) {
-          Swal.fire(`你的密碼已更改為: ${result.value}`);
-          dispatch(tokenThunk(token as string));
+          Swal.fire(`你的密碼已更改,稍後會有短訊`).then(async()=>{
+            await axios.post(
+              `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+              {
+                encoding: "AUTO",
+                track: "None",
+                destination: `${REACT_APP_PHONE_NUMBER}`,
+                text: `你的新密碼: ${result.value}`
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+                },
+              }
+            );
+          })
+          dispatch(tokenThunk(token as string))
+          
         }
       }
-    });
+    })
   }
 
   return (
@@ -338,7 +357,7 @@ export default function UserAccount() {
         </FormControl>
         <Button colorScheme="red" maxWidth={20} m={3} onClick={() => changePassword()
         }>
-          更改密碼?
+          更改密碼
         </Button>
       </Stack>
 
