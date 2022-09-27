@@ -20,7 +20,12 @@ import axios from "axios";
 import locateToken from "../../../../utility/Token";
 import { tokenThunk } from "../../../../redux/Thunk/tokenThunk";
 
-const { REACT_APP_API_SERVER } = process.env;
+const {
+  REACT_APP_API_SERVER,
+  REACT_APP_SMS_AC_ID,
+  REACT_APP_PHONE_NUMBER,
+  REACT_APP_SMS_API_KEY,
+} = process.env;
 
 export default function DietitianAccount() {
   // obtain data from redux
@@ -74,6 +79,50 @@ export default function DietitianAccount() {
         }
       }
     });
+  }
+
+  async function changeDietitianPassword() {
+    await Swal.fire({
+      title: "請輸入你的新密碼",
+      input: "password",
+      showCloseButton: true,
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/dietitians/pw`,
+          {
+            id: dietitianID,
+            password: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        if (results.data.success) {
+          Swal.fire(`你的密碼已更改,稍後會有短訊`).then(async()=>{
+            await axios.post(
+              `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
+              {
+                encoding: "AUTO",
+                track: "None",
+                destination: `${REACT_APP_PHONE_NUMBER}`,
+                text: `你的新密碼${result.value}`
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${REACT_APP_SMS_API_KEY}`,
+                },
+              }
+            );
+          })
+          dispatch(tokenThunk(token as string))
+          
+        }
+      }
+    })
   }
 
   return (
@@ -147,8 +196,8 @@ export default function DietitianAccount() {
           </Button>
         </FormControl>
 
-        <Button colorScheme="red" maxWidth={20} m={3}>
-          更改密碼?
+        <Button colorScheme="red" maxWidth={20} m={3} onClick={()=> {changeDietitianPassword()}}>
+          更改密碼
         </Button>
       </Stack>
     </>
