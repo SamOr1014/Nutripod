@@ -31,6 +31,7 @@ import {
   VStack,
   Textarea,
   useColorModeValue,
+  Select,
 } from "@chakra-ui/react";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -75,7 +76,7 @@ export default function DietitianMain() {
   const {
     isOpen: modalOpen,
     onOpen: onModalOpen,
-    onClose: onModalClose
+    onClose: onModalClose,
   } = useDisclosure();
   const [show, setShow] = useState(false);
   const handleClick = () => setShow(!show);
@@ -90,6 +91,10 @@ export default function DietitianMain() {
   const [allBooking, setAllBookings] = useState<
     Array<UserPlusIndividualBooking>
   >([]);
+
+  const [dateForFirst, setDateForFirst] = useState<Date>(new Date());
+  const [HKID, setHKID] = useState<string>("");
+  const [timeID, setTimeID] = useState<string>("");
 
   const css = `
 .my-selected:not([disabled]) { 
@@ -110,7 +115,8 @@ export default function DietitianMain() {
   async function fetchSelectedDateBooking() {
     axios
       .get(
-        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${currentDietitian.id
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${
+          currentDietitian.id
         }`,
         {
           headers: {
@@ -124,7 +130,7 @@ export default function DietitianMain() {
   }
 
   async function addBooking() {
-    console.log("123")
+    console.log("123");
   }
   useEffect(() => {
     fetchSelectedDateBooking();
@@ -141,7 +147,8 @@ export default function DietitianMain() {
     async function fetchFollowUpAvailability() {
       axios
         .get(
-          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${currentDietitian.id
+          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
+            currentDietitian.id
           }`,
           {
             headers: {
@@ -198,15 +205,17 @@ export default function DietitianMain() {
                   ).toLocaleDateString()}的${timeslot[timeid - 1].time.slice(
                     0,
                     -3
-                  )}覆診。營養師為${dietitianList.filter(
-                    (dietitianInfo) =>
-                      dietitianInfo.id === currentDietitian.id
-                  )[0].first_name
-                    } ${dietitianList.filter(
+                  )}覆診。營養師為${
+                    dietitianList.filter(
+                      (dietitianInfo) =>
+                        dietitianInfo.id === currentDietitian.id
+                    )[0].first_name
+                  } ${
+                    dietitianList.filter(
                       (dietitianInfo) =>
                         dietitianInfo.id === currentDietitian.id
                     )[0].last_name
-                    }，請記得準時到診`,
+                  }，請記得準時到診`,
                 },
                 {
                   headers: {
@@ -618,14 +627,11 @@ export default function DietitianMain() {
           p={4}
           borderRadius={"3xl"}
         >
-
           <Flex>
-            <Heading flex={'1'} p={3} textAlign={"center"} mb={1}>
+            <Heading flex={"1"} p={3} textAlign={"center"} mb={1}>
               📅請選擇應診日期
             </Heading>
-            <Button>
-              <AddIcon onClick={() => addBooking()}/>
-            </Button>
+            <Button onClick={onModalOpen}>首次應診</Button>
           </Flex>
 
           <Divider />
@@ -705,8 +711,8 @@ export default function DietitianMain() {
                       booking.gender === 1
                         ? "男"
                         : booking.gender === 2
-                          ? "女"
-                          : "其他"
+                        ? "女"
+                        : "其他"
                     }
                     HKID={booking.hkid}
                     phone={booking.phone}
@@ -722,6 +728,86 @@ export default function DietitianMain() {
           </Flex>
         </Flex>
       </Flex>
+      {/*  */}
+      <Modal isOpen={modalOpen} onClose={onModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>覆診日期</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody gap={4} display={"flex"} flexDir={"column"}>
+            <Input
+              placeholder="Select Date and Time"
+              size="md"
+              type="date"
+              onChange={(e) => {
+                setDateForFirst(new Date(e.target.value));
+              }}
+            />
+            <Text>病人身份證：</Text>
+            <Input
+              size="md"
+              onChange={(e) => {
+                setHKID(e.target.value);
+              }}
+            />
+            <Text>時間：</Text>
+            <Select
+              placeholder="時間"
+              onChange={(e) => {
+                setTimeID(e.target.value);
+              }}
+            >
+              {timeslot.map((time) => {
+                return (
+                  <option value={time.id}>{time.time.slice(0, -3)}</option>
+                );
+              })}
+            </Select>
+          </ModalBody>
+
+          <ModalFooter
+            gap={2}
+            flexWrap={"wrap"}
+            display={"flex"}
+            justifyContent={"center"}
+          >
+            <Button
+              onClick={async () => {
+                await axios
+                  .post(`http://localhost:8080/api/booking/first`, {
+                    HKID: HKID,
+                    time: timeID,
+                    date: dateForFirst.toISOString(),
+                    dietitian_id: currentDietitian.id,
+                  })
+                  .then(({ data }) => {
+                    if (data.success) {
+                      Swal.fire({
+                        icon: "success",
+                        title: "成功登記首次應診",
+                      });
+                    } else if (data.user === false) {
+                      Swal.fire({
+                        icon: "error",
+                        title: "無此用戶",
+                      });
+                    } else {
+                      Swal.fire({
+                        icon: "error",
+                        title: "發生錯誤",
+                      });
+                    }
+                  });
+                console.log(timeID, dateForFirst, HKID, currentDietitian.id);
+                onModalClose();
+              }}
+            >
+              提交
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      {/*  */}
     </>
   );
 }
