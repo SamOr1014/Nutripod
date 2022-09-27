@@ -770,7 +770,7 @@ export default function DietitianMain() {
             <Button
               onClick={async () => {
                 await axios
-                  .post(`${REACT_APP_API_SERVER}/api/booking/first`, {
+                  .post(`${REACT_APP_API_SERVER}/booking/first`, {
                     HKID: HKID,
                     time: timeID,
                     date: dateForFirst.toISOString(),
