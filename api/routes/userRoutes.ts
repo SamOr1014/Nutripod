@@ -20,4 +20,6 @@ userRoutes.post(
 	userController.postDietitian
 )
 
+userRoutes.put('/pw', userController.changePassword)
+
 userRoutes.get('/hkid/:hkid', isDietitianLoggedIn, userController.getUserByHKID)

@@ -241,7 +241,7 @@ export default function UserBPBGRecord() {
       >
         {/* Weight part */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
@@ -352,7 +352,7 @@ export default function UserBPBGRecord() {
         </Flex>
         {/* BP */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
@@ -480,7 +480,7 @@ export default function UserBPBGRecord() {
         </Flex>
         {/* BG */}
         <Flex
-          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "430px"}
+          w={isSmallerThan600 ? "100%" : isLargerThan1700 ? "32%" : "400px"}
           bg={bg}
           borderRadius={"3xl"}
           flexDir={"column"}
