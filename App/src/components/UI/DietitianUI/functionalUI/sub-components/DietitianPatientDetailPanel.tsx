@@ -51,6 +51,8 @@ import {
 } from "../../../../../utility/models";
 import locateToken from "../../../../../utility/Token";
 import { exercise, diet } from "../../../../../utility/models";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const dietMappings = new Map([
   ["breakfast", "早餐"],
@@ -81,6 +83,8 @@ export default function DietitianPatientDetailPanel(
 
   const [foodDetail, setFoodDetail] = useState(Array<diet>);
   const [exDetail, setExDetail] = useState<Array<exercise>>([]);
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   //#######Age Function#######
   const userAge = () => {
@@ -360,7 +364,16 @@ export default function DietitianPatientDetailPanel(
           <Text flex={1} fontWeight={"extrabold"}>
             香港身份證:
           </Text>
-          <Text>{patient.HKID}</Text>
+          <Text>
+            {show ? patient.HKID : ""}
+            <Button size={"xs"} onClick={handleClick}>
+              {show ? (
+                <FontAwesomeIcon icon={solid("eye-slash")} />
+              ) : (
+                <FontAwesomeIcon icon={solid("eye")} />
+              )}
+            </Button>
+          </Text>
         </Flex>
         <Flex>
           <Text flex={1} fontWeight={"extrabold"}>

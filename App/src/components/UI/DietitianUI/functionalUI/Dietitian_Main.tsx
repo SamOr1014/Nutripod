@@ -31,6 +31,8 @@ import {
   Textarea,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
@@ -69,6 +71,8 @@ export default function DietitianMain() {
     onOpen: onMedRecOpen,
     onClose: onMedRecClose,
   } = useDisclosure();
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
   //redux states
   const currentDietitian = useSelector(
     (state: IRootState) => state.user.dietitian[0]
@@ -204,7 +208,7 @@ export default function DietitianMain() {
                   },
                 }
               );
-            });;
+            });
           }
         });
       fetchSelectedDateBooking();
@@ -280,7 +284,16 @@ export default function DietitianMain() {
               <Text flex={1} fontWeight={"extrabold"}>
                 香港身份證:
               </Text>
-              <Text>{patient.HKID}</Text>
+              <Text>
+                {show ? patient.HKID : ""}
+                <Button size={"xs"} onClick={handleClick}>
+                  {show ? (
+                    <FontAwesomeIcon icon={solid("eye-slash")} />
+                  ) : (
+                    <FontAwesomeIcon icon={solid("eye")} />
+                  )}
+                </Button>
+              </Text>
             </Flex>
             <Flex>
               <Text flex={1} fontWeight={"extrabold"}>
