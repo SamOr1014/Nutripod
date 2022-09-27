@@ -21,6 +21,7 @@ const { REACT_APP_API_SERVER } = process.env;
 export default function FullPost() {
   const bg = useColorModeValue("gray.200", "gray.700");
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const { id } = useParams();
   const [postContent, setPostContent] = useState<Array<FullSinglePost>>([]);
   //API Function
@@ -58,7 +59,13 @@ export default function FullPost() {
             return (
               <Flex
                 w={isSmallerThan600 ? "100%" : "80%"}
-                h={isSmallerThan600 ? "auto" : "690px"}
+                h={
+                  isSmallerThan600
+                    ? "auto"
+                    : isLargerThan1700
+                    ? "80vh"
+                    : "690px"
+                }
                 bg={bg}
                 p={10}
                 rounded={"3xl"}

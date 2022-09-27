@@ -42,6 +42,7 @@ export default function UserBooking() {
   date.setDate(date.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(date);
   const [isSmallerThan600] = useMediaQuery("(max-width: 600px)");
+  const [isLargerThan1700] = useMediaQuery("(min-width: 1700px)");
   const [dietitian, setDietitian] = useState<string>("");
   const [existedBookings, setExistedBooking] = useState<
     Array<UserBookingDetailByDateAndDietitian>
@@ -134,7 +135,7 @@ export default function UserBooking() {
         borderRadius="2xl"
         flexWrap={"wrap"}
         gap={5}
-        maxH={"800px"}
+        h={isLargerThan1700 ? "70vh" : isSmallerThan600 ? "auto" : "720px"}
       >
         <Flex
           flex={1}
@@ -221,6 +222,7 @@ export default function UserBooking() {
           maxW={"100%"}
           p={4}
           borderRadius={"3xl"}
+          h={isLargerThan1700 ? "70vh" : isSmallerThan600 ? "auto" : "720px"}
           bg={bg}
         >
           <Heading p={3} textAlign={"center"}>
