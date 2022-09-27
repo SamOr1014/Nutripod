@@ -85,6 +85,31 @@ export class BookingController {
 		}
 	}
 
+	firstTimeBooking = async (req: Request, res: Response) => {
+		try {
+			const { HKID, time, date, dietitian_id } = req.body
+			let formattedDate = formatDate(date)
+			const result = await this.bookingService.postFirstTime(
+				HKID,
+				time,
+				formattedDate,
+				dietitian_id
+			)
+			if (result[0].success === false) {
+				res.status(200).json({ user: false })
+				return
+			}
+			res.status(200).json({ success: true, result: result })
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({
+				success: false,
+				message: 'Internal Server Error'
+			})
+			return
+		}
+	}
+
 	deleteUserBooking = async (req: Request, res: Response) => {
 		try {
 			let bookingID = req.params.bID
@@ -121,7 +146,7 @@ export class BookingController {
 	getFollowUpBooking = async (req: Request, res: Response) => {
 		try {
 			let bid = req.params.bid
-			res.status(200).json({ success: true, bid:bid})
+			res.status(200).json({ success: true, bid: bid })
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({

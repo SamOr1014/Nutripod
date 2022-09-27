@@ -55,6 +55,29 @@ export class BookingServices {
 		return result
 	}
 
+	async postFirstTime(
+		hkid: string,
+		time: string | number,
+		date: string,
+		dietitian_id: string | number
+	) {
+		const user = await this.knex('users').select('id').where('hkid', hkid)
+		if (user.length === 0) {
+			return [{ success: false }]
+		}
+		const result = await this.knex('booking')
+			.insert([
+				{
+					date: date,
+					time: time,
+					user_id: user[0].id,
+					dietitian_id: dietitian_id
+				}
+			])
+			.returning('id')
+		return result
+	}
+
 	async deleteUserBooking(
 		bookingID: number | string,
 		userID: number | string
