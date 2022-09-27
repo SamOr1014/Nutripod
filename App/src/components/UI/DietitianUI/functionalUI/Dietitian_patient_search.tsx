@@ -11,11 +11,12 @@ import {
 import axios from "axios";
 import { Field, Formik } from "formik";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
+import { IRootState } from "../../../../redux/store";
 import { UserDetailInDietiainPanel } from "../../../../utility/models";
 import locateToken from "../../../../utility/Token";
 import DietitianPatientDetailPanel from "./sub-components/DietitianPatientDetailPanel";
-
 const { REACT_APP_API_SERVER } = process.env;
 
 export default function PatientSearchPanel() {
@@ -23,29 +24,90 @@ export default function PatientSearchPanel() {
     []
   );
   const isSmallerThan600 = useMediaQuery("max-width: 600px");
+  const checkToken = sessionStorage.getItem("searchUserToken");
+  const dietitianUsername = useSelector((state: IRootState) => state.user.dietitian[0].username as string);
 
   async function searchUserByHKID(hkid: string) {
-    axios
-      .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`, {
-        headers: {
-          Authorization: `Bearer ${locateToken()}`,
-        },
-      })
-      .then(({ data }) => {
-        if (!data.user[0]) {
+
+    await Swal.fire({
+      title: "請輸入你的密碼",
+      input: "password",
+      showCloseButton: true,
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        axios.post(`${REACT_APP_API_SERVER}/user/verify`,
+          {
+            username: dietitianUsername,
+            password: result.value
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        ).then(({ data }) => {
+          if (data.success) {
+            sessionStorage.setItem("searchUserToken", "verified")
+            axios
+              .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`, {
+                headers: {
+                  Authorization: `Bearer ${locateToken()}`,
+                },
+              })
+              .then(({ data }) => {
+                if (!data.user[0]) {
+                  Swal.fire({
+                    icon: "question",
+                    title: "無此用戶",
+                  });
+                }
+                setUserinfo(data.user);
+              })
+              .catch((e) => {
+                Swal.fire({
+                  icon: "error",
+                  title: "發生錯誤，請稍後再試",
+                });
+              })
+          } else if (!data.success) {
+            Swal.fire({
+              icon: "error",
+              title: "密碼錯誤",
+            });
+          }
+        })
+      }
+    })
+  }
+
+  async function checkTokenBeforeSearch(hkid: string) {
+
+    if (checkToken === null) {
+      searchUserByHKID(hkid)
+    } else if (checkToken === "verified") {
+      axios
+        .get(`${REACT_APP_API_SERVER}/user/hkid/${hkid}`, {
+          headers: {
+            Authorization: `Bearer ${locateToken()}`,
+          },
+        })
+        .then(({ data }) => {
+          if (!data.user[0]) {
+            Swal.fire({
+              icon: "question",
+              title: "無此用戶",
+            });
+          }
+          setUserinfo(data.user);
+        })
+        .catch((e) => {
           Swal.fire({
-            icon: "question",
-            title: "無此用戶",
+            icon: "error",
+            title: "發生錯誤，請稍後再試",
           });
-        }
-        setUserinfo(data.user);
-      })
-      .catch((e) => {
-        Swal.fire({
-          icon: "error",
-          title: "發生錯誤，請稍後再試",
-        });
-      });
+        })
+    }
   }
 
   interface SearchValue {
@@ -66,7 +128,7 @@ export default function PatientSearchPanel() {
         <Formik
           initialValues={initialValues}
           onSubmit={async (values, actions) => {
-            searchUserByHKID(values.hkid);
+            checkTokenBeforeSearch(values.hkid);
           }}
         >
           {({ handleSubmit, errors, touched }) => (

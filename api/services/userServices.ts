@@ -227,4 +227,14 @@ export class UserServices {
 			.returning('id')
 		return result
 	}
+
+	async checkDietitian(
+		username:string
+	) {
+		const result = await this.knex('dietitian').select('password').where({
+			username:username
+		})
+
+		return result
+	}
 }

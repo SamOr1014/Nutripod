@@ -7,7 +7,7 @@ import { hashPassword, checkPassword } from '../utilities/hash'
 import { generateP } from '../utilities/generater'
 
 export class UserController {
-	constructor(private userService: UserServices) {}
+	constructor(private userService: UserServices) { }
 
 	checkToken = async (req: Request, res: Response) => {
 		try {
@@ -345,4 +345,31 @@ export class UserController {
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
+
+	verifyDietitian = async (req: Request, res: Response) => {
+		try {
+			const { username, password } = req.body
+
+			const result = await this.userService.checkDietitian(username)
+
+			if (result.length === 0) {
+				res.json({ success: false })
+				return
+			}
+			const hashedPassword = result[0].password
+			const matchResult = await checkPassword(password, hashedPassword)
+
+			if (matchResult) {
+				res.json({ success: true })
+				return
+			}
+
+			res.json({success:false})
+
+		} catch (e) {
+			logger.error(e.message)
+			res.status(500).json({ success: false, message: e.message })
+		}
+	}
+
 }
