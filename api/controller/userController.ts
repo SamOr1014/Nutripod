@@ -47,7 +47,7 @@ export class UserController {
 			if (!username || !password) {
 				res.status(400).json({
 					success: false,
-					message: 'username or password are missing'
+					message: '帳戶名或密碼沒有提供'
 				})
 				return
 			}
@@ -57,7 +57,7 @@ export class UserController {
 			if (result.length === 0) {
 				res.status(400).json({
 					success: false,
-					message: 'No such user'
+					message: '無此用戶'
 				})
 				return
 			}
@@ -77,7 +77,7 @@ export class UserController {
 			} else {
 				res.status(400).json({
 					success: false,
-					message: 'Incorrect password'
+					message: '密碼不正確'
 				})
 			}
 		} catch (e) {
@@ -305,7 +305,7 @@ export class UserController {
 			if (!username || !firstName || !lastName || !password || !email) {
 				res.status(400).json({
 					success: false,
-					message: 'Invalid information provided'
+					message: '資料不足'
 				})
 				return
 			}
