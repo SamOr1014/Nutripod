@@ -19,7 +19,7 @@ userRoutes.post(
 	isDietitianLoggedIn,
 	userController.postDietitian
 )
-
+userRoutes.post('/verify',isDietitianLoggedIn, userController.verifyDietitian )
 userRoutes.put('/dietitians/pw', userController.changeDietitianPassword)
 userRoutes.put('/pw', userController.changePassword)
 
