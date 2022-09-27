@@ -661,7 +661,7 @@ export default function UserMain() {
                             hidden={hasSearchResult ? true : false}
                           >
                             <Button colorScheme="blue" mr={3} type="submit">
-                              提交
+                              搜尋
                             </Button>
                             <Button
                               colorScheme="blue"

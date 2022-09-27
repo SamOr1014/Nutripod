@@ -202,6 +202,35 @@ export default function UserAccount() {
     });
   }
 
+  async function changePassword() {
+    await Swal.fire({
+      title: "請輸入你的新密碼",
+      input: "password",
+      inputLabel: "Your password",
+      showCloseButton: true,
+      showCancelButton: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const results = await axios.put(
+          `${REACT_APP_API_SERVER}/user/pw`,
+          {
+            id: userID,
+            password: result.value,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${locateToken()}`,
+            },
+          }
+        );
+        if (results.data.success) {
+          Swal.fire(`你的密碼已更改為: ${result.value}`);
+          dispatch(tokenThunk(token as string));
+        }
+      }
+    });
+  }
+
   return (
     <Flex gap={2} w={"100%"} flexDir={isSmallerThan600 ? "column" : "row"}>
       <Stack
@@ -307,7 +336,8 @@ export default function UserAccount() {
             更改
           </Button>
         </FormControl>
-        <Button colorScheme="red" maxWidth={20} m={3}>
+        <Button colorScheme="red" maxWidth={20} m={3} onClick={() => changePassword()
+        }>
           更改密碼?
         </Button>
       </Stack>
