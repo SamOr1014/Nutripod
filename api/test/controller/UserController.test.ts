@@ -55,7 +55,7 @@ describe('UserController', () => {
 		expect(res.status).lastCalledWith(400)
 		expect(res.json).lastCalledWith({
 			success: false,
-			message: 'username or password are missing'
+			message: '帳戶名或密碼沒有提供'
 		})
 		expect(res.json).toBeCalledTimes(1)
 	})
