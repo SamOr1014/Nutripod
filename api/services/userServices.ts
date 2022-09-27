@@ -194,6 +194,14 @@ export class UserServices {
 		return result
 	}
 
+	async changePassword(password: string, id: string | number) {
+		const result = await this.knex('users')
+			.update('password', password)
+			.where('id', id)
+			.returning('id')
+		return result
+	}
+
 	async postDietitian(
 		username: string,
 		firstName: string,
