@@ -110,7 +110,10 @@ export class DietRecordController {
 			}
 			let date = new Date(dateString).toISOString()
 			let formattedDate = formatDate(date)
-			let formattedTime = new Date(dateString).toLocaleTimeString()
+			let formattedTime = new Date(dateString).toLocaleTimeString(
+				'en-US',
+				{ timeZone: 'Asia/Shanghai' }
+			)
 			const result = await this.dietRecordService.postBP(
 				sys_bp,
 				dia_bp,
@@ -176,7 +179,10 @@ export class DietRecordController {
 			}
 			let date = new Date(dateString).toISOString()
 			let formattedDate = formatDate(date)
-			let formattedTime = new Date(dateString).toLocaleTimeString()
+			let formattedTime = new Date(dateString).toLocaleTimeString(
+				'en-US',
+				{ timeZone: 'Asia/Shanghai' }
+			)
 			const result = await this.dietRecordService.postBG(
 				bg,
 				formattedDate,
