@@ -295,7 +295,6 @@ export default function UserMed() {
                         </Text>
                         <Text fontWeight={"bold"}>姓： {rec.last_name}</Text>
                         <Text fontWeight={"bold"}>名： {rec.first_name}</Text>
-                        <Text fontWeight={"bold"}>HKID： {rec.hkid}</Text>
                         <Text fontWeight={"bold"}>年齡： {userAge()}</Text>
                         <Text fontWeight={"bold"}>
                           性別：{" "}

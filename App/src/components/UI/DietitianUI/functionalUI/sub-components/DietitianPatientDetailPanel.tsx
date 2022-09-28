@@ -137,7 +137,7 @@ export default function DietitianPatientDetailPanel(
             icon: "error",
             title: "發生錯誤，請稍後再試",
           });
-        });
+        }); 
     }
     async function fetchUserBodyState() {
       const weightFetch = axios.get(
@@ -518,7 +518,6 @@ export default function DietitianPatientDetailPanel(
                           </Text>
                           <Text fontWeight={"bold"}>姓： {rec.last_name}</Text>
                           <Text fontWeight={"bold"}>名： {rec.first_name}</Text>
-                          <Text fontWeight={"bold"}>HKID： {rec.hkid}</Text>
                           <Text fontWeight={"bold"}>年齡： {userAge()}</Text>
                           <Text fontWeight={"bold"}>
                             性別：{" "}
