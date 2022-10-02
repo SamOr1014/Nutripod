@@ -10,7 +10,7 @@ import {
 } from '../utilities/formatDate'
 
 export class DietRecordController {
-	constructor(private dietRecordService: DietRecordServices) {}
+	constructor(private dietRecordService: DietRecordServices) { }
 
 	//##############Weight BP BG Record Controller#############################
 
