@@ -10,7 +10,7 @@ import {
 } from '../utilities/formatDate'
 
 export class DietRecordController {
-	constructor(private dietRecordService: DietRecordServices) { }
+	constructor(private dietRecordService: DietRecordServices) {}
 
 	//##############Weight BP BG Record Controller#############################
 
@@ -87,7 +87,7 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
-				return 
+				return
 			}
 			const bpRec = await this.dietRecordService.getBPByUserID(
 				req.params.uid
