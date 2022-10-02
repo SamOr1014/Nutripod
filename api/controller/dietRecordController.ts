@@ -22,7 +22,7 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
-				return
+
 			}
 			const weightRec = await this.dietRecordService.getWeightByUserID(
 				userID
@@ -87,7 +87,6 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
-				return
 			}
 			const bpRec = await this.dietRecordService.getBPByUserID(
 				req.params.uid
@@ -157,7 +156,7 @@ export class DietRecordController {
 					success: false,
 					message: 'No ID Provided'
 				})
-				return
+				
 			}
 			const bgRec = await this.dietRecordService.getBGByUserID(
 				req.params.uid
