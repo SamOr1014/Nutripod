@@ -263,7 +263,7 @@ export default function UserBPBGRecord() {
               >
                 請更新你的體重！我們建議你每星期更新一次！
               </Heading>
-              <Flex gap={2} p={4} flexWrap={"wrap"}>
+              <Flex gap={2} p={3} flexWrap={"wrap"}>
                 <Input
                   placeholder="體重(kg)"
                   htmlSize={isSmallerThan600 ? 6 : 4}
