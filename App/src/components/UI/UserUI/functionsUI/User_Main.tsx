@@ -505,7 +505,6 @@ export default function UserMain() {
 
   const today = new Date();
 
-
   return (
     <>
       <style>{css}</style>
@@ -532,7 +531,7 @@ export default function UserMain() {
               <Flex justifyContent={"center"} mb={-6}>
                 <DayPicker
                   mode="single"
-                  disabled={ { after: today }}
+                  disabled={{ after: today }}
                   selected={selectedDate}
                   onSelect={setSelectedDate}
                   defaultMonth={new Date()}
@@ -1042,10 +1041,10 @@ export default function UserMain() {
                           </h2>
                           <AccordionPanel pb={5}>
                             {exercise.duration}分鐘 <br></br>
-                            每60分鐘所消耗的卡路里: {
-                              exercise.ex_calories
-                            }kcal <br></br>
-                            總共消耗的卡路里: {exercise.burn_calories}kcal
+                            每60分鐘所消耗的卡路里: {exercise.ex_calories}
+                            kcal <br></br>
+                            總共消耗的卡路里: {exercise.burn_calories}
+                            kcal
                           </AccordionPanel>
                         </AccordionItem>
                       ))
@@ -1186,8 +1185,11 @@ export default function UserMain() {
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -1268,8 +1270,11 @@ export default function UserMain() {
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -1350,8 +1355,11 @@ export default function UserMain() {
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -1432,8 +1440,11 @@ export default function UserMain() {
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>

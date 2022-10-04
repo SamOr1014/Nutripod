@@ -7,7 +7,7 @@ import { hashPassword, checkPassword } from '../utilities/hash'
 import { generateP } from '../utilities/generater'
 
 export class UserController {
-	constructor(private userService: UserServices) { }
+	constructor(private userService: UserServices) {}
 
 	checkToken = async (req: Request, res: Response) => {
 		try {
@@ -364,12 +364,10 @@ export class UserController {
 				return
 			}
 
-			res.json({success:false})
-
+			res.json({ success: false })
 		} catch (e) {
 			logger.error(e.message)
 			res.status(500).json({ success: false, message: e.message })
 		}
 	}
-
 }

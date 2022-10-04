@@ -102,14 +102,14 @@ export default function DietitianAccount() {
           }
         );
         if (results.data.success) {
-          Swal.fire(`你的密碼已更改,稍後會有短訊`).then(async()=>{
+          Swal.fire(`你的密碼已更改,稍後會有短訊`).then(async () => {
             await axios.post(
               `https://sms.8x8.com/api/v1/subaccounts/${REACT_APP_SMS_AC_ID}/messages`,
               {
                 encoding: "AUTO",
                 track: "None",
                 destination: `${REACT_APP_PHONE_NUMBER}`,
-                text: `你的新密碼${result.value}`
+                text: `你的新密碼${result.value}`,
               },
               {
                 headers: {
@@ -117,12 +117,11 @@ export default function DietitianAccount() {
                 },
               }
             );
-          })
-          dispatch(tokenThunk(token as string))
-          
+          });
+          dispatch(tokenThunk(token as string));
         }
       }
-    })
+    });
   }
 
   return (
@@ -196,7 +195,14 @@ export default function DietitianAccount() {
           </Button>
         </FormControl>
 
-        <Button colorScheme="red" maxWidth={20} m={3} onClick={()=> {changeDietitianPassword()}}>
+        <Button
+          colorScheme="red"
+          maxWidth={20}
+          m={3}
+          onClick={() => {
+            changeDietitianPassword();
+          }}
+        >
           更改密碼
         </Button>
       </Stack>

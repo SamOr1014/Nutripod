@@ -297,54 +297,56 @@ export async function seed(knex: Knex) {
 		])
 		.returning('id')
 
-	const bookIngID = await knex(bookingTableName).insert([
-		{
-			date: '2022-09-16',
-			time: timeSlotID[0].id,
-			user_id: userID[0].id,
-			dietitian_id: dietitianID[0].id,
-			follow_up: false,
-			is_attended: true
-		},
-		{
-			date: '2022-09-17',
-			time: timeSlotID[0].id,
-			user_id: userID[1].id,
-			dietitian_id: dietitianID[0].id,
-			follow_up: true,
-			is_attended: true
-		},
-		{
-			date: '2022-10-01',
-			time: timeSlotID[0].id,
-			user_id: userID[0].id,
-			dietitian_id: dietitianID[0].id
-		},
-		{
-			date: '2022-10-02',
-			time: timeSlotID[1].id,
-			user_id: userID[0].id,
-			dietitian_id: dietitianID[0].id
-		},
-		{
-			date: '2022-10-03',
-			time: timeSlotID[2].id,
-			user_id: userID[1].id,
-			dietitian_id: dietitianID[1].id
-		},
-		{
-			date: '2022-10-04',
-			time: timeSlotID[3].id,
-			user_id: userID[1].id,
-			dietitian_id: dietitianID[2].id
-		},
-		{
-			date: '2022-10-05',
-			time: timeSlotID[4].id,
-			user_id: userID[0].id,
-			dietitian_id: dietitianID[3].id
-		}
-	]).returning('id')
+	const bookIngID = await knex(bookingTableName)
+		.insert([
+			{
+				date: '2022-09-16',
+				time: timeSlotID[0].id,
+				user_id: userID[0].id,
+				dietitian_id: dietitianID[0].id,
+				follow_up: false,
+				is_attended: true
+			},
+			{
+				date: '2022-09-17',
+				time: timeSlotID[0].id,
+				user_id: userID[1].id,
+				dietitian_id: dietitianID[0].id,
+				follow_up: true,
+				is_attended: true
+			},
+			{
+				date: '2022-10-01',
+				time: timeSlotID[0].id,
+				user_id: userID[0].id,
+				dietitian_id: dietitianID[0].id
+			},
+			{
+				date: '2022-10-02',
+				time: timeSlotID[1].id,
+				user_id: userID[0].id,
+				dietitian_id: dietitianID[0].id
+			},
+			{
+				date: '2022-10-03',
+				time: timeSlotID[2].id,
+				user_id: userID[1].id,
+				dietitian_id: dietitianID[1].id
+			},
+			{
+				date: '2022-10-04',
+				time: timeSlotID[3].id,
+				user_id: userID[1].id,
+				dietitian_id: dietitianID[2].id
+			},
+			{
+				date: '2022-10-05',
+				time: timeSlotID[4].id,
+				user_id: userID[0].id,
+				dietitian_id: dietitianID[3].id
+			}
+		])
+		.returning('id')
 
 	await knex(userWeightTableName).insert([
 		{
@@ -730,22 +732,21 @@ export async function seed(knex: Knex) {
 		])
 		.returning('id')
 
-	await seedFile(knex, path.resolve('./seeds/foodcsv.csv'), 'food',
-		{
-			columnSeparator: ';',
-			ignoreFirstLine: true,
-			mapTo:
-				['food_name',
-					'group_id',
-					'food_calories',
-					'carbohydrates',
-					'sugars',
-					'fat',
-					'protein',
-					'fiber',
-					'sodium'
-				]
-		})
+	await seedFile(knex, path.resolve('./seeds/foodcsv.csv'), 'food', {
+		columnSeparator: ';',
+		ignoreFirstLine: true,
+		mapTo: [
+			'food_name',
+			'group_id',
+			'food_calories',
+			'carbohydrates',
+			'sugars',
+			'fat',
+			'protein',
+			'fiber',
+			'sodium'
+		]
+	})
 
 	await knex(usersDietTableName).insert([
 		{

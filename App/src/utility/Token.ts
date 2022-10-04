@@ -1,11 +1,10 @@
 function locateToken() {
+  const token =
+    localStorage.getItem("userLocalToken") === null
+      ? sessionStorage.getItem("userSessionToken")
+      : localStorage.getItem("userLocalToken");
 
-    const token = localStorage.getItem('userLocalToken') === null ?
-    sessionStorage.getItem('userSessionToken') 
-    : localStorage.getItem('userLocalToken')
-
-    return token as string
-
+  return token as string;
 }
 
-export default locateToken
+export default locateToken;

@@ -145,7 +145,7 @@ export default function UserPost() {
         });
       });
   }
-  
+
   useEffect(() => {
     fetchAllPost();
   }, []);

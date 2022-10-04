@@ -137,7 +137,7 @@ export default function DietitianPatientDetailPanel(
             icon: "error",
             title: "發生錯誤，請稍後再試",
           });
-        }); 
+        });
     }
     async function fetchUserBodyState() {
       const weightFetch = axios.get(
@@ -743,7 +743,8 @@ export default function DietitianPatientDetailPanel(
                               {food.name} {`(${food.food_type})`}
                             </Box>
                             <Box flex="1" textAlign="right">
-                              {food.food_intake}kcal
+                              {food.food_intake}
+                              kcal
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>
@@ -752,8 +753,11 @@ export default function DietitianPatientDetailPanel(
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -774,7 +778,8 @@ export default function DietitianPatientDetailPanel(
                               {food.name} {`(${food.food_type})`}
                             </Box>
                             <Box flex="1" textAlign="right">
-                              {food.food_intake}kcal
+                              {food.food_intake}
+                              kcal
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>
@@ -783,8 +788,11 @@ export default function DietitianPatientDetailPanel(
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -805,7 +813,8 @@ export default function DietitianPatientDetailPanel(
                               {food.name} {`(${food.food_type})`}
                             </Box>
                             <Box flex="1" textAlign="right">
-                              {food.food_intake}kcal
+                              {food.food_intake}
+                              kcal
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>
@@ -814,8 +823,11 @@ export default function DietitianPatientDetailPanel(
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>
@@ -836,7 +848,8 @@ export default function DietitianPatientDetailPanel(
                               {food.name} {`(${food.food_type})`}
                             </Box>
                             <Box flex="1" textAlign="right">
-                              {food.food_intake}kcal
+                              {food.food_intake}
+                              kcal
                             </Box>
                             <AccordionIcon />
                           </AccordionButton>
@@ -845,8 +858,11 @@ export default function DietitianPatientDetailPanel(
                           種類: {food.food_group}
                           <br></br>
                           分量: {food.food_amount}g<br></br>
-                          每一百克卡路里： {food.food_calories}kcal<br></br>
-                          攝入卡路里：{food.food_intake}kcal<br></br>
+                          每一百克卡路里： {food.food_calories}kcal
+                          <br></br>
+                          攝入卡路里：
+                          {food.food_intake}kcal
+                          <br></br>
                           碳水化合物: {food.carbohydrates}g<br></br>
                           糖分: {food.sugars}g<br></br>
                           脂肪: {food.fat}g<br></br>

@@ -86,7 +86,9 @@ export default function DietitianMain() {
   const dietitianList = useSelector((state: IRootState) => state.dietitian);
   const timeslot = useSelector((state: IRootState) => state.timeslot);
   const checkToken = sessionStorage.getItem("viewIDToken");
-  const dietitianUsername = useSelector((state: IRootState) => state.user.dietitian[0].username as string);
+  const dietitianUsername = useSelector(
+    (state: IRootState) => state.user.dietitian[0].username as string
+  );
   //local state for bookings of selected date
   const [allBooking, setAllBookings] = useState<
     Array<UserPlusIndividualBooking>
@@ -115,7 +117,8 @@ export default function DietitianMain() {
   async function fetchSelectedDateBooking() {
     axios
       .get(
-        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${currentDietitian.id
+        `${REACT_APP_API_SERVER}/booking/date/${selectedDate?.toISOString()}/${
+          currentDietitian.id
         }`,
         {
           headers: {
@@ -143,7 +146,8 @@ export default function DietitianMain() {
     async function fetchFollowUpAvailability() {
       axios
         .get(
-          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${currentDietitian.id
+          `${REACT_APP_API_SERVER}/booking/date/${dateSubmit?.toISOString()}/${
+            currentDietitian.id
           }`,
           {
             headers: {
@@ -200,15 +204,17 @@ export default function DietitianMain() {
                   ).toLocaleDateString()}的${timeslot[timeid - 1].time.slice(
                     0,
                     -3
-                  )}覆診。營養師為${dietitianList.filter(
-                    (dietitianInfo) =>
-                      dietitianInfo.id === currentDietitian.id
-                  )[0].first_name
-                    } ${dietitianList.filter(
+                  )}覆診。營養師為${
+                    dietitianList.filter(
+                      (dietitianInfo) =>
+                        dietitianInfo.id === currentDietitian.id
+                    )[0].first_name
+                  } ${
+                    dietitianList.filter(
                       (dietitianInfo) =>
                         dietitianInfo.id === currentDietitian.id
                     )[0].last_name
-                    }，請記得準時到診`,
+                  }，請記得準時到診`,
                 },
                 {
                   headers: {
@@ -224,9 +230,8 @@ export default function DietitianMain() {
     }
 
     async function viewHKID() {
-
-      if (checkToken === 'IDverified') {
-        handleClick()
+      if (checkToken === "IDverified") {
+        handleClick();
       }
       if (checkToken === null) {
         await Swal.fire({
@@ -236,24 +241,27 @@ export default function DietitianMain() {
           showCancelButton: true,
         }).then(async (result) => {
           if (result.isConfirmed) {
-            axios.post(`${REACT_APP_API_SERVER}/user/verify`,
-              {
-                username: dietitianUsername,
-                password: result.value
-              },
-              {
-                headers: {
-                  Authorization: `Bearer ${locateToken()}`,
+            axios
+              .post(
+                `${REACT_APP_API_SERVER}/user/verify`,
+                {
+                  username: dietitianUsername,
+                  password: result.value,
                 },
-              }
-            ).then(({ data }) => {
-              if (data.success) {
-                sessionStorage.setItem("viewIDToken", "IDverified")
-                handleClick()
-              }
-            })
+                {
+                  headers: {
+                    Authorization: `Bearer ${locateToken()}`,
+                  },
+                }
+              )
+              .then(({ data }) => {
+                if (data.success) {
+                  sessionStorage.setItem("viewIDToken", "IDverified");
+                  handleClick();
+                }
+              });
           }
-        })
+        });
       }
     }
 
@@ -739,8 +747,8 @@ export default function DietitianMain() {
                       booking.gender === 1
                         ? "男"
                         : booking.gender === 2
-                          ? "女"
-                          : "其他"
+                        ? "女"
+                        : "其他"
                     }
                     HKID={booking.hkid}
                     phone={booking.phone}

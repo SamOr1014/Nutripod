@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
 import { loginThunk } from "../Thunk/AuthThunk";
-import { tokenThunk } from "../Thunk/tokenThunk"
+import { tokenThunk } from "../Thunk/tokenThunk";
 
 interface userInfo {
   id: number | null;
@@ -135,8 +135,8 @@ export const authSlice = createSlice({
             chronic_condition: null,
             education: null,
             is_deleted: null,
-            is_user: null
-          }
+            is_user: null,
+          },
         ],
         dietitian: [
           {
@@ -146,61 +146,62 @@ export const authSlice = createSlice({
             last_name: null,
             email: null,
             is_deleted: null,
-            is_user: null
-          }
-        ]
-      }
-    }
+            is_user: null,
+          },
+        ],
+      };
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(tokenThunk.pending, (state) => {
-      state.loading = true;
-    }).addCase(tokenThunk.fulfilled, (state, action) => {
-      state.loading = false;
+    builder
+      .addCase(tokenThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(tokenThunk.fulfilled, (state, action) => {
+        state.loading = false;
 
-      if (action.payload.data.is_user === false) {
-        state.dietitian = [
-          {
-            id: action.payload.data.id,
-            username: action.payload.data.username,
-            first_name: action.payload.data.first_name,
-            last_name: action.payload.data.last_name,
-            email: action.payload.data.email,
-            is_deleted: action.payload.data.is_deleted,
-            is_user: action.payload.data.is_user
-          }
-        ]
-        state.saveToken = true
-      } else if (action.payload.data.is_user === true) {
-        state.user = [
-          {
-            id: action.payload.data.id,
-            username: action.payload.data.username,
-            first_name: action.payload.data.first_name,
-            last_name: action.payload.data.last_name,
-            email: action.payload.data.email,
-            birthday: action.payload.data.birthday,
-            height: action.payload.data.height,
-            weight: action.payload.data.weight,
-            gender: action.payload.data.gender,
-            phone: action.payload.data.phone,
-            address: action.payload.data.address,
-            profession: action.payload.data.profession,
-            HKID: action.payload.data.hkid,
-            chronic_condition: action.payload.data.chronic_condition,
-            education: action.payload.data.education,
-            is_deleted: action.payload.data.is_deleted,
-            is_user: action.payload.data.is_user
-          }
-        ]
-        state.saveToken = true
-      }
-    })
+        if (action.payload.data.is_user === false) {
+          state.dietitian = [
+            {
+              id: action.payload.data.id,
+              username: action.payload.data.username,
+              first_name: action.payload.data.first_name,
+              last_name: action.payload.data.last_name,
+              email: action.payload.data.email,
+              is_deleted: action.payload.data.is_deleted,
+              is_user: action.payload.data.is_user,
+            },
+          ];
+          state.saveToken = true;
+        } else if (action.payload.data.is_user === true) {
+          state.user = [
+            {
+              id: action.payload.data.id,
+              username: action.payload.data.username,
+              first_name: action.payload.data.first_name,
+              last_name: action.payload.data.last_name,
+              email: action.payload.data.email,
+              birthday: action.payload.data.birthday,
+              height: action.payload.data.height,
+              weight: action.payload.data.weight,
+              gender: action.payload.data.gender,
+              phone: action.payload.data.phone,
+              address: action.payload.data.address,
+              profession: action.payload.data.profession,
+              HKID: action.payload.data.hkid,
+              chronic_condition: action.payload.data.chronic_condition,
+              education: action.payload.data.education,
+              is_deleted: action.payload.data.is_deleted,
+              is_user: action.payload.data.is_user,
+            },
+          ];
+          state.saveToken = true;
+        }
+      })
       .addCase(tokenThunk.rejected, (state, action: any) => {
         state.loading = false;
         Swal.fire("OOPS!", action.payload?.error, "error");
       });
-
 
     builder
       .addCase(loginThunk.pending, (state) => {
@@ -218,9 +219,9 @@ export const authSlice = createSlice({
               last_name: action.payload.data.last_name,
               email: action.payload.data.email,
               is_deleted: action.payload.data.is_deleted,
-              is_user: action.payload.data.is_user
-            }
-          ]
+              is_user: action.payload.data.is_user,
+            },
+          ];
           state.saveToken = action.payload.saveToken;
         } else if (action.payload.data.is_user === true) {
           state.user = [
@@ -241,9 +242,9 @@ export const authSlice = createSlice({
               chronic_condition: action.payload.data.chronic_condition,
               education: action.payload.data.education,
               is_deleted: action.payload.data.is_deleted,
-              is_user: action.payload.data.is_user
-            }
-          ]
+              is_user: action.payload.data.is_user,
+            },
+          ];
           state.saveToken = action.payload.saveToken;
         }
       })

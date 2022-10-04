@@ -44,12 +44,14 @@ export function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const userID = useSelector((state: IRootState) => state.user.user[0].id);
-  const DietitianID = useSelector((state: IRootState) => state.user.dietitian[0].id);
+  const DietitianID = useSelector(
+    (state: IRootState) => state.user.dietitian[0].id
+  );
   const loadingStatus = useSelector((state: IRootState) => state.user.loading);
   const [isSmallerThan600] = useMediaQuery("(max-width: 800px)");
   const { toggleColorMode } = useColorMode();
   const checkToken = window.localStorage.getItem("userLocalToken");
-  
+
   const TokenLogin = async () => {
     const result = await dispatch(tokenThunk(checkToken as string));
     if (result.payload.success) {

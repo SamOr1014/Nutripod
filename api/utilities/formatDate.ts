@@ -1,6 +1,7 @@
 export function formatDate(dateString: string) {
-
-	let date = new Date(dateString).toLocaleString('en-US', { timeZone: "Asia/Shanghai" })
+	let date = new Date(dateString).toLocaleString('en-US', {
+		timeZone: 'Asia/Shanghai'
+	})
 	let HKDate = new Date(date)
 
 	let formattedDate =
@@ -15,7 +16,10 @@ export function formatDate(dateString: string) {
 
 export function formatLastDate(dateString: string) {
 	let date = new Date(dateString)
-	let datestring = new Date(date.setDate(date.getDate() - 1)).toLocaleString('en-US', { timeZone: "Asia/Shanghai" })
+	let datestring = new Date(date.setDate(date.getDate() - 1)).toLocaleString(
+		'en-US',
+		{ timeZone: 'Asia/Shanghai' }
+	)
 	let hkDate = new Date(datestring)
 
 	const formattedDate =
@@ -34,10 +38,9 @@ export function formatToMonthStartAndEnd(date: Date) {
 	let startYear = date.getFullYear()
 	let endYear = date.getFullYear()
 
-
 	if (parseInt(mm2) > 12) {
 		endYear += 1
-		mm2 = "01"
+		mm2 = '01'
 	}
 
 	let start = startYear + '-' + mm + '-' + '01'
@@ -53,7 +56,7 @@ export function formatToLastMonthStartAndEnd(date: Date) {
 
 	if (parseInt(mm) < 1) {
 		startYear -= 1
-		mm = "12"
+		mm = '12'
 	}
 
 	let start = startYear + '-' + mm + '-' + '01'

@@ -207,8 +207,9 @@ export default function UserMed() {
                             ).toLocaleDateString()}</p> <br> <p><b>時間</b>: ${detail.time.slice(
                               0,
                               -3
-                            )}</p> <br> <p><b>營養師</b>: ${detail.first_name + " " + detail.last_name
-                              }</p>`,
+                            )}</p> <br> <p><b>營養師</b>: ${
+                              detail.first_name + " " + detail.last_name
+                            }</p>`,
                             showCloseButton: true,
                             showCancelButton: true,
                           }).then(async (result) => {
@@ -277,8 +278,7 @@ export default function UserMed() {
                     </AccordionButton>
                   </h2>
                   <AccordionPanel pb={4}>
-
-                    <Flex width={'100%'}>
+                    <Flex width={"100%"}>
                       <Box flex={1}>
                         <Text fontWeight={"bold"}>
                           主診營養師：{" "}
@@ -301,8 +301,8 @@ export default function UserMed() {
                           {rec.gender === 1
                             ? "男"
                             : rec.gender === 2
-                              ? "女"
-                              : "其他"}
+                            ? "女"
+                            : "其他"}
                         </Text>
                         <Text fontWeight={"bold"}>身高： {rec.height} cm</Text>
                         <Text fontWeight={"bold"}>體重： {rec.weight} kg</Text>
@@ -316,14 +316,15 @@ export default function UserMed() {
                           血壓： {rec.bp}/{rec.bp} mmHG
                         </Text>
                         <Text fontWeight={"bold"}>血糖：{rec.bg} mmol/L</Text>
-                        <Text fontWeight={"bold"}>慢性疾病：{rec.disease} </Text>
+                        <Text fontWeight={"bold"}>
+                          慢性疾病：{rec.disease}{" "}
+                        </Text>
                       </Box>
 
                       <Box flex={1}>
                         <Text fontWeight={"bold"}>評估：</Text>
                         <Text fontWeight={"bold"}>{rec.content}</Text>
                       </Box>
-
                     </Flex>
                   </AccordionPanel>
                 </AccordionItem>

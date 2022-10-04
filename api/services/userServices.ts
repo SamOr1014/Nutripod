@@ -228,11 +228,9 @@ export class UserServices {
 		return result
 	}
 
-	async checkDietitian(
-		username:string
-	) {
+	async checkDietitian(username: string) {
 		const result = await this.knex('dietitian').select('password').where({
-			username:username
+			username: username
 		})
 
 		return result
