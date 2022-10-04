@@ -52,6 +52,12 @@ export function Login() {
   const { toggleColorMode } = useColorMode();
   const checkToken = window.localStorage.getItem("userLocalToken");
 
+  if (userID) {
+    navigate("/dashboard");
+  } else if (DietitianID) {
+    navigate("/dietitian");
+  }
+  
   const TokenLogin = async () => {
     const result = await dispatch(tokenThunk(checkToken as string));
     if (result.payload.success) {
