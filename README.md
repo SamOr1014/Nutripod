@@ -2,7 +2,7 @@
 
 Description
 
-This repository is a react healthcare web application with progressive web app (PWA)
+This mono-repo-like repository is a react healthcare web application with progressive web app (PWA)
 
 A platform designed for a clinic that provides nutrition consultation and helps them to manage clients' diet and develop clients' diet habits and lifestyle.
 
