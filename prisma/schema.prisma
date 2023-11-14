@@ -42,9 +42,19 @@ model Session {
 
 model User {
     id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
+    type          Int
+    username      String    @unique
+    first_name    String
+    last_name     String
+    date_of_birth Date
+    height        Float(5,2)
+    weight        Float(5,2)
+    gender        Int
+    phone         String
+
+    profession    String
+    email         String   @unique
+    emailVerified Boolean
     image         String?
     accounts      Account[]
     sessions      Session[]
@@ -56,4 +66,75 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model user_diets {
+    id            String    @id @default(cuid())
+    user_id       Int
+    diet_type     Int
+    food          Int
+    food_amount   Int
+    date          Date
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
+}
+
+model food {
+     id            String    @id @default(cuid())
+     name          String
+     groups        Int
+     calories      DECIMAL(8,4)
+     carbohydrates DECIMAL(8,4)
+     sugars        DECIMAL(8,4)
+     fat           DECIMAL(8,4)
+     protein       DECIMAL(8,4)
+     fiber         DECIMAL(8,4)
+     sodium        DECIMAL(8,4)
+     created_at    DateTime @default(now())
+     updated_at    DateTime @default(now())s
+}
+
+model user_exercises {
+     id            String    @id @default(cuid())
+     date          Date
+     type          Int
+     duration      Int
+     is_deleted    Boolean
+     created_at    DateTime @default(now())
+     updated_at    DateTime @default(now())
+}
+
+model user_blood_glucose {
+    id            String    @id @default(cuid())
+    user_id       Int
+    amount        Int
+    is_deleted    Boolean
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
+}
+
+model user_blood_pressure {
+    id            String    @id @default(cuid())
+    user_id       Int
+    sys_bp        Int
+    dia_bp        Int
+    is_deleted    Boolean
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
+}
+
+model user_weight {
+    id            String    @id @default(cuid())
+    user_id       Int
+    amount        Int
+    is_deleted    Boolean
+    created_at    DateTime @default(now())
+    updated_at    DateTime @default(now())
+}
+
+model booking {
+     id            String    @id @default(cuid())
+     date          Date
+     time_slot     Int
+     
 }
