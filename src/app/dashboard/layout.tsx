@@ -1,7 +1,8 @@
 import { getServerAuthSession } from "../../server/auth";
 import { redirect } from "next/navigation";
 import Container from "../../components/common/Container";
-import LogoutButton from "../../components/common/LogoutButton";
+import DashboardNavBar from "../../components/common/DashboardNavBar";
+import { Separator } from "../../components/ui/separator";
 
 export default async function DashboardLayout({
   children,
@@ -14,10 +15,8 @@ export default async function DashboardLayout({
   }
   return (
     <Container>
-      <nav className="w-full border-b border-slate-800 p-3">
-        <LogoutButton />
-      </nav>
-
+      <DashboardNavBar />
+      <Separator className="my-2" />
       {children}
     </Container>
   );

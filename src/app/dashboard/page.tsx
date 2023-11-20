@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default function DashboardPage() {
-  return <p>on9 dashboard</p>;
+  redirect("/dashboard/home");
 }
