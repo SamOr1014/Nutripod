@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 
 const LogoutButton = () => {
   const router = useRouter();
-  const handleLogout = () => router.push("api/auth/signout");
+  const handleLogout = () => router.replace(`/api/auth/signout`);
   return (
     <Button
       variant="outline"
