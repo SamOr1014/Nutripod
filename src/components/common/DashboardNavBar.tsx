@@ -1,5 +1,3 @@
-"use client";
-
 import LogoutButton from "./LogoutButton";
 import NavButtons from "./NavButtons";
 
