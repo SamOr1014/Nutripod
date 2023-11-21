@@ -1,5 +1,5 @@
 const InfoPage = () => {
-  return <>Info</>;
-};
+  return <>Info</>
+}
 
-export default InfoPage;
+export default InfoPage

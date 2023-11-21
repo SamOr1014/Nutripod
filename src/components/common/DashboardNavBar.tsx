@@ -1,7 +1,7 @@
-"use client";
+'use client'
 
-import LogoutButton from "./LogoutButton";
-import NavButtons from "./NavButtons";
+import LogoutButton from './LogoutButton'
+import NavButtons from './NavButtons'
 
 const DashboardNavBar = () => {
   return (
@@ -13,7 +13,7 @@ const DashboardNavBar = () => {
         <LogoutButton />
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default DashboardNavBar;
+export default DashboardNavBar
