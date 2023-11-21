@@ -1,0 +1,6 @@
+{
+  "*": [
+    "yarn format",
+    "eslint --fix"
+  ]
+}
