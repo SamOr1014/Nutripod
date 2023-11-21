@@ -1,5 +1,5 @@
 const MetricsPage = () => {
-  return <>Metrics</>;
-};
+  return <>Metrics</>
+}
 
-export default MetricsPage;
+export default MetricsPage

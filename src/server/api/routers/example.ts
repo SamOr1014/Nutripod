@@ -1,9 +1,9 @@
-import { z } from "zod";
+import { z } from 'zod'
 import {
   createTRPCRouter,
   // protectedProcedure,
   publicProcedure,
-} from "~/server/api/trpc";
+} from '~/server/api/trpc'
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -11,9 +11,9 @@ export const exampleRouter = createTRPCRouter({
     .query(({ input }) => {
       return {
         greeting: `Hello ${input.text}`,
-      };
+      }
     }),
   getUser: publicProcedure.query(({ ctx }) => {
-    return ctx.db.user.findFirst();
+    return ctx.db.user.findFirst()
   }),
-});
+})
