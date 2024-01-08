@@ -1,144 +1,160 @@
 datasource db {
-    provider     = "mysql"
-    url          = env("DATABASE_URL")
-    relationMode = "prisma"
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 //WARNING: BELOW THIS CANNOT BE REMOVED
 //REQUIRED BY NEXTAUTH
 model Account {
-    id                String   @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String?  @db.Text
-    access_token      String?  @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String?  @db.Text
-    session_state     String?
-    created_at        DateTime @default(now())
-    updated_at        DateTime @updatedAt @default(now())
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-    @@unique([provider, providerAccountId])
+  id                String   @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?  @db.Text
+  access_token      String?  @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?  @db.Text
+  session_state     String?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @default(now()) @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 model Session {
-    id           String    @id @default(cuid())
-    sessionToken String    @unique
-    userId       String
-    expires      DateTime
-    created_at   DateTime  @default(now())
-    updated_at   DateTime  @updatedAt @default(now())
-    user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-    id            String    @id @default(cuid())
-    type          Int       @db.UnsignedTinyInt @default(1)
-    first_name    String?   @db.VarChar(255)
-    last_name     String?   @db.VarChar(255)
-    date_of_birth DateTime? @db.Date
-    height        Decimal?  @db.Decimal(5,2)
-    weight        Decimal?  @db.Decimal(5,2)
-    gender        Int?      @db.UnsignedTinyInt
-    phone         String?   @unique @db.VarChar(8)
-    address       String?   @db.Text
-    profession    Int?      @db.UnsignedSmallInt
-    education     Int?      @db.UnsignedTinyInt
-    id_number     String?   @unique @db.VarChar(8)
-    name          String?   
-    email         String?   @unique
-    emailVerified DateTime? 
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    is_deleted    Boolean   @default(false)
-    created_at    DateTime  @default(now())
-    updated_at    DateTime  @updatedAt @default(now())
+  id            String    @unique @default(cuid())
+  member_id     Int       @id @default(autoincrement()) @db.UnsignedInt
+  type          Int       @default(1) @db.UnsignedTinyInt
+  first_name    String    @default("") @db.VarChar(255)
+  last_name     String    @default("") @db.VarChar(255)
+  date_of_birth DateTime? @db.Date
+  height        Decimal?  @db.Decimal(5, 2)
+  weight        Decimal?  @db.Decimal(5, 2)
+  gender        Int?      @db.UnsignedTinyInt
+  phone         String    @unique @default("") @db.VarChar(8)
+  address       String?   @db.Text
+  profession    Int?      @db.UnsignedSmallInt
+  education     Int?      @db.UnsignedTinyInt
+  id_number     String    @unique @default("") @db.VarChar(8)
+  name          String    @default("")
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  is_deleted    Boolean   @default(false)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now()) @updatedAt
 }
 
 model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
-    created_at DateTime @default(now())
-    updated_at DateTime @updatedAt @default(now())
-    @@unique([identifier, token])
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@unique([identifier, token])
+}
+
+model User_diets {
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  date           DateTime @db.Date
+  time           DateTime @db.Time()
+  type           Int      @db.UnsignedSmallInt
+  food           String   @default("") @db.VarChar(255)
+  amount         Int      @db.UnsignedSmallInt
+  is_deleted     Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
 
 model User_exercises {
-    id            String   @id @default(cuid())
-    date          DateTime @db.Date
-    type          Int      @db.UnsignedSmallInt
-    duration      Int      @db.UnsignedSmallInt
-    is_deleted    Boolean  @default(false)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt @default(now())
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  date           DateTime @db.Date
+  type           Int      @db.UnsignedSmallInt
+  duration       Int      @db.UnsignedSmallInt
+  is_deleted     Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
 
 model User_blood_glucose {
-    id            String   @id @default(cuid())
-    user_id       Int      @db.UnsignedInt 
-    amount        Decimal  @db.Decimal(5,2)
-    date          DateTime @db.Date
-    time          DateTime @db.Time()
-    is_deleted    Boolean  @default(false)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt @default(now())
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  amount         Decimal  @db.Decimal(5, 2)
+  date           DateTime @db.Date
+  time           DateTime @db.Time()
+  is_deleted     Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
 
 model User_blood_pressure {
-    id            String   @id @default(cuid())
-    user_id       Int      @db.UnsignedInt 
-    sys_bp        Decimal  @db.Decimal(5,2)
-    dia_bp        Decimal  @db.Decimal(5,2)
-    date          DateTime @db.Date
-    time          DateTime @db.Time()
-    is_deleted    Boolean  @default(false)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt @default(now())
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  sys_bp         Decimal  @db.Decimal(5, 2)
+  dia_bp         Decimal  @db.Decimal(5, 2)
+  date           DateTime @db.Date
+  time           DateTime @db.Time()
+  is_deleted     Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
 
 model User_weight {
-    id            String   @id @default(cuid())
-    user_id       Int      @db.UnsignedInt
-    amount        Decimal  @db.Decimal(5,2)
-    date          DateTime @db.Date
-    is_deleted    Boolean  @default(false)
-    created_at    DateTime @default(now())
-    updated_at    DateTime @updatedAt @default(now())
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  amount         Decimal  @db.Decimal(5, 2)
+  date           DateTime @db.Date
+  is_deleted     Boolean  @default(false)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
 
 model Booking {
-    id            String    @id @default(cuid())
-    date          DateTime  @db.Date
-    time          DateTime  @db.Time()
-    is_deleted    Boolean   @default(false)
-    is_attended   Boolean   @default(false)
-    follow_up     Boolean  
-    previous_booking_id Int @db.UnsignedInt
-    created_at    DateTime  @default(now())
-    updated_at    DateTime  @updatedAt @default(now())
+  id                  Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id      Int      @db.UnsignedInt
+  date                DateTime @db.Date
+  time                DateTime @db.Time()
+  is_deleted          Boolean  @default(false)
+  is_attended         Boolean  @default(false)
+  follow_up           Boolean  @default(false)
+  previous_booking_id Int      @db.UnsignedInt
+  created_at          DateTime @default(now())
+  updated_at          DateTime @default(now()) @updatedAt
 }
 
 model Report {
-    id            String    @id @default(cuid())
-    booking_id    Int       @db.UnsignedInt
-    content       String    @db.Text
-    weight        Decimal   @db.Decimal(5,2)
-    height        Decimal   @db.Decimal(5,2)
-    sys_bp        Decimal   @db.Decimal(5,2)
-    dia_bp        Decimal   @db.Decimal(5,2)
-    blood_glocose Decimal   @db.Decimal(5,2)
-    follow_up     Int       @db.UnsignedTinyInt
-    created_at    DateTime  @default(now())
-    updated_at    DateTime  @updatedAt @default(now())
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  user_member_id Int      @db.UnsignedInt
+  content        String   @db.Text
+  weight         Decimal  @db.Decimal(5, 2)
+  height         Decimal  @db.Decimal(5, 2)
+  sys_bp         Decimal  @db.Decimal(5, 2)
+  dia_bp         Decimal  @db.Decimal(5, 2)
+  blood_glocose  Decimal  @db.Decimal(5, 2)
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
 }
