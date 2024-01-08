@@ -1,5 +1,5 @@
 const BookingPage = () => {
-  return <>Booking</>;
-};
+  return <>Booking</>
+}
 
-export default BookingPage;
+export default BookingPage
