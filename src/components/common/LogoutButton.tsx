@@ -1,10 +1,10 @@
 'use client'
 
 import { LogOut } from 'lucide-react'
-import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
+import { Button } from '../ui/button'
 
-const LogoutButton = () => {
+export default function LogoutButton() {
   const router = useRouter()
   const handleLogout = () => router.replace(`/api/auth/signout`)
   return (
@@ -19,5 +19,3 @@ const LogoutButton = () => {
     </Button>
   )
 }
-
-export default LogoutButton
