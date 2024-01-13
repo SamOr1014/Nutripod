@@ -24,13 +24,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={`font-sans ${inter.variable} max-h-screen`}>
         <NextThemeProvider attribute="class" defaultTheme="dark">
-          <main className="min-h-screen">
-            <TRPCReactProvider headers={headers()}>
-              {children}
-            </TRPCReactProvider>
-          </main>
+          <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
         </NextThemeProvider>
       </body>
     </html>

@@ -74,3 +74,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* firefox scrollbar is so ugly man */
+* {
+  scrollbar-color: grey transparent;
+  scrollbar-width: thin;
+}
