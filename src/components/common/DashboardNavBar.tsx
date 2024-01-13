@@ -9,7 +9,7 @@ type Props = {
 
 export default function DashboardNavBar({ role }: Props) {
   return (
-    <nav className=" w-full  p-3">
+    <nav className="w-full p-3">
       <div className="flex">
         <div className="flex flex-1 gap-2">
           <NavButtons role={role} />
