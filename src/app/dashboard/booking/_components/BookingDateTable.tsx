@@ -1,12 +1,6 @@
+import { RenderType, Table } from '~/components/common/Table'
 import { Button } from '~/components/ui/button'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '~/components/ui/table'
+import { TableCell } from '~/components/ui/table'
 
 //To be decided structure
 const mockData = [
@@ -63,30 +57,29 @@ const mockData = [
 ]
 
 export const BookingDateTable = () => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Time</TableHead>
-          <TableHead className="w-[50px] min-w-[50px]">Apply</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {mockData.map((item) => {
-          return (
-            <TableRow key={item.date.toISOString() + item.time}>
-              <TableCell>{item.date.toLocaleDateString('zh-hk')}</TableCell>
-              <TableCell>{item.time}</TableCell>
-              <TableCell>
-                <Button size="sm" variant="link" disabled={!item.available}>
-                  Apply
-                </Button>
-              </TableCell>
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
-  )
+  const headers: RenderType[] = [
+    { render: 'Date' },
+    { render: 'Time' },
+    {
+      render: 'Apply',
+      className: 'w-[50px] text-center',
+    },
+  ]
+
+  const data: RenderType[] = mockData.map((item) => {
+    return {
+      render: (
+        <>
+          <TableCell>{item.date.toLocaleDateString()}</TableCell>
+          <TableCell>{item.time}</TableCell>
+          <TableCell>
+            <Button disabled={!item.available} variant="link">
+              Apply
+            </Button>
+          </TableCell>
+        </>
+      ),
+    }
+  })
+  return <Table renderHeaders={headers} renderData={data} />
 }
