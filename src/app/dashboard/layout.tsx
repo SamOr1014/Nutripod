@@ -1,8 +1,8 @@
-import { getServerAuthSession } from '../../server/auth'
 import { redirect } from 'next/navigation'
 import Container from '../../components/common/Container'
 import DashboardNavBar from '../../components/common/DashboardNavBar'
 import { Separator } from '../../components/ui/separator'
+import { getServerAuthSession } from '../../server/auth'
 
 export default async function DashboardLayout({
   children,
@@ -13,9 +13,10 @@ export default async function DashboardLayout({
   if (!session) {
     redirect('/api/auth/signin')
   }
+
   return (
     <Container>
-      <DashboardNavBar />
+      <DashboardNavBar role={session.user.type} />
       <Separator className="my-2" />
       {children}
     </Container>
