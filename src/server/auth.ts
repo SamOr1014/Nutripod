@@ -1,12 +1,9 @@
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
-} from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-import { env } from "~/env.mjs";
-import { db } from "~/server/db";
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import { getServerSession, type NextAuthOptions } from 'next-auth'
+import DiscordProvider from 'next-auth/providers/discord'
+import { env } from '~/env.mjs'
+import { db } from '~/server/db'
+import { UserRole } from '~/types/UserRole'
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -14,19 +11,18 @@ import { db } from "~/server/db";
  *
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
-declare module "next-auth" {
-  interface Session extends DefaultSession {
+declare module 'next-auth' {
+  interface Session {
     user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+      id: number
+      type: UserRole
+      expires: string
+    }
   }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    member_id: number
+    type: UserRole
+  }
 }
 
 /**
@@ -36,21 +32,24 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session: ({ session, user }) => {
+      return {
+        ...session,
+        user: {
+          id: user.member_id,
+          type: user.type,
+          expires: session.expires,
+        },
+      }
+    },
     redirect: (params) => {
       switch (params.url) {
         case `${params.baseUrl}/api/auth/signout`:
-          return params.baseUrl;
+          return params.baseUrl
         case `${params.baseUrl}/api/auth/signin`:
-          return `${params.baseUrl}/dashboard`;
+          return `${params.baseUrl}/dashboard`
         default:
-          return params.url;
+          return params.url
       }
     },
   },
@@ -70,11 +69,11 @@ export const authOptions: NextAuthOptions = {
      * @see https://next-auth.js.org/providers/github
      */
   ],
-};
+}
 
 /**
  * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
  *
  * @see https://next-auth.js.org/configuration/nextjs
  */
-export const getServerAuthSession = () => getServerSession(authOptions);
+export const getServerAuthSession = () => getServerSession(authOptions)

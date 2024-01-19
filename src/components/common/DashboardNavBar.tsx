@@ -1,17 +1,21 @@
-import LogoutButton from "./LogoutButton";
-import NavButtons from "./NavButtons";
+'use client'
+import { UserRole } from '~/types/UserRole'
+import LogoutButton from './LogoutButton'
+import NavButtons from './NavButtons'
 
-const DashboardNavBar = () => {
+type Props = {
+  role: UserRole
+}
+
+export default function DashboardNavBar({ role }: Props) {
   return (
-    <nav className=" w-full  p-3">
+    <nav className="w-full p-3">
       <div className="flex">
         <div className="flex flex-1 gap-2">
-          <NavButtons />
+          <NavButtons role={role} />
         </div>
         <LogoutButton />
       </div>
     </nav>
-  );
-};
-
-export default DashboardNavBar;
+  )
+}
