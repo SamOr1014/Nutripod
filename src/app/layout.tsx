@@ -1,8 +1,7 @@
-import '~/styles/globals.css'
-
 import { Inter } from 'next/font/google'
 import { headers } from 'next/headers'
-
+import NextAuthProvider from '~/components/common/SessionProvider'
+import '~/styles/globals.css'
 import { TRPCReactProvider } from '~/trpc/react'
 import { NextThemeProvider } from '../components/common/ThemeProvider'
 
@@ -25,9 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable} max-h-screen`}>
-        <NextThemeProvider attribute="class" defaultTheme="dark">
-          <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
-        </NextThemeProvider>
+        <NextAuthProvider>
+          <NextThemeProvider attribute="class" defaultTheme="dark">
+            <TRPCReactProvider headers={headers()}>
+              {children}
+            </TRPCReactProvider>
+          </NextThemeProvider>
+        </NextAuthProvider>
       </body>
     </html>
   )
